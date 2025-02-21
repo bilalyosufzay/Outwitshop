@@ -2,6 +2,19 @@
 import { useNavigate } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import ProductCard from "@/components/ProductCard";
+import { 
+  Smartphone,
+  ShirtIcon,
+  Home,
+  Sparkles,
+  ShoppingCart,
+  Dumbbell,
+  Baby,
+  Car,
+  BookOpen,
+  Cat,
+  type LucideIcon
+} from "lucide-react";
 
 // Temporary mock data
 const FEATURED_PRODUCTS = [
@@ -32,6 +45,76 @@ const FEATURED_PRODUCTS = [
     price: 129.99,
     category: "Fashion",
     image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&q=80",
+  },
+];
+
+interface Category {
+  id: string;
+  name: string;
+  icon: LucideIcon;
+  subcategories: string[];
+}
+
+const CATEGORIES: Category[] = [
+  {
+    id: "fashion",
+    name: "Fashion",
+    icon: ShirtIcon,
+    subcategories: ["Women's Clothing", "Men's Clothing", "Children's", "Shoes & Bags", "Accessories"],
+  },
+  {
+    id: "electronics",
+    name: "Electronics",
+    icon: Smartphone,
+    subcategories: ["Phones", "Computers", "Home Appliances", "Audio & Video"],
+  },
+  {
+    id: "home",
+    name: "Home & Living",
+    icon: Home,
+    subcategories: ["Furniture", "Décor", "Kitchen", "Bedding & Bath"],
+  },
+  {
+    id: "beauty",
+    name: "Beauty",
+    icon: Sparkles,
+    subcategories: ["Cosmetics", "Skincare", "Haircare", "Fragrances"],
+  },
+  {
+    id: "grocery",
+    name: "Supermarket",
+    icon: ShoppingCart,
+    subcategories: ["Food & Beverages", "Household", "Personal Care"],
+  },
+  {
+    id: "sports",
+    name: "Sports",
+    icon: Dumbbell,
+    subcategories: ["Equipment", "Activewear", "Outdoor Gear"],
+  },
+  {
+    id: "kids",
+    name: "Kids & Baby",
+    icon: Baby,
+    subcategories: ["Toys", "Baby Essentials", "Maternity"],
+  },
+  {
+    id: "auto",
+    name: "Automotive",
+    icon: Car,
+    subcategories: ["Accessories", "Motorcycle", "Spare Parts"],
+  },
+  {
+    id: "books",
+    name: "Books & Media",
+    icon: BookOpen,
+    subcategories: ["Books", "Magazines", "Music & Movies"],
+  },
+  {
+    id: "pets",
+    name: "Pet Supplies",
+    icon: Cat,
+    subcategories: ["Pet Food", "Accessories", "Aquarium"],
   },
 ];
 
@@ -93,14 +176,20 @@ const Index = () => {
               View All
             </button>
           </div>
-          <div className="grid grid-cols-4 gap-4">
-            {["Electronics", "Fashion", "Home", "Beauty"].map((category) => (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            {CATEGORIES.map(({ id, name, icon: Icon }) => (
               <button
-                key={category}
-                className="p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow text-center"
+                key={id}
+                onClick={() => navigate(`/category/${id}`)}
+                className="flex flex-col items-center p-4 bg-white rounded-xl shadow-sm 
+                         hover:shadow-md transition-all duration-300 group space-y-2"
               >
-                <span className="text-sm font-medium text-gray-900">
-                  {category}
+                <div className="p-3 rounded-full bg-accent/10 group-hover:bg-accent/20 
+                             transition-colors duration-300">
+                  <Icon className="w-6 h-6 text-accent" />
+                </div>
+                <span className="text-sm font-medium text-gray-900 text-center">
+                  {name}
                 </span>
               </button>
             ))}
