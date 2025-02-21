@@ -126,7 +126,14 @@ const Index = () => {
       {/* Header */}
       <header className="sticky top-0 z-10 bg-white/80 backdrop-blur-lg border-b border-gray-200">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <h1 className="text-xl font-semibold text-gray-900">Outwit Shop</h1>
+          <div className="flex items-center gap-2">
+            <img
+              src="/lovable-uploads/b7de9b33-d899-4c4a-a399-3655bbb16b4c.png"
+              alt="Outwit Shop"
+              className="h-8 w-auto"
+            />
+            <h1 className="text-xl font-semibold text-gray-900">Outwit Shop</h1>
+          </div>
           <button className="p-2 rounded-full hover:bg-gray-100">
             <span className="sr-only">Notifications</span>
             <div className="relative">
