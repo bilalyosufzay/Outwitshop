@@ -1,5 +1,5 @@
 
-import { Home, Search, Heart, ShoppingBag, User } from "lucide-react";
+import { Home, Search, Gift, ShoppingBag, User } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
@@ -10,7 +10,7 @@ const Navigation = () => {
   const navItems = [
     { icon: Home, label: "Home", path: "/" },
     { icon: Search, label: "Search", path: "/search" },
-    { icon: Heart, label: "Wishlist", path: "/wishlist" },
+    { icon: Gift, label: "Lucky Draw", path: "/lucky-draw" },
     { icon: ShoppingBag, label: "Cart", path: "/cart" },
     { icon: User, label: "Profile", path: "/profile" },
   ];
