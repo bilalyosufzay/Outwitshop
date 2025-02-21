@@ -1,4 +1,3 @@
-
 import { useNavigate } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import ProductCard from "@/components/ProductCard";
@@ -16,7 +15,6 @@ import {
   type LucideIcon
 } from "lucide-react";
 
-// Temporary mock data
 const FEATURED_PRODUCTS = [
   {
     id: "1",
@@ -45,6 +43,72 @@ const FEATURED_PRODUCTS = [
     price: 129.99,
     category: "Fashion",
     image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&q=80",
+  },
+];
+
+const TRENDING_PRODUCTS = [
+  {
+    id: "5",
+    name: "Smart Fitness Watch",
+    price: 159.99,
+    category: "Electronics",
+    image: "https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=800&q=80",
+  },
+  {
+    id: "6",
+    name: "Designer Sunglasses",
+    price: 179.99,
+    category: "Accessories",
+    image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=800&q=80",
+  },
+  {
+    id: "7",
+    name: "Premium Coffee Maker",
+    price: 249.99,
+    category: "Home",
+    image: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&q=80",
+  },
+  {
+    id: "8",
+    name: "Wireless Earbuds",
+    price: 129.99,
+    category: "Electronics",
+    image: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=800&q=80",
+  },
+];
+
+const SALE_PRODUCTS = [
+  {
+    id: "9",
+    name: "Summer Dress",
+    price: 39.99,
+    originalPrice: 79.99,
+    category: "Fashion",
+    image: "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=800&q=80",
+  },
+  {
+    id: "10",
+    name: "Running Shoes",
+    price: 69.99,
+    originalPrice: 129.99,
+    category: "Sports",
+    image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80",
+  },
+  {
+    id: "11",
+    name: "Portable Speaker",
+    price: 49.99,
+    originalPrice: 99.99,
+    category: "Electronics",
+    image: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=800&q=80",
+  },
+  {
+    id: "12",
+    name: "Kitchen Mixer",
+    price: 199.99,
+    originalPrice: 299.99,
+    category: "Home",
+    image: "https://images.unsplash.com/photo-1622444435576-c8d475d86d09?w=800&q=80",
   },
 ];
 
@@ -123,7 +187,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
-      {/* Header */}
       <header className="sticky top-0 z-10 bg-white/80 backdrop-blur-lg border-b border-gray-200">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -157,7 +220,6 @@ const Index = () => {
       </header>
 
       <main className="container mx-auto px-4 py-6 space-y-8">
-        {/* Hero Section */}
         <section className="relative h-48 rounded-2xl overflow-hidden animate-fade-in">
           <img
             src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200&q=80"
@@ -175,7 +237,6 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Categories */}
         <section>
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-semibold text-gray-900">Categories</h2>
@@ -203,7 +264,49 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Featured Products */}
+        <section>
+          <div className="flex justify-between items-center mb-4">
+            <div className="flex items-center gap-2">
+              <h2 className="text-lg font-semibold text-gray-900">
+                Trending Now
+              </h2>
+              <span className="px-2 py-1 bg-accent/10 text-accent text-xs font-medium rounded-full">
+                Hot 🔥
+              </span>
+            </div>
+            <button className="text-sm text-accent hover:underline">
+              View All
+            </button>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {TRENDING_PRODUCTS.map((product) => (
+              <ProductCard
+                key={product.id}
+                {...product}
+                onClick={() => navigate(`/product/${product.id}`)}
+              />
+            ))}
+          </div>
+        </section>
+
+        <section className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 p-6 text-white">
+          <div className="absolute inset-0 bg-black/10" />
+          <div className="relative">
+            <h2 className="text-2xl font-bold mb-2">Flash Sale 🎉</h2>
+            <p className="text-white/80 mb-4">Up to 50% off on selected items</p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {SALE_PRODUCTS.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  {...product}
+                  onClick={() => navigate(`/product/${product.id}`)}
+                  className="bg-white/10 backdrop-blur-md border border-white/20"
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+
         <section>
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-semibold text-gray-900">

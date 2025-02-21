@@ -6,6 +6,7 @@ interface ProductCardProps {
   id: string;
   name: string;
   price: number;
+  originalPrice?: number;
   image: string;
   category: string;
   onClick?: () => void;
@@ -16,6 +17,7 @@ const ProductCard = ({
   id,
   name,
   price,
+  originalPrice,
   image,
   category,
   onClick,
@@ -41,13 +43,25 @@ const ProductCard = ({
         >
           <Heart className="w-5 h-5 text-gray-600" />
         </button>
+        {originalPrice && (
+          <span className="absolute top-3 left-3 px-2 py-1 bg-red-500 text-white text-xs font-medium rounded-full">
+            -{Math.round(((originalPrice - price) / originalPrice) * 100)}%
+          </span>
+        )}
       </div>
       <div className="space-y-1">
         <p className="text-xs font-medium text-gray-500 uppercase">{category}</p>
         <h3 className="font-medium text-gray-900 truncate">{name}</h3>
-        <p className="font-semibold text-accent">
-          ${price.toLocaleString("en-US", { minimumFractionDigits: 2 })}
-        </p>
+        <div className="flex items-center gap-2">
+          <p className="font-semibold text-accent">
+            ${price.toLocaleString("en-US", { minimumFractionDigits: 2 })}
+          </p>
+          {originalPrice && (
+            <p className="text-sm text-gray-500 line-through">
+              ${originalPrice.toLocaleString("en-US", { minimumFractionDigits: 2 })}
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );
