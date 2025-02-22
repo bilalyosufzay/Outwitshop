@@ -10,21 +10,23 @@ import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface SponsoredProduct {
-  products: {
+  boost_level: number;
+  product: {
     id: string;
     name: string;
     price: number;
-    category: string;
+    description: string | null;
     image: string;
     images?: string[];
   };
-  boost_level: number;
 }
 
 interface DatabaseProduct {
   id: string;
   name: string;
   price: number;
+  description: string | null;
+  stock_quantity: number;
   image: string;
   images?: string[];
 }
@@ -47,21 +49,24 @@ const Search = () => {
         .from('sponsored_products')
         .select(`
           boost_level,
-          products:product_id (
+          product:product_id (
             id,
             name,
             price,
-            category,
+            description,
+            stock_quantity,
             image,
             images
           )
         `)
-        .textSearch('products.name', searchQuery);
+        .eq('status', 'active')
+        .textSearch('product.name', searchQuery);
 
       // Then, get regular products
       const { data: regularProducts, error: regularError } = await supabase
         .from('products')
-        .select('id, name, price, image, images')
+        .select('id, name, price, description, stock_quantity, image, images')
+        .eq('status', 'active')
         .textSearch('name', searchQuery)
         .limit(20);
 
@@ -71,12 +76,12 @@ const Search = () => {
 
       // Combine and format results
       const sponsored = (sponsoredProducts || []).map((sp) => ({
-        id: sp.products.id,
-        name: sp.products.name,
-        price: sp.products.price,
+        id: sp.product.id,
+        name: sp.product.name,
+        price: sp.product.price,
         category: 'sponsored',
-        image: sp.products.image,
-        images: sp.products.images,
+        image: sp.product.image,
+        images: sp.product.images,
         isSponsored: true,
         boostLevel: sp.boost_level
       })) as ProductWithSponsorship[];
