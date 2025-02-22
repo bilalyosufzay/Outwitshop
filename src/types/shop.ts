@@ -9,4 +9,9 @@ export interface Shop {
   status: string;
   created_at: string;
   updated_at: string | null;
+  business_license?: string;
+  owner_name: string;
+  id_card_number: string;
+  address: string;
+  phone_number: string;
 }
