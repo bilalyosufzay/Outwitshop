@@ -68,7 +68,7 @@ const CreateShop = () => {
           slug: data.slug.toLowerCase(),
           contact_email: data.contactEmail,
           status: 'pending',
-        } as Partial<Shop>);
+        });
 
       if (error) throw error;
 
