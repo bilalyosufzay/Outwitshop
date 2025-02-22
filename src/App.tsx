@@ -11,6 +11,7 @@ import { HeroSection } from "./components/HeroSection";
 import { TrendingSection } from "./components/TrendingSection";
 import { FlashSaleSection } from "./components/FlashSaleSection";
 import { FeaturedSection } from "./components/FeaturedSection";
+import Profile from "./pages/Profile";
 import "./App.css";
 import "./i18n/config";
 
@@ -40,7 +41,7 @@ function App() {
                 <Route path="/lucky-draw" element={<div>Lucky Draw Page</div>} />
                 <Route path="/cart" element={<div>Cart Page</div>} />
                 <Route path="/my-shop" element={<div>My Shop Page</div>} />
-                <Route path="/profile" element={<div>Profile Page</div>} />
+                <Route path="/profile" element={<Profile />} />
               </Routes>
             </main>
             <Navigation />
