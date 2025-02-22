@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -161,15 +162,56 @@ const LuckyDraw = () => {
                       <BookOpen className="h-4 w-4" />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent className="w-80 p-4">
-                    <div className="space-y-2">
-                      <h4 className="font-semibold">Lucky Draw Rules:</h4>
-                      <ul className="list-disc ml-4 space-y-1 text-sm">
-                        <li>One free draw is available every 24 hours</li>
-                        <li>All prizes are automatically added to your account</li>
-                        <li>Prizes include discounts, points, and special rewards</li>
-                        <li>The prize selection is completely random</li>
-                      </ul>
+                  <TooltipContent className="w-[400px] p-4">
+                    <div className="space-y-4">
+                      <h4 className="font-semibold text-base">Lucky Draw Rules</h4>
+                      
+                      <div>
+                        <h5 className="font-medium mb-1">1. Entry Options</h5>
+                        <ul className="list-disc ml-4 space-y-1 text-sm">
+                          <li>Daily Spin: Users can participate once per day</li>
+                          <li>Bonus Entries: Earn extra spins by inviting friends or making purchases</li>
+                          <li>VIP Entries: Special spins for premium members or high-spending customers</li>
+                        </ul>
+                      </div>
+
+                      <div>
+                        <h5 className="font-medium mb-1">2. Prize Categories</h5>
+                        <ul className="list-disc ml-4 space-y-1 text-sm">
+                          <li>Discount Coupons: 5%, 10%, 20% off on purchases</li>
+                          <li>Free Products: Select items from our store</li>
+                          <li>Cashback Rewards: Win a percentage of your last order back</li>
+                          <li>Exclusive Deals: Limited-time offers for winners</li>
+                          <li>Loyalty Points: Points added to your account for future use</li>
+                        </ul>
+                      </div>
+
+                      <div>
+                        <h5 className="font-medium mb-1">3. Spin Customization</h5>
+                        <ul className="list-disc ml-4 space-y-1 text-sm">
+                          <li>Spin the Wheel: Rotating wheel with different prize sections</li>
+                          <li>Scratch Cards: Digital scratch cards with hidden prizes</li>
+                          <li>Mystery Box: Open a box to reveal your reward</li>
+                        </ul>
+                      </div>
+
+                      <div>
+                        <h5 className="font-medium mb-1">4. Winner Announcement</h5>
+                        <ul className="list-disc ml-4 space-y-1 text-sm">
+                          <li>Instant Win Popup: See what you won immediately</li>
+                          <li>Leaderboard: View recent winners</li>
+                          <li>Push Notifications: Get reminded when you can spin again</li>
+                        </ul>
+                      </div>
+
+                      <div>
+                        <h5 className="font-medium mb-1">5. Redemption Rules</h5>
+                        <ul className="list-disc ml-4 space-y-1 text-sm">
+                          <li>Claim Time Limit: Must claim prizes within the specified period</li>
+                          <li>Minimum Order Requirement: Some rewards require minimum purchase value</li>
+                          <li>Non-Transferable: Prizes are bound to winner's account only</li>
+                        </ul>
+                      </div>
                     </div>
                   </TooltipContent>
                 </Tooltip>
