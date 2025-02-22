@@ -3,10 +3,10 @@ import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
 
 const SUMMER_IMAGES = [
-  "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=1200&q=80", // orange flowers
-  "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1200&q=80", // water and trees
-  "https://images.unsplash.com/photo-1518495973542-4542c06a5843?w=1200&q=80", // sunlight through trees
-  "https://images.unsplash.com/photo-1582562124811-c09040d0a901?w=1200&q=80", // cat on textile
+  "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200&q=80", // shopping mall
+  "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=1200&q=80", // woman shopping
+  "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=1200&q=80", // shopping bags
+  "https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?w=1200&q=80", // modern storefront
 ];
 
 export const HeroSection = () => {
