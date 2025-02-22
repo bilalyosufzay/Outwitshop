@@ -12,6 +12,7 @@ import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 import CreateShop from "./pages/my-shop/CreateShop";
 import ShopDashboard from "./pages/my-shop/ShopDashboard";
+import Profile from "./pages/Profile";
 
 const queryClient = new QueryClient();
 
@@ -30,7 +31,7 @@ const App = () => (
               <Route path="/search" element={<NotFound />} />
               <Route path="/lucky-draw" element={<NotFound />} />
               <Route path="/cart" element={<NotFound />} />
-              <Route path="/profile" element={<NotFound />} />
+              <Route path="/profile" element={<Profile />} />
               <Route path="/product/:id" element={<NotFound />} />
               <Route path="/my-shop" element={<Navigate to="/my-shop/dashboard" replace />} />
               <Route path="/my-shop/create" element={<CreateShop />} />
