@@ -301,6 +301,39 @@ export type Database = {
         }
         Relationships: []
       }
+      referral_codes: {
+        Row: {
+          code: string
+          created_at: string | null
+          expires_at: string | null
+          id: string
+          referrals_count: number | null
+          rewards_earned: number | null
+          type: string
+          user_id: string
+        }
+        Insert: {
+          code: string
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          referrals_count?: number | null
+          rewards_earned?: number | null
+          type: string
+          user_id: string
+        }
+        Update: {
+          code?: string
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          referrals_count?: number | null
+          rewards_earned?: number | null
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       shops: {
         Row: {
           address: string

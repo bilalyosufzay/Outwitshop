@@ -19,6 +19,7 @@ import {
   Facebook,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import type { ReferralCode } from "@/types/marketing";
 
 export const MarketingContent = () => {
   const { user } = useAuth();
@@ -33,15 +34,13 @@ export const MarketingContent = () => {
       
       const { error } = await supabase
         .from('referral_codes')
-        .insert([
-          {
-            user_id: user.id,
-            code: code,
-            type: 'buyer',
-            referrals_count: 0,
-            rewards_earned: 0,
-          }
-        ]);
+        .insert({
+          user_id: user.id,
+          code: code,
+          type: 'buyer' as const,
+          referrals_count: 0,
+          rewards_earned: 0,
+        });
 
       if (error) throw error;
 
