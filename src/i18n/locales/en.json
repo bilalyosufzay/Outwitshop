@@ -15,14 +15,14 @@
     "view_all": "View All",
     "fashion": "Fashion",
     "electronics": "Electronics",
-    "home_living": "Home & Living",
+    "home_living": "Home",
     "beauty": "Beauty",
     "supermarket": "Supermarket",
     "sports": "Sports",
     "kids_baby": "Kids & Baby",
-    "automotive": "Automotive",
-    "books_media": "Books & Media",
-    "pet_supplies": "Pet Supplies"
+    "automotive": "Auto",
+    "books_media": "Books",
+    "pet_supplies": "Pets"
   },
   "featured": {
     "title": "Featured Products",
