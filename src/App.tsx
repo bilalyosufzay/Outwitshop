@@ -20,96 +20,109 @@ import AddProductPage from "@/pages/my-shop/products/AddProductPage";
 import ProductsPage from "@/pages/my-shop/products/ProductsPage";
 import { I18nextProvider } from 'react-i18next';
 import i18n from '@/i18n/config';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+// Create a client
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 60 * 1000, // 1 minute
+      retry: 1,
+    },
+  },
+});
 
 const App = () => {
   return (
-    <I18nextProvider i18n={i18n}>
-      <Router>
-        <AuthProvider>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/auth/login" element={<Login />} />
-            <Route path="/auth/signup" element={<Signup />} />
-            <Route path="/lucky-draw" element={<LuckyDraw />} />
-            <Route
-              path="/profile"
-              element={
-                <ProtectedRoute>
-                  <Profile />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/settings"
-              element={
-                <ProtectedRoute>
-                  <Settings />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/notifications"
-              element={
-                <ProtectedRoute>
-                  <Notifications />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/security"
-              element={
-                <ProtectedRoute>
-                  <Security />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/cart"
-              element={
-                <ProtectedRoute>
-                  <Cart />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="/search" element={<Search />} />
-            <Route
-              path="/my-shop/create"
-              element={
-                <ProtectedRoute>
-                  <CreateShop />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/my-shop"
-              element={
-                <ProtectedRoute>
-                  <ShopDashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/my-shop/products"
-              element={
-                <ProtectedRoute>
-                  <ProductsPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/my-shop/products/add"
-              element={
-                <ProtectedRoute>
-                  <AddProductPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <Toaster />
-        </AuthProvider>
-      </Router>
-    </I18nextProvider>
+    <QueryClientProvider client={queryClient}>
+      <I18nextProvider i18n={i18n}>
+        <Router>
+          <AuthProvider>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/auth/login" element={<Login />} />
+              <Route path="/auth/signup" element={<Signup />} />
+              <Route path="/lucky-draw" element={<LuckyDraw />} />
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/settings"
+                element={
+                  <ProtectedRoute>
+                    <Settings />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/notifications"
+                element={
+                  <ProtectedRoute>
+                    <Notifications />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/security"
+                element={
+                  <ProtectedRoute>
+                    <Security />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/cart"
+                element={
+                  <ProtectedRoute>
+                    <Cart />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="/search" element={<Search />} />
+              <Route
+                path="/my-shop/create"
+                element={
+                  <ProtectedRoute>
+                    <CreateShop />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/my-shop"
+                element={
+                  <ProtectedRoute>
+                    <ShopDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/my-shop/products"
+                element={
+                  <ProtectedRoute>
+                    <ProductsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/my-shop/products/add"
+                element={
+                  <ProtectedRoute>
+                    <AddProductPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+            <Toaster />
+          </AuthProvider>
+        </Router>
+      </I18nextProvider>
+    </QueryClientProvider>
   );
 };
 
