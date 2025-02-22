@@ -15,6 +15,7 @@ import Profile from "./pages/Profile";
 import Search from "./pages/Search";
 import Cart from "./pages/Cart";
 import LuckyDraw from "./pages/LuckyDraw";
+import ShopDashboard from "./pages/my-shop/ShopDashboard";
 import "./App.css";
 import "./i18n/config";
 
@@ -44,7 +45,7 @@ function App() {
                   <Route path="/search" element={<Search />} />
                   <Route path="/lucky-draw" element={<LuckyDraw />} />
                   <Route path="/cart" element={<Cart />} />
-                  <Route path="/my-shop" element={<div>My Shop Page</div>} />
+                  <Route path="/my-shop" element={<ShopDashboard />} />
                   <Route path="/profile" element={<Profile />} />
                 </Routes>
               </div>
