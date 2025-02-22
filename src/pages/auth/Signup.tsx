@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
-import ReCAPTCHA from "react-google-recaptcha";
+import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { toast } from "sonner";
 
 const Signup = () => {
@@ -90,9 +90,9 @@ const Signup = () => {
           </div>
 
           <div className="flex justify-center">
-            <ReCAPTCHA
-              sitekey="6LclRt8qAAAAACvFGtcjSW5REpYxartWSGgPzSlD"
-              onChange={handleCaptchaChange}
+            <HCaptcha
+              sitekey="10000000-ffff-ffff-ffff-000000000001"
+              onVerify={handleCaptchaChange}
             />
           </div>
 
@@ -113,4 +113,3 @@ const Signup = () => {
 };
 
 export default Signup;
-
