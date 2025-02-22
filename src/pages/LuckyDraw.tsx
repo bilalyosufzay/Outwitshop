@@ -1,20 +1,19 @@
-
 import { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Gift, Timer, Star, AlertCircle } from "lucide-react";
+import { Gift, Timer, Star, AlertCircle, Ticket, Package, Truck, Percent } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const prizes = [
-  { id: 1, name: "5% Discount", color: "#FF6B6B" },
-  { id: 2, name: "10% Discount", color: "#4ECDC4" },
-  { id: 3, name: "Free Shipping", color: "#45B7D1" },
-  { id: 4, name: "20% Discount", color: "#96CEB4" },
-  { id: 5, name: "100 Points", color: "#FFEEAD" },
-  { id: 6, name: "Mystery Box", color: "#D4A5A5" },
-  { id: 7, name: "15% Discount", color: "#9EC1CF" },
-  { id: 8, name: "50 Points", color: "#FFD93D" },
+  { id: 1, name: "5% Discount", color: "#FF6B6B", icon: <Percent className="h-4 w-4" /> },
+  { id: 2, name: "10% Discount", color: "#4ECDC4", icon: <Percent className="h-4 w-4" /> },
+  { id: 3, name: "Free Shipping", color: "#45B7D1", icon: <Truck className="h-4 w-4" /> },
+  { id: 4, name: "20% Discount", color: "#96CEB4", icon: <Percent className="h-4 w-4" /> },
+  { id: 5, name: "100 Points", color: "#FFEEAD", icon: <Star className="h-4 w-4" /> },
+  { id: 6, name: "Mystery Box", color: "#D4A5A5", icon: <Package className="h-4 w-4" /> },
+  { id: 7, name: "15% Discount", color: "#9EC1CF", icon: <Percent className="h-4 w-4" /> },
+  { id: 8, name: "50 Points", color: "#FFD93D", icon: <Star className="h-4 w-4" /> },
 ];
 
 const LuckyDraw = () => {
@@ -109,9 +108,9 @@ const LuckyDraw = () => {
             </div>
 
             {/* Spinning Wheel */}
-            <div className="relative w-64 h-64 mx-auto mb-8">
+            <div className="relative w-72 h-72 mx-auto mb-8">
               <div
-                className="absolute w-full h-full rounded-full transition-transform duration-[5000ms] ease-out"
+                className="absolute w-full h-full rounded-full transition-transform duration-[5000ms] ease-out shadow-lg"
                 style={{
                   transform: `rotate(${rotation}deg)`,
                   background: `conic-gradient(
@@ -124,12 +123,16 @@ const LuckyDraw = () => {
                 {prizes.map((prize, index) => (
                   <div
                     key={prize.id}
-                    className="absolute w-full h-full text-xs text-white flex items-center justify-center"
+                    className="absolute w-full h-full text-sm font-medium text-white flex items-center justify-center"
                     style={{
                       transform: `rotate(${index * 45 + 22.5}deg)`,
                     }}
                   >
-                    <div className="absolute" style={{ transform: "rotate(-90deg)" }}>
+                    <div 
+                      className="absolute flex flex-col items-center gap-1 bg-black/20 px-2 py-1 rounded" 
+                      style={{ transform: "rotate(-90deg)" }}
+                    >
+                      {prize.icon}
                       {prize.name}
                     </div>
                   </div>
@@ -144,8 +147,9 @@ const LuckyDraw = () => {
             <Button
               onClick={spinWheel}
               disabled={isSpinning || !canSpin}
-              className="w-full max-w-xs"
+              className="w-full max-w-xs text-lg font-medium"
             >
+              <Gift className="h-5 w-5" />
               {isSpinning ? "Spinning..." : "Spin to Win!"}
             </Button>
 
