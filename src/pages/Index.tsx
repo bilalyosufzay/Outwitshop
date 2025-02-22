@@ -135,15 +135,23 @@ const Index = () => {
   });
 
   const handleLanguageChange = async (language: typeof LANGUAGES[0]) => {
-    setCurrentLanguage(language);
-    localStorage.setItem('preferred-language', language.code);
-    document.documentElement.dir = ['fa', 'prs'].includes(language.code) ? 'rtl' : 'ltr';
-    await i18n.changeLanguage(language.code);
-    toast.success(`Language changed to ${language.name}`);
+    try {
+      setCurrentLanguage(language);
+      localStorage.setItem('preferred-language', language.code);
+      document.documentElement.dir = ['fa', 'prs'].includes(language.code) ? 'rtl' : 'ltr';
+      await i18n.changeLanguage(language.code);
+      toast.success(`Language changed to ${language.name}`);
+    } catch (error) {
+      console.error('Error changing language:', error);
+      toast.error('Failed to change language. Please try again.');
+    }
   };
 
   useEffect(() => {
+    // Set initial direction
     document.documentElement.dir = ['fa', 'prs'].includes(currentLanguage.code) ? 'rtl' : 'ltr';
+    // Ensure i18n is using the current language
+    i18n.changeLanguage(currentLanguage.code);
   }, []);
 
   return (
