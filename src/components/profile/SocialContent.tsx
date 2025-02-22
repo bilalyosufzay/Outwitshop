@@ -1,7 +1,7 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { MessageCircle, Users, Gift, PieChart } from "lucide-react";
+import { MessageCircle, Users, Gift, PieChart, Share2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ProfileSection } from "./ProfileSection";
 
@@ -32,6 +32,12 @@ export const SocialContent = () => {
           title="Following & Followers"
           icon={Users}
           onClick={() => navigate('/connections')}
+        />
+        <ProfileSection
+          title="Share & Earn"
+          description="Share products and earn rewards"
+          icon={Share2}
+          onClick={() => navigate('/share-earn')}
         />
       </div>
     </div>
