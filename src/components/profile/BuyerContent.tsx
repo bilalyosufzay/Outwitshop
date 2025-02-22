@@ -15,9 +15,55 @@ import {
   RefreshCcw,
   Bell,
 } from "lucide-react";
+import { useEffect } from "react";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 export const BuyerContent = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchBuyerProfile = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('user_levels')
+          .select('*')
+          .eq('type', 'buyer')
+          .single();
+
+        if (error) {
+          console.error('Error fetching buyer profile:', error);
+          return;
+        }
+
+        if (!data) {
+          // Initialize buyer level if it doesn't exist
+          const { error: insertError } = await supabase
+            .from('user_levels')
+            .insert([
+              {
+                type: 'buyer',
+                current_level: 'Newbie Shopper',
+                total_orders: 0,
+                total_spent: 0,
+              }
+            ]);
+
+          if (insertError) {
+            console.error('Error initializing buyer profile:', insertError);
+          }
+        }
+      } catch (error) {
+        console.error('Error in fetchBuyerProfile:', error);
+      }
+    };
+
+    fetchBuyerProfile();
+  }, []);
+
+  const handleNavigation = (path: string) => {
+    navigate(path);
+  };
 
   return (
     <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
@@ -25,64 +71,71 @@ export const BuyerContent = () => {
         title="Auto-Reorder Essentials"
         description="Manage your recurring purchases"
         icon={RefreshCcw}
-        onClick={() => navigate('/auto-reorder')}
+        onClick={() => {
+          handleNavigation('/auto-reorder');
+          toast.info("Loading auto-reorder settings...");
+        }}
       />
       <ProfileSection
         title="Price Drop Alerts"
         description="Track prices and get notified"
         icon={Bell}
-        onClick={() => navigate('/price-alerts')}
+        onClick={() => {
+          handleNavigation('/price-alerts');
+          toast.info("Loading price alerts...");
+        }}
       />
       <ProfileSection
         title="Orders & Shopping"
         icon={ShoppingBag}
-        onClick={() => navigate('/orders')}
+        onClick={() => handleNavigation('/orders')}
       />
       <ProfileSection
         title="Wishlist"
         icon={Heart}
-        onClick={() => navigate('/wishlists')}
+        onClick={() => handleNavigation('/wishlists')}
       />
       <ProfileSection
         title="Recently Viewed"
         icon={History}
-        onClick={() => navigate('/recently-viewed')}
+        onClick={() => handleNavigation('/recently-viewed')}
       />
       <ProfileSection
         title="Saved Addresses"
         icon={MapPin}
-        onClick={() => navigate('/addresses')}
+        onClick={() => handleNavigation('/addresses')}
       />
       <ProfileSection
         title="Payment Methods"
         icon={CreditCard}
-        onClick={() => navigate('/payment-methods')}
+        onClick={() => handleNavigation('/payment-methods')}
       />
       <ProfileSection
         title="Wallet & Transactions"
         icon={Wallet}
-        onClick={() => navigate('/wallet')}
+        onClick={() => handleNavigation('/wallet')}
       />
       <ProfileSection
         title="Rewards & Points"
         icon={Award}
-        onClick={() => navigate('/rewards')}
+        onClick={() => handleNavigation('/rewards')}
       />
       <ProfileSection
         title="Account Settings"
         icon={Settings}
-        onClick={() => navigate('/settings')}
+        onClick={() => handleNavigation('/settings')}
       />
       <ProfileSection
         title="Security"
         icon={Shield}
-        onClick={() => navigate('/security')}
+        onClick={() => handleNavigation('/security')}
       />
       <ProfileSection
         title="Help Center"
         icon={HelpCircle}
-        onClick={() => navigate('/help')}
+        onClick={() => handleNavigation('/help')}
       />
     </div>
   );
 };
+
