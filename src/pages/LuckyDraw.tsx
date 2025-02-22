@@ -1,8 +1,9 @@
+
 import { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Gift, Timer, Star, AlertCircle, Percent, Package, Truck, BadgeDollarSign, BookOpen } from "lucide-react";
+import { Gift, Timer, Star, AlertCircle, Percent, Package, Truck, BadgeDollarSign, BookOpen, Trophy, History, Share2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
   Tooltip,
@@ -62,6 +63,13 @@ const prizes = [
   },
 ];
 
+interface PrizeHistory {
+  id: string;
+  prize: typeof prizes[0];
+  date: Date;
+  claimed: boolean;
+}
+
 const LuckyDraw = () => {
   const { toast } = useToast();
   const [isSpinning, setIsSpinning] = useState(false);
@@ -70,45 +78,45 @@ const LuckyDraw = () => {
   const [canSpin, setCanSpin] = useState(true);
   const [showCards, setShowCards] = useState(true);
   const [showRules, setShowRules] = useState(false);
+  const [streak, setStreak] = useState(0);
+  const [lastSpinDate, setLastSpinDate] = useState<string | null>(null);
+  const [prizeHistory, setPrizeHistory] = useState<PrizeHistory[]>([]);
+  const [showHistory, setShowHistory] = useState(false);
 
   useEffect(() => {
     const lastSpinTime = localStorage.getItem('lastSpinTime');
+    const storedStreak = localStorage.getItem('streak');
+    const storedLastSpinDate = localStorage.getItem('lastSpinDate');
+    const storedPrizeHistory = localStorage.getItem('prizeHistory');
+
     if (lastSpinTime) {
-      const nextTime = new Date(Number(lastSpinTime) + 24 * 60 * 60 * 1000); // 24 hours
+      const nextTime = new Date(Number(lastSpinTime) + 24 * 60 * 60 * 1000);
       if (nextTime > new Date()) {
         setCanSpin(false);
         setNextSpinTime(nextTime);
       }
     }
+
+    if (storedStreak) setStreak(Number(storedStreak));
+    if (storedLastSpinDate) setLastSpinDate(storedLastSpinDate);
+    if (storedPrizeHistory) setPrizeHistory(JSON.parse(storedPrizeHistory));
   }, []);
 
-  useEffect(() => {
-    if (nextSpinTime && !canSpin) {
-      const timer = setInterval(() => {
-        const now = new Date();
-        if (nextSpinTime <= now) {
-          setCanSpin(true);
-          setNextSpinTime(null);
-          clearInterval(timer);
-        }
-      }, 1000);
-
-      return () => clearInterval(timer);
+  const updateStreak = () => {
+    const today = new Date().toDateString();
+    const yesterday = new Date(Date.now() - 86400000).toDateString();
+    
+    if (lastSpinDate === yesterday) {
+      const newStreak = streak + 1;
+      setStreak(newStreak);
+      localStorage.setItem('streak', String(newStreak));
+    } else if (lastSpinDate !== today) {
+      setStreak(1);
+      localStorage.setItem('streak', '1');
     }
-  }, [nextSpinTime, canSpin]);
-
-  const resetDraw = () => {
-    localStorage.removeItem('lastSpinTime');
-    setCanSpin(true);
-    setNextSpinTime(null);
-    setSelectedPrize(null);
-    setShowCards(true);
-    setIsSpinning(false);
-    toast({
-      title: "Reset Complete",
-      description: "You can now try the lucky draw again!",
-      duration: 3000,
-    });
+    
+    setLastSpinDate(today);
+    localStorage.setItem('lastSpinDate', today);
   };
 
   const spinDraw = () => {
@@ -117,15 +125,39 @@ const LuckyDraw = () => {
     setIsSpinning(true);
     setShowCards(false);
 
-    // Simulate card shuffling animation
+    // Simulate card shuffling animation with multiple stages
     setTimeout(() => {
       const randomPrize = prizes[Math.floor(Math.random() * prizes.length)];
       setSelectedPrize(randomPrize);
       setShowCards(true);
 
+      // Add to prize history
+      const newPrize: PrizeHistory = {
+        id: Date.now().toString(),
+        prize: randomPrize,
+        date: new Date(),
+        claimed: false,
+      };
+      const updatedHistory = [newPrize, ...prizeHistory].slice(0, 10); // Keep last 10 prizes
+      setPrizeHistory(updatedHistory);
+      localStorage.setItem('prizeHistory', JSON.stringify(updatedHistory));
+
+      // Update streak
+      updateStreak();
+
+      // Show win animation and toast
       toast({
-        title: "Congratulations! 🎉",
-        description: `You won: ${randomPrize.name}`,
+        title: `Congratulations! 🎉 Day ${streak}`,
+        description: (
+          <div className="space-y-2">
+            <p>You won: {randomPrize.name}</p>
+            {streak > 1 && (
+              <p className="text-sm text-muted-foreground">
+                🔥 {streak} day streak! Keep it up!
+              </p>
+            )}
+          </div>
+        ),
         duration: 5000,
       });
 
@@ -145,9 +177,23 @@ const LuckyDraw = () => {
     return `${hours}h ${minutes}m`;
   };
 
+  const shareWin = async () => {
+    if (selectedPrize) {
+      try {
+        await navigator.share({
+          title: 'Lucky Draw Win! 🎉',
+          text: `I just won ${selectedPrize.name} in the Lucky Draw! Come join the fun!`,
+          url: window.location.href,
+        });
+      } catch (err) {
+        console.log('Sharing failed', err);
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background pb-20">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 space-y-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <div className="flex items-center gap-4">
@@ -230,9 +276,13 @@ const LuckyDraw = () => {
           </CardHeader>
           <CardContent className="text-center">
             <div className="mb-6">
-              <p className="text-muted-foreground">
-                Draw a card and win amazing prizes!
-              </p>
+              <div className="flex items-center justify-center gap-4 mb-4">
+                <p className="text-muted-foreground">Draw a card and win amazing prizes!</p>
+                <div className="flex items-center gap-2">
+                  <Trophy className="h-4 w-4 text-yellow-500" />
+                  <span className="text-sm font-medium">Streak: {streak} days</span>
+                </div>
+              </div>
               {!canSpin && nextSpinTime && (
                 <div className="flex items-center justify-center gap-2 mt-2 text-sm text-yellow-600">
                   <Timer className="h-4 w-4" />
@@ -241,14 +291,19 @@ const LuckyDraw = () => {
               )}
             </div>
 
-            {/* Cards Display */}
             <div className="relative min-h-[300px] mb-8">
               {showCards ? (
-                <div className={`grid grid-cols-2 sm:grid-cols-4 gap-4 transition-all duration-500 ${isSpinning ? 'opacity-0 scale-90' : 'opacity-100 scale-100'}`}>
+                <div
+                  className={`grid grid-cols-2 sm:grid-cols-4 gap-4 transition-all duration-500 ${
+                    isSpinning ? 'opacity-0 scale-90 rotate-180' : 'opacity-100 scale-100 rotate-0'
+                  }`}
+                >
                   {(selectedPrize ? [selectedPrize] : prizes.slice(0, 8)).map((prize) => (
                     <div
                       key={prize.id}
-                      className="aspect-[3/4] rounded-xl shadow-lg flex flex-col items-center justify-center p-4 transition-transform hover:scale-105"
+                      className={`aspect-[3/4] rounded-xl shadow-lg flex flex-col items-center justify-center p-4 transition-all duration-300 hover:scale-105 ${
+                        selectedPrize ? 'animate-bounce-once' : ''
+                      }`}
                       style={{ backgroundColor: prize.color }}
                     >
                       <div className="mb-4">
@@ -269,21 +324,74 @@ const LuckyDraw = () => {
               )}
             </div>
 
-            <Button
-              onClick={spinDraw}
-              disabled={isSpinning || !canSpin}
-              className="w-full max-w-xs text-lg font-medium"
-            >
-              <Gift className="h-5 w-5 mr-2" />
-              {isSpinning ? "Drawing..." : "Draw a Card!"}
-            </Button>
+            <div className="space-y-4">
+              <Button
+                onClick={spinDraw}
+                disabled={isSpinning || !canSpin}
+                className="w-full max-w-xs text-lg font-medium"
+              >
+                <Gift className="h-5 w-5 mr-2" />
+                {isSpinning ? "Drawing..." : "Draw a Card!"}
+              </Button>
 
-            <div className="mt-6 text-sm text-muted-foreground">
+              {selectedPrize && (
+                <Button
+                  variant="outline"
+                  onClick={shareWin}
+                  className="w-full max-w-xs"
+                >
+                  <Share2 className="h-4 w-4 mr-2" />
+                  Share Your Win
+                </Button>
+              )}
+
+              <Button
+                variant="ghost"
+                onClick={() => setShowHistory(!showHistory)}
+                className="w-full max-w-xs"
+              >
+                <History className="h-4 w-4 mr-2" />
+                Prize History
+              </Button>
+            </div>
+
+            {showHistory && prizeHistory.length > 0 && (
+              <div className="mt-8 border rounded-lg p-4">
+                <h3 className="text-lg font-semibold mb-4">Recent Prizes</h3>
+                <div className="space-y-2">
+                  {prizeHistory.map((item) => (
+                    <div
+                      key={item.id}
+                      className="flex items-center justify-between p-2 bg-muted rounded"
+                    >
+                      <div className="flex items-center gap-2">
+                        <div
+                          className="w-8 h-8 rounded flex items-center justify-center"
+                          style={{ backgroundColor: item.prize.color }}
+                        >
+                          {item.prize.icon}
+                        </div>
+                        <span>{item.prize.name}</span>
+                      </div>
+                      <span className="text-sm text-muted-foreground">
+                        {new Date(item.date).toLocaleDateString()}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="mt-6 text-sm text-muted-foreground space-y-2">
               <div className="flex items-center justify-center gap-1">
                 <Star className="h-4 w-4 text-yellow-500" />
                 <span>One free draw available every 24 hours</span>
               </div>
-              <div className="flex items-center justify-center gap-1 mt-2">
+              <div className="flex items-center justify-center gap-1">
+                <Trophy className="h-4 w-4 text-yellow-500" />
+                <span>Keep your daily streak for bonus rewards!</span>
+              </div>
+              <div className="flex items-center justify-center gap-1">
                 <AlertCircle className="h-4 w-4 text-blue-500" />
                 <span>All prizes are automatically added to your account</span>
               </div>
