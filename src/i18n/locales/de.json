@@ -4,6 +4,14 @@
     "notifications": "Benachrichtigungen",
     "menu": "Menü"
   },
+  "navigation": {
+    "home": "Startseite",
+    "search": "Suchen",
+    "lucky_draw": "Gewinnspiel",
+    "cart": "Warenkorb",
+    "my_shop": "Mein Shop",
+    "profile": "Profil"
+  },
   "categories": {
     "view_all": "Alle anzeigen"
   },
