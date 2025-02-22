@@ -1,0 +1,20 @@
+
+import { CapacitorConfig } from '@capacitor/cli';
+
+const config: CapacitorConfig = {
+  appId: 'app.lovable.ad14e26392fc413ca4cae1ae31f9b10f',
+  appName: 'wishful-shopper',
+  webDir: 'dist',
+  server: {
+    url: 'https://ad14e263-92fc-413c-a4ca-e1ae31f9b10f.lovableproject.com?forceHideBadge=true',
+    cleartext: true
+  },
+  ios: {
+    contentInset: 'automatic'
+  },
+  android: {
+    allowMixedContent: true
+  }
+};
+
+export default config;
