@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -41,8 +42,9 @@ const ShopDashboard = () => {
       
       const transformedShop: Shop = {
         ...data,
+        verification_status: (data.verification_status || 'pending') as Shop['verification_status'],
         verification_documents: (data.verification_documents as any[] || []).map((doc: any) => ({
-          type: doc.type,
+          type: doc.type as 'business_license' | 'id_card' | 'proof_of_address',
           url: doc.url,
           uploaded_at: doc.uploaded_at,
         })),

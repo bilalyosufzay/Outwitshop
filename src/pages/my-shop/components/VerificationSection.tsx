@@ -47,7 +47,7 @@ export const VerificationSection = ({ shop, onVerificationUpdate }: Verification
         .from('verification_documents')
         .getPublicUrl(filePath);
 
-      // Create the new document in the correct format for Supabase
+      // Create the new document as a plain object for Supabase
       const newDocument = {
         type,
         url: publicUrl,
@@ -56,7 +56,11 @@ export const VerificationSection = ({ shop, onVerificationUpdate }: Verification
 
       // Get existing documents and add the new one
       const existingDocs = shop.verification_documents || [];
-      const updatedDocs = [...existingDocs, newDocument];
+      const updatedDocs = [...existingDocs, newDocument].map(doc => ({
+        type: doc.type,
+        url: doc.url,
+        uploaded_at: doc.uploaded_at,
+      }));
 
       // Update shop verification documents
       const { error: updateError } = await supabase
