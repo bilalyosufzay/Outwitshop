@@ -1,3 +1,4 @@
+
 import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -6,6 +7,10 @@ import { Header } from "./components/Header";
 import { Toaster } from "sonner";
 import { ChatSupport } from "./components/ChatSupport";
 import { Routes, Route } from "react-router-dom";
+import { HeroSection } from "./components/HeroSection";
+import { TrendingSection } from "./components/TrendingSection";
+import { FlashSaleSection } from "./components/FlashSaleSection";
+import { FeaturedSection } from "./components/FeaturedSection";
 import "./App.css";
 import "./i18n/config";
 
@@ -20,7 +25,17 @@ function App() {
             <Header />
             <main className="container mx-auto px-4">
               <Routes>
-                <Route path="/" element={<div>Home Page</div>} />
+                <Route 
+                  path="/" 
+                  element={
+                    <div className="space-y-8">
+                      <HeroSection />
+                      <TrendingSection />
+                      <FlashSaleSection />
+                      <FeaturedSection />
+                    </div>
+                  } 
+                />
                 <Route path="/search" element={<div>Search Page</div>} />
                 <Route path="/lucky-draw" element={<div>Lucky Draw Page</div>} />
                 <Route path="/cart" element={<div>Cart Page</div>} />
