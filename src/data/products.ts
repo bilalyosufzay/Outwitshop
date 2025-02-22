@@ -1,4 +1,3 @@
-
 export interface Product {
   id: string;
   name: string;
@@ -43,12 +42,12 @@ export const FEATURED_PRODUCTS: Product[] = [
     name: "Artistic Table Lamp",
     price: 89.99,
     category: "Home",
-    image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=800&q=80",
+    image: "https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?w=800&q=80",
     images: [
-      "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=800&q=80",
       "https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?w=800&q=80",
       "https://images.unsplash.com/photo-1534105615256-13940a56ff44?w=800&q=80",
       "https://images.unsplash.com/photo-1543198126-a3459b931bb3?w=800&q=80",
+      "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=800&q=80",
     ]
   },
   {
@@ -93,11 +92,11 @@ export const TRENDING_PRODUCTS: Product[] = [
     name: "Barista Coffee Machine",
     price: 249.99,
     category: "Home",
-    image: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&q=80",
+    image: "https://images.unsplash.com/photo-1606483956061-46a898dce538?w=800&q=80",
     images: [
-      "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&q=80",
       "https://images.unsplash.com/photo-1606483956061-46a898dce538?w=800&q=80",
       "https://images.unsplash.com/photo-1572119865084-43c285814d63?w=800&q=80",
+      "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&q=80",
       "https://images.unsplash.com/photo-1505275350441-83dcda8eeef5?w=800&q=80",
     ]
   },
@@ -142,12 +141,12 @@ export const SALE_PRODUCTS: Product[] = [
     price: 199.99,
     originalPrice: 299.99,
     category: "Home",
-    image: "https://images.unsplash.com/photo-1622444435576-c8d475d86d09?w=800&q=80",
+    image: "https://images.unsplash.com/photo-1578643463396-0997cb5328c1?w=800&q=80",
     images: [
-      "https://images.unsplash.com/photo-1622444435576-c8d475d86d09?w=800&q=80",
       "https://images.unsplash.com/photo-1578643463396-0997cb5328c1?w=800&q=80",
       "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80",
       "https://images.unsplash.com/photo-1546549095-5d8bc3c37ffa?w=800&q=80",
+      "https://images.unsplash.com/photo-1622444435576-c8d475d86d09?w=800&q=80",
     ]
   },
 ];
