@@ -1,10 +1,8 @@
-
 import { useNavigate } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import ProductCard from "@/components/ProductCard";
 import {
   MoreVertical,
-  Globe,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -129,31 +127,7 @@ const SALE_PRODUCTS = [
 const Index = () => {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
-  const [currentLanguage, setCurrentLanguage] = useState(() => {
-    const savedLang = localStorage.getItem('preferred-language');
-    return savedLang ? LANGUAGES.find(lang => lang.code === savedLang) || LANGUAGES[0] : LANGUAGES[0];
-  });
-
-  const handleLanguageChange = async (language: typeof LANGUAGES[0]) => {
-    try {
-      setCurrentLanguage(language);
-      localStorage.setItem('preferred-language', language.code);
-      document.documentElement.dir = ['fa', 'prs'].includes(language.code) ? 'rtl' : 'ltr';
-      await i18n.changeLanguage(language.code);
-      toast.success(`Language changed to ${language.name}`);
-    } catch (error) {
-      console.error('Error changing language:', error);
-      toast.error('Failed to change language. Please try again.');
-    }
-  };
-
-  useEffect(() => {
-    // Set initial direction
-    document.documentElement.dir = ['fa', 'prs'].includes(currentLanguage.code) ? 'rtl' : 'ltr';
-    // Ensure i18n is using the current language
-    i18n.changeLanguage(currentLanguage.code);
-  }, []);
-
+  
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
       <header className="sticky top-0 z-10 bg-white/80 backdrop-blur-lg border-b border-gray-200">
@@ -167,26 +141,6 @@ const Index = () => {
               />
               <h1 className="text-xl font-semibold text-gray-900">Outwit Shop</h1>
             </div>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-1.5 px-2 py-1 text-sm text-gray-600 hover:text-gray-900 rounded-md hover:bg-gray-100">
-                  <Globe className="w-4 h-4" />
-                  <span>{currentLanguage.flag}</span>
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-48">
-                {LANGUAGES.map((language) => (
-                  <DropdownMenuItem
-                    key={language.code}
-                    onClick={() => handleLanguageChange(language)}
-                    className="flex items-center gap-2 px-3 py-2 cursor-pointer"
-                  >
-                    <span className="text-base">{language.flag}</span>
-                    <span>{language.name}</span>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
           </div>
           <div className="flex items-center gap-2">
             <button className="p-2 rounded-full hover:bg-gray-100">

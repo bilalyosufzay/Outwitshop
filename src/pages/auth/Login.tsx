@@ -3,12 +3,43 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
+import { Globe } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
+
+const LANGUAGES = [
+  { code: "en", name: "English", flag: "🇺🇸" },
+  { code: "es", name: "Español", flag: "🇪🇸" },
+];
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const { signIn } = useAuth();
+  const { t, i18n } = useTranslation();
+  const [currentLanguage, setCurrentLanguage] = useState(() => {
+    const savedLang = localStorage.getItem('preferred-language');
+    return LANGUAGES.find(lang => lang.code === savedLang) || LANGUAGES[0];
+  });
+
+  const handleLanguageChange = async (language: typeof LANGUAGES[0]) => {
+    try {
+      setCurrentLanguage(language);
+      localStorage.setItem('preferred-language', language.code);
+      await i18n.changeLanguage(language.code);
+      toast.success(`Language changed to ${language.name}`);
+    } catch (error) {
+      console.error('Error changing language:', error);
+      toast.error('Failed to change language. Please try again.');
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,6 +68,29 @@ const Login = () => {
           <p className="mt-2 text-sm text-gray-600">
             Please sign in to your account
           </p>
+          <div className="mt-4">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-600 hover:text-gray-900 rounded-md hover:bg-gray-100 border border-gray-300">
+                  <Globe className="w-4 h-4" />
+                  <span>{currentLanguage.flag}</span>
+                  <span>{currentLanguage.name}</span>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="center" className="w-48">
+                {LANGUAGES.map((language) => (
+                  <DropdownMenuItem
+                    key={language.code}
+                    onClick={() => handleLanguageChange(language)}
+                    className="flex items-center gap-2 px-3 py-2 cursor-pointer"
+                  >
+                    <span className="text-base">{language.flag}</span>
+                    <span>{language.name}</span>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
         <form onSubmit={handleSubmit} className="mt-8 space-y-6">
           <div className="space-y-4">
