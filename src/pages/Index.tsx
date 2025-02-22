@@ -15,6 +15,8 @@ import {
 import { CATEGORIES } from "@/data/categories";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
+import "../i18n/config";
 
 const LANGUAGES = [
   { code: "en", name: "English", flag: "🇺🇸" },
@@ -126,20 +128,21 @@ const SALE_PRODUCTS = [
 
 const Index = () => {
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
   const [currentLanguage, setCurrentLanguage] = useState(() => {
     const savedLang = localStorage.getItem('preferred-language');
     return savedLang ? LANGUAGES.find(lang => lang.code === savedLang) || LANGUAGES[0] : LANGUAGES[0];
   });
 
-  const handleLanguageChange = (language: typeof LANGUAGES[0]) => {
+  const handleLanguageChange = async (language: typeof LANGUAGES[0]) => {
     setCurrentLanguage(language);
     localStorage.setItem('preferred-language', language.code);
     document.documentElement.dir = ['fa', 'prs'].includes(language.code) ? 'rtl' : 'ltr';
+    await i18n.changeLanguage(language.code);
     toast.success(`Language changed to ${language.name}`);
   };
 
   useEffect(() => {
-    // Set initial direction based on selected language
     document.documentElement.dir = ['fa', 'prs'].includes(currentLanguage.code) ? 'rtl' : 'ltr';
   }, []);
 
@@ -179,7 +182,7 @@ const Index = () => {
           </div>
           <div className="flex items-center gap-2">
             <button className="p-2 rounded-full hover:bg-gray-100">
-              <span className="sr-only">Notifications</span>
+              <span className="sr-only">{t('header.notifications')}</span>
               <div className="relative">
                 <div className="absolute -top-1 -right-1 w-2 h-2 bg-accent rounded-full" />
                 <svg
@@ -200,7 +203,7 @@ const Index = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="p-2 rounded-full hover:bg-gray-100">
-                  <span className="sr-only">Menu</span>
+                  <span className="sr-only">{t('header.menu')}</span>
                   <MoreVertical className="w-6 h-6 text-gray-600" />
                 </button>
               </DropdownMenuTrigger>
@@ -233,10 +236,10 @@ const Index = () => {
           />
           <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent flex items-center">
             <div className="p-6 text-white">
-              <p className="text-sm font-medium mb-2">New Arrival</p>
-              <h2 className="text-2xl font-semibold mb-4">Summer Collection</h2>
+              <p className="text-sm font-medium mb-2">{t('new_arrival')}</p>
+              <h2 className="text-2xl font-semibold mb-4">{t('summer_collection')}</h2>
               <button className="px-4 py-2 bg-white text-gray-900 rounded-full text-sm font-medium hover:bg-gray-100 transition-colors">
-                Shop Now
+                {t('shop_now')}
               </button>
             </div>
           </div>
@@ -245,10 +248,10 @@ const Index = () => {
         <section>
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-semibold text-gray-900">
-              Trending Now
+              {t('trending.title')}
             </h2>
             <span className="px-2 py-1 bg-accent/10 text-accent text-xs font-medium rounded-full">
-              Hot 🔥
+              {t('trending.hot')}
             </span>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -265,8 +268,8 @@ const Index = () => {
         <section className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 p-6 text-white">
           <div className="absolute inset-0 bg-black/10" />
           <div className="relative">
-            <h2 className="text-2xl font-bold mb-2">Flash Sale 🎉</h2>
-            <p className="text-white/80 mb-4">Up to 50% off on selected items</p>
+            <h2 className="text-2xl font-bold mb-2">{t('flash_sale.title')}</h2>
+            <p className="text-white/80 mb-4">{t('flash_sale.subtitle')}</p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {SALE_PRODUCTS.map((product) => (
                 <ProductCard
@@ -283,10 +286,10 @@ const Index = () => {
         <section>
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-semibold text-gray-900">
-              Featured Products
+              {t('featured.title')}
             </h2>
             <button className="text-sm text-accent hover:underline">
-              View All
+              {t('featured.view_all')}
             </button>
           </div>
           <div className="grid grid-cols-2 gap-4">
