@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,7 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { PrizeCard } from "@/components/lucky-draw/PrizeCard";
 import { PrizeHistory } from "@/components/lucky-draw/PrizeHistory";
 import { Rules } from "@/components/lucky-draw/Rules";
-import { Prize, PrizeHistoryItem } from "@/components/lucky-draw/types";
+import { Prize, PrizeHistoryItem, SpecialEvent } from "@/components/lucky-draw/types";
 import { Missions } from "@/components/lucky-draw/Missions";
 import { EventBanner } from "@/components/lucky-draw/EventBanner";
 
