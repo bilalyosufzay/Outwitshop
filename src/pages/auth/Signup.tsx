@@ -3,41 +3,27 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
-import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { toast } from "sonner";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const { signUp } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted, captchaToken:", captchaToken);
     
-    if (!captchaToken) {
-      console.log("No CAPTCHA token available");
-      toast.error("Please complete the CAPTCHA verification");
-      return;
-    }
-
     try {
       setLoading(true);
-      console.log("Attempting signup with token:", captchaToken);
-      await signUp(email, password, captchaToken);
+      // Pass empty string as captchaToken for now
+      await signUp(email, password, "");
     } catch (error) {
       console.error("Signup error:", error);
       // Error is handled in the AuthContext
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleCaptchaChange = (token: string | null) => {
-    console.log("CAPTCHA callback triggered, token:", token ? "received" : "null");
-    setCaptchaToken(token);
   };
 
   return (
@@ -89,14 +75,7 @@ const Signup = () => {
             </div>
           </div>
 
-          <div className="flex justify-center">
-            <HCaptcha
-              sitekey="43ce83e4-a4e0-488c-a52e-89a069be0868"
-              onVerify={handleCaptchaChange}
-            />
-          </div>
-
-          <Button type="submit" className="w-full" disabled={loading || !captchaToken}>
+          <Button type="submit" className="w-full" disabled={loading}>
             {loading ? "Creating account..." : "Create account"}
           </Button>
 
