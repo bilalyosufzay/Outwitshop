@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -11,13 +12,20 @@ import {
   CardTitle,
   CardFooter,
 } from "@/components/ui/card";
-import { Loader2 } from "lucide-react";
+import { Loader2, DollarSign, Package, MessageSquare, BarChart3 } from "lucide-react";
 import { Shop } from "@/types/shop";
+import { DashboardStats } from "@/types/dashboard";
 
 const ShopDashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [shop, setShop] = useState<Shop | null>(null);
+  const [stats, setStats] = useState<DashboardStats>({
+    totalOrders: 0,
+    totalRevenue: 0,
+    totalProducts: 0,
+    unreadMessages: 0,
+  });
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -33,6 +41,40 @@ const ShopDashboard = () => {
 
         if (error) throw error;
         setShop(data as Shop);
+
+        // Fetch dashboard statistics
+        if (data) {
+          const [
+            { count: ordersCount, sum: revenue },
+            { count: productsCount },
+            { count: unreadCount },
+          ] = await Promise.all([
+            supabase
+              .from('orders')
+              .select('id, total_amount', { count: 'exact', head: false })
+              .eq('shop_id', data.id)
+              .then(({ count, data }) => ({
+                count: count || 0,
+                sum: data?.reduce((acc, order) => acc + (order.total_amount || 0), 0) || 0,
+              })),
+            supabase
+              .from('products')
+              .select('id', { count: 'exact', head: true })
+              .eq('shop_id', data.id),
+            supabase
+              .from('messages')
+              .select('id', { count: 'exact', head: true })
+              .eq('shop_id', data.id)
+              .eq('read', false),
+          ]);
+
+          setStats({
+            totalOrders: ordersCount,
+            totalRevenue: revenue,
+            totalProducts: productsCount || 0,
+            unreadMessages: unreadCount || 0,
+          });
+        }
       } catch (error) {
         console.error("Error fetching shop:", error);
       } finally {
@@ -98,16 +140,61 @@ const ShopDashboard = () => {
           <CardContent>
             <p className="text-sm text-gray-500">{shop.description}</p>
           </CardContent>
-          <CardFooter>
-            <Button
-              variant="outline"
-              onClick={handleCancel}
-              className="w-full"
-            >
-              Exit Shop Dashboard
-            </Button>
-          </CardFooter>
         </Card>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+              <DollarSign className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">${stats.totalRevenue.toFixed(2)}</div>
+              <p className="text-xs text-muted-foreground">
+                Lifetime earnings
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Orders</CardTitle>
+              <Package className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.totalOrders}</div>
+              <p className="text-xs text-muted-foreground">
+                Total orders received
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Products</CardTitle>
+              <BarChart3 className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.totalProducts}</div>
+              <p className="text-xs text-muted-foreground">
+                Active listings
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Messages</CardTitle>
+              <MessageSquare className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.unreadMessages}</div>
+              <p className="text-xs text-muted-foreground">
+                Unread messages
+              </p>
+            </CardContent>
+          </Card>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Card>
