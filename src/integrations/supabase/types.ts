@@ -445,6 +445,60 @@ export type Database = {
         }
         Relationships: []
       }
+      sponsored_products: {
+        Row: {
+          amount_paid: number
+          boost_level: number
+          created_at: string | null
+          end_date: string
+          id: string
+          product_id: string
+          shop_id: string
+          start_date: string | null
+          status: string
+          updated_at: string | null
+        }
+        Insert: {
+          amount_paid: number
+          boost_level?: number
+          created_at?: string | null
+          end_date: string
+          id?: string
+          product_id: string
+          shop_id: string
+          start_date?: string | null
+          status?: string
+          updated_at?: string | null
+        }
+        Update: {
+          amount_paid?: number
+          boost_level?: number
+          created_at?: string | null
+          end_date?: string
+          id?: string
+          product_id?: string
+          shop_id?: string
+          start_date?: string | null
+          status?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sponsored_products_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sponsored_products_shop_id_fkey"
+            columns: ["shop_id"]
+            isOneToOne: false
+            referencedRelation: "shops"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_levels: {
         Row: {
           average_rating: number | null

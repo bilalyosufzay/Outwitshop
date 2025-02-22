@@ -9,6 +9,11 @@ import { Product } from "@/data/products";
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 
+interface SponsoredProduct {
+  products: Product;
+  boost_level: number;
+}
+
 interface ProductWithSponsorship extends Product {
   isSponsored?: boolean;
   boostLevel?: number;
@@ -23,41 +28,37 @@ const Search = () => {
       if (!searchQuery) return [];
 
       // First, get sponsored products
-      const { data: sponsoredProducts } = await supabase
-        .from('sponsored_products')
-        .select(`
-          products (
-            id,
-            name,
-            price,
-            category,
-            image,
-            images
-          ),
-          boost_level
-        `)
-        .eq('status', 'active')
-        .textSearch('products.name', searchQuery)
-        .order('boost_level', { ascending: false });
+      const { data: sponsoredProducts, error: sponsoredError } = await supabase
+        .rpc('search_sponsored_products', {
+          search_query: searchQuery
+        }) as { data: SponsoredProduct[] | null; error: any };
+
+      if (sponsoredError) {
+        console.error('Error fetching sponsored products:', sponsoredError);
+      }
 
       // Then, get regular products
-      const { data: regularProducts } = await supabase
+      const { data: regularProducts, error: regularError } = await supabase
         .from('products')
-        .select()
+        .select('id, name, price, category, image, images')
         .textSearch('name', searchQuery)
         .limit(20);
 
+      if (regularError) {
+        console.error('Error fetching regular products:', regularError);
+      }
+
       // Combine and format results
-      const sponsored = sponsoredProducts?.map(sp => ({
+      const sponsored = (sponsoredProducts || []).map(sp => ({
         ...sp.products,
         isSponsored: true,
         boostLevel: sp.boost_level
-      })) || [];
+      })) as ProductWithSponsorship[];
 
-      const regular = regularProducts?.map(p => ({
+      const regular = (regularProducts || []).map(p => ({
         ...p,
         isSponsored: false
-      })) || [];
+      })) as ProductWithSponsorship[];
 
       // Sort results: sponsored first (by boost level), then regular
       return [...sponsored, ...regular];
