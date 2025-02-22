@@ -2,65 +2,57 @@ import { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Gift, Timer, Star, AlertCircle } from "lucide-react";
+import { Gift, Timer, Star, AlertCircle, Percent, Package, Truck, BadgeDollarSign } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const prizes = [
   { 
     id: 1, 
     name: "5% Discount", 
-    color: "#FF6B6B", 
-    image: "/placeholder.svg",
-    icon: <img src="/placeholder.svg" alt="5% Discount" className="h-24 w-24 object-contain rounded-lg bg-white/90" />
+    color: "#FF6B6B",
+    icon: <Percent className="h-24 w-24 text-white" />
   },
   { 
     id: 2, 
     name: "10% Discount", 
-    color: "#4ECDC4", 
-    image: "/placeholder.svg",
-    icon: <img src="/placeholder.svg" alt="10% Discount" className="h-24 w-24 object-contain rounded-lg bg-white/90" />
+    color: "#4ECDC4",
+    icon: <Percent className="h-24 w-24 text-white" />
   },
   { 
     id: 3, 
     name: "Free Shipping", 
-    color: "#45B7D1", 
-    image: "/placeholder.svg",
-    icon: <img src="/placeholder.svg" alt="Free Shipping" className="h-24 w-24 object-contain rounded-lg bg-white/90" />
+    color: "#45B7D1",
+    icon: <Truck className="h-24 w-24 text-white" />
   },
   { 
     id: 4, 
     name: "20% Discount", 
-    color: "#96CEB4", 
-    image: "/placeholder.svg",
-    icon: <img src="/placeholder.svg" alt="20% Discount" className="h-24 w-24 object-contain rounded-lg bg-white/90" />
+    color: "#96CEB4",
+    icon: <Percent className="h-24 w-24 text-white" />
   },
   { 
     id: 5, 
     name: "100 Points", 
-    color: "#FFEEAD", 
-    image: "/placeholder.svg",
-    icon: <img src="/placeholder.svg" alt="100 Points" className="h-24 w-24 object-contain rounded-lg bg-white/90" />
+    color: "#FFEEAD",
+    icon: <BadgeDollarSign className="h-24 w-24 text-white" />
   },
   { 
     id: 6, 
     name: "Mystery Box", 
-    color: "#D4A5A5", 
-    image: "/placeholder.svg",
-    icon: <img src="/placeholder.svg" alt="Mystery Box" className="h-24 w-24 object-contain rounded-lg bg-white/90" />
+    color: "#D4A5A5",
+    icon: <Package className="h-24 w-24 text-white" />
   },
   { 
     id: 7, 
     name: "15% Discount", 
-    color: "#9EC1CF", 
-    image: "/placeholder.svg",
-    icon: <img src="/placeholder.svg" alt="15% Discount" className="h-24 w-24 object-contain rounded-lg bg-white/90" />
+    color: "#9EC1CF",
+    icon: <Percent className="h-24 w-24 text-white" />
   },
   { 
     id: 8, 
     name: "50 Points", 
-    color: "#FFD93D", 
-    image: "/placeholder.svg",
-    icon: <img src="/placeholder.svg" alt="50 Points" className="h-24 w-24 object-contain rounded-lg bg-white/90" />
+    color: "#FFD93D",
+    icon: <BadgeDollarSign className="h-24 w-24 text-white" />
   },
 ];
 
@@ -179,7 +171,7 @@ const LuckyDraw = () => {
                       className="aspect-[3/4] rounded-xl shadow-lg flex flex-col items-center justify-center p-4 transition-transform hover:scale-105"
                       style={{ backgroundColor: prize.color }}
                     >
-                      <div className="mb-4 p-3 rounded-lg">
+                      <div className="mb-4">
                         {prize.icon}
                       </div>
                       <div className="text-white text-xl font-semibold text-center mt-2">
