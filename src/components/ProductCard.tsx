@@ -2,7 +2,7 @@
 import { Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
-import { getLocalizedPrice, getUserCountry } from "@/utils/localization";
+import { getLocalizedPrice } from "@/utils/localization";
 
 interface ProductCardProps {
   id: string;
@@ -27,22 +27,18 @@ const ProductCard = ({
   onClick,
   className,
 }: ProductCardProps) => {
-  const [localizedPrice, setLocalizedPrice] = useState(getLocalizedPrice(price));
-  const [localizedOriginalPrice, setLocalizedOriginalPrice] = useState(
-    originalPrice ? getLocalizedPrice(originalPrice) : null
-  );
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  // Default to US pricing if country detection fails
+  const [localizedPrice, setLocalizedPrice] = useState(getLocalizedPrice(price, "US"));
+  const [localizedOriginalPrice, setLocalizedOriginalPrice] = useState(
+    originalPrice ? getLocalizedPrice(originalPrice, "US") : null
+  );
 
   useEffect(() => {
-    const initializeLocalization = async () => {
-      const country = await getUserCountry();
-      setLocalizedPrice(getLocalizedPrice(price, country));
-      if (originalPrice) {
-        setLocalizedOriginalPrice(getLocalizedPrice(originalPrice, country));
-      }
-    };
-
-    initializeLocalization();
+    setLocalizedPrice(getLocalizedPrice(price, "US"));
+    if (originalPrice) {
+      setLocalizedOriginalPrice(getLocalizedPrice(originalPrice, "US"));
+    }
   }, [price, originalPrice]);
 
   useEffect(() => {
@@ -70,6 +66,10 @@ const ProductCard = ({
           src={images ? images[currentImageIndex] : image}
           alt={name}
           className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            target.src = "/placeholder.svg"; // Fallback image
+          }}
         />
         <button
           className="absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-sm rounded-full 
