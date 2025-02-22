@@ -10,6 +10,8 @@ import Login from "./pages/auth/Login";
 import Signup from "./pages/auth/Signup";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
+import CreateShop from "./pages/my-shop/CreateShop";
+import ShopDashboard from "./pages/my-shop/ShopDashboard";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +32,8 @@ const App = () => (
               <Route path="/cart" element={<NotFound />} />
               <Route path="/profile" element={<NotFound />} />
               <Route path="/product/:id" element={<NotFound />} />
+              <Route path="/my-shop/create" element={<CreateShop />} />
+              <Route path="/my-shop/dashboard" element={<ShopDashboard />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
