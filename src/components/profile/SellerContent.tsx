@@ -1,21 +1,25 @@
-
 import { useNavigate } from "react-router-dom";
 import { ProfileSection } from "./ProfileSection";
 import { Store, Star, MessageSquare, Bot, Link, ChartBar, Package, Users, FileText } from "lucide-react";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 export const SellerContent = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchSellerProfile = async () => {
+      if (!user?.id) return;
+
       try {
         const { data, error } = await supabase
           .from('user_levels')
           .select('*')
           .eq('type', 'seller')
+          .eq('user_id', user.id)
           .single();
 
         if (error) {
@@ -27,14 +31,14 @@ export const SellerContent = () => {
           // Initialize seller level if it doesn't exist
           const { error: insertError } = await supabase
             .from('user_levels')
-            .insert([
-              {
-                type: 'seller',
-                current_level: 'Starter Seller',
-                total_sales: 0,
-                average_rating: 0,
-              }
-            ]);
+            .insert({
+              user_id: user.id,
+              type: 'seller' as const,
+              current_level: 'Starter Seller',
+              total_sales: 0,
+              average_rating: 0,
+              points: 0
+            });
 
           if (insertError) {
             console.error('Error initializing seller profile:', insertError);
@@ -46,7 +50,7 @@ export const SellerContent = () => {
     };
 
     fetchSellerProfile();
-  }, []);
+  }, [user]);
 
   return (
     <div className="grid gap-4 grid-cols-1 md:grid-cols-2">

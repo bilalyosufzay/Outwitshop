@@ -1,4 +1,3 @@
-
 import { useNavigate } from "react-router-dom";
 import { ProfileSection } from "./ProfileSection";
 import {
@@ -18,17 +17,22 @@ import {
 import { useEffect } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 export const BuyerContent = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchBuyerProfile = async () => {
+      if (!user?.id) return;
+
       try {
         const { data, error } = await supabase
           .from('user_levels')
           .select('*')
           .eq('type', 'buyer')
+          .eq('user_id', user.id)
           .single();
 
         if (error) {
@@ -40,14 +44,14 @@ export const BuyerContent = () => {
           // Initialize buyer level if it doesn't exist
           const { error: insertError } = await supabase
             .from('user_levels')
-            .insert([
-              {
-                type: 'buyer',
-                current_level: 'Newbie Shopper',
-                total_orders: 0,
-                total_spent: 0,
-              }
-            ]);
+            .insert({
+              user_id: user.id,
+              type: 'buyer' as const,
+              current_level: 'Newbie Shopper',
+              total_orders: 0,
+              total_spent: 0,
+              points: 0
+            });
 
           if (insertError) {
             console.error('Error initializing buyer profile:', insertError);
@@ -59,7 +63,7 @@ export const BuyerContent = () => {
     };
 
     fetchBuyerProfile();
-  }, []);
+  }, [user]);
 
   const handleNavigation = (path: string) => {
     navigate(path);
@@ -138,4 +142,3 @@ export const BuyerContent = () => {
     </div>
   );
 };
-
