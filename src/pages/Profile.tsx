@@ -24,7 +24,7 @@ import {
   Wallet,
   Star,
   MessageSquare,
-  Robot,
+  Bot,
   Link
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -33,7 +33,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 interface ProfileData {
   username: string | null;
   avatar_url: string | null;
-  bio?: string | null;
 }
 
 const ProfileSection = ({ title, icon: Icon, onClick }: { 
@@ -62,7 +61,7 @@ const Profile = () => {
       try {
         const { data, error } = await supabase
           .from('profiles')
-          .select('username, avatar_url, bio')
+          .select('username, avatar_url')
           .eq('id', user?.id)
           .single();
 
@@ -222,7 +221,7 @@ const Profile = () => {
               />
               <ProfileSection
                 title="AI Assistant"
-                icon={Robot}
+                icon={Bot}
                 onClick={() => navigate('/shop/ai-assistant')}
               />
               <ProfileSection
