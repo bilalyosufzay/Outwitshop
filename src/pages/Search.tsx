@@ -34,10 +34,6 @@ interface ProductWithSponsorship extends Product {
   boostLevel?: number;
 }
 
-interface SearchSponsoredProductsParams {
-  search_query: string;
-}
-
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -47,32 +43,38 @@ const Search = () => {
       if (!searchQuery) return [];
 
       // First, get sponsored products
-      const { data: sponsoredProducts, error: sponsoredError } = await supabase
-        .rpc<SearchSponsoredProductsParams, SponsoredProduct[]>('search_sponsored_products', {
-          search_query: searchQuery
-        });
-
-      if (sponsoredError) {
-        console.error('Error fetching sponsored products:', sponsoredError);
-      }
+      const { data: sponsoredProducts } = await supabase
+        .from('sponsored_products')
+        .select(`
+          boost_level,
+          products:product_id (
+            id,
+            name,
+            price,
+            category,
+            image,
+            images
+          )
+        `)
+        .textSearch('products.name', searchQuery);
 
       // Then, get regular products
       const { data: regularProducts, error: regularError } = await supabase
         .from('products')
         .select('id, name, price, image, images')
         .textSearch('name', searchQuery)
-        .limit(20) as unknown as { data: DatabaseProduct[] | null; error: null };
+        .limit(20);
 
       if (regularError) {
         console.error('Error fetching regular products:', regularError);
       }
 
       // Combine and format results
-      const sponsored = (sponsoredProducts || []).map((sp: SponsoredProduct) => ({
+      const sponsored = (sponsoredProducts || []).map((sp) => ({
         id: sp.products.id,
         name: sp.products.name,
         price: sp.products.price,
-        category: sp.products.category,
+        category: 'sponsored',
         image: sp.products.image,
         images: sp.products.images,
         isSponsored: true,
@@ -83,7 +85,7 @@ const Search = () => {
         id: p.id,
         name: p.name,
         price: p.price,
-        category: 'general', // Since category is not in the products table
+        category: 'general',
         image: p.image,
         images: p.images,
         isSponsored: false
