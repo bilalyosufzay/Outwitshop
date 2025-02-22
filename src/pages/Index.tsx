@@ -13,7 +13,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { CATEGORIES } from "@/data/categories";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { toast } from "sonner";
 
 const LANGUAGES = [
   { code: "en", name: "English", flag: "🇺🇸" },
@@ -125,7 +126,22 @@ const SALE_PRODUCTS = [
 
 const Index = () => {
   const navigate = useNavigate();
-  const [currentLanguage, setCurrentLanguage] = useState(LANGUAGES[0]);
+  const [currentLanguage, setCurrentLanguage] = useState(() => {
+    const savedLang = localStorage.getItem('preferred-language');
+    return savedLang ? LANGUAGES.find(lang => lang.code === savedLang) || LANGUAGES[0] : LANGUAGES[0];
+  });
+
+  const handleLanguageChange = (language: typeof LANGUAGES[0]) => {
+    setCurrentLanguage(language);
+    localStorage.setItem('preferred-language', language.code);
+    document.documentElement.dir = ['fa', 'prs'].includes(language.code) ? 'rtl' : 'ltr';
+    toast.success(`Language changed to ${language.name}`);
+  };
+
+  useEffect(() => {
+    // Set initial direction based on selected language
+    document.documentElement.dir = ['fa', 'prs'].includes(currentLanguage.code) ? 'rtl' : 'ltr';
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
@@ -151,7 +167,7 @@ const Index = () => {
                 {LANGUAGES.map((language) => (
                   <DropdownMenuItem
                     key={language.code}
-                    onClick={() => setCurrentLanguage(language)}
+                    onClick={() => handleLanguageChange(language)}
                     className="flex items-center gap-2 px-3 py-2 cursor-pointer"
                   >
                     <span className="text-base">{language.flag}</span>
