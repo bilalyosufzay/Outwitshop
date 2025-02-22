@@ -1,3 +1,4 @@
+
 export interface Product {
   id: string;
   name: string;
@@ -281,9 +282,9 @@ export const SALE_PRODUCTS: Product[] = [
     image: "https://images.unsplash.com/photo-1558989994-08bf50b89b14?w=800&q=80",
     images: [
       "https://images.unsplash.com/photo-1558989994-08bf50b89b14?w=800&q=80",
-      "https://images.unsplash.com/photo-1544484579-173b48cde2e5?w=800&q=80",
       "https://images.unsplash.com/photo-1582298538104-fe2e74c27f59?w=800&q=80",
-      "https://images.unsplash.com/photo-1558989966-f593c1a08922?w=800&q=80",
+      "https://images.unsplash.com/photo-1544484579-173b48cde2e5?w=800&q=80",
+      "https://images.unsplash.com/photo-1557537398-e5cc89109f2d?w=800&q=80"
     ]
   }
 ];
