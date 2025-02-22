@@ -1,20 +1,67 @@
-
 import { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Gift, Timer, Star, AlertCircle, Ticket, Package, Truck, Percent } from "lucide-react";
+import { Gift, Timer, Star, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const prizes = [
-  { id: 1, name: "5% Discount", color: "#FF6B6B", icon: <Percent className="h-8 w-8" /> },
-  { id: 2, name: "10% Discount", color: "#4ECDC4", icon: <Percent className="h-8 w-8" /> },
-  { id: 3, name: "Free Shipping", color: "#45B7D1", icon: <Truck className="h-8 w-8" /> },
-  { id: 4, name: "20% Discount", color: "#96CEB4", icon: <Percent className="h-8 w-8" /> },
-  { id: 5, name: "100 Points", color: "#FFEEAD", icon: <Star className="h-8 w-8" /> },
-  { id: 6, name: "Mystery Box", color: "#D4A5A5", icon: <Package className="h-8 w-8" /> },
-  { id: 7, name: "15% Discount", color: "#9EC1CF", icon: <Percent className="h-8 w-8" /> },
-  { id: 8, name: "50 Points", color: "#FFD93D", icon: <Star className="h-8 w-8" /> },
+  { 
+    id: 1, 
+    name: "5% Discount", 
+    color: "#FF6B6B", 
+    image: "/discount-5.png",
+    icon: <img src="/discount-5.png" alt="" className="h-24 w-24 object-contain" />
+  },
+  { 
+    id: 2, 
+    name: "10% Discount", 
+    color: "#4ECDC4", 
+    image: "/discount-10.png",
+    icon: <img src="/discount-10.png" alt="" className="h-24 w-24 object-contain" />
+  },
+  { 
+    id: 3, 
+    name: "Free Shipping", 
+    color: "#45B7D1", 
+    image: "/shipping.png",
+    icon: <img src="/shipping.png" alt="" className="h-24 w-24 object-contain" />
+  },
+  { 
+    id: 4, 
+    name: "20% Discount", 
+    color: "#96CEB4", 
+    image: "/discount-20.png",
+    icon: <img src="/discount-20.png" alt="" className="h-24 w-24 object-contain" />
+  },
+  { 
+    id: 5, 
+    name: "100 Points", 
+    color: "#FFEEAD", 
+    image: "/points-100.png",
+    icon: <img src="/points-100.png" alt="" className="h-24 w-24 object-contain" />
+  },
+  { 
+    id: 6, 
+    name: "Mystery Box", 
+    color: "#D4A5A5", 
+    image: "/mystery-box.png",
+    icon: <img src="/mystery-box.png" alt="" className="h-24 w-24 object-contain" />
+  },
+  { 
+    id: 7, 
+    name: "15% Discount", 
+    color: "#9EC1CF", 
+    image: "/discount-15.png",
+    icon: <img src="/discount-15.png" alt="" className="h-24 w-24 object-contain" />
+  },
+  { 
+    id: 8, 
+    name: "50 Points", 
+    color: "#FFD93D", 
+    image: "/points-50.png",
+    icon: <img src="/points-50.png" alt="" className="h-24 w-24 object-contain" />
+  },
 ];
 
 const LuckyDraw = () => {
@@ -118,10 +165,10 @@ const LuckyDraw = () => {
                       className="aspect-[3/4] rounded-xl shadow-lg flex flex-col items-center justify-center p-4 transition-transform hover:scale-105"
                       style={{ backgroundColor: prize.color }}
                     >
-                      <div className="text-white mb-4">
+                      <div className="mb-4">
                         {prize.icon}
                       </div>
-                      <div className="text-white text-lg font-semibold text-center">
+                      <div className="text-white text-xl font-semibold text-center mt-2">
                         {prize.name}
                       </div>
                     </div>
