@@ -10,11 +10,11 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-  CardFooter,
 } from "@/components/ui/card";
 import { Loader2, DollarSign, Package, MessageSquare, BarChart3 } from "lucide-react";
 import { Shop } from "@/types/shop";
 import { DashboardStats } from "@/types/dashboard";
+import { VerificationSection } from "./components/VerificationSection";
 
 const ShopDashboard = () => {
   const { user } = useAuth();
@@ -28,60 +28,60 @@ const ShopDashboard = () => {
   });
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchShop = async () => {
-      if (!user) return;
+  const fetchShop = async () => {
+    if (!user) return;
 
-      try {
-        const { data, error } = await supabase
-          .from('shops')
-          .select()
-          .eq("owner_id", user.id)
-          .single();
+    try {
+      const { data, error } = await supabase
+        .from('shops')
+        .select()
+        .eq("owner_id", user.id)
+        .single();
 
-        if (error) throw error;
-        setShop(data as Shop);
+      if (error) throw error;
+      setShop(data as Shop);
 
-        // Fetch dashboard statistics
-        if (data) {
-          const [
-            { count: ordersCount, sum: revenue },
-            { count: productsCount },
-            { count: unreadCount },
-          ] = await Promise.all([
-            supabase
-              .from('orders')
-              .select('id, total_amount', { count: 'exact', head: false })
-              .eq('shop_id', data.id)
-              .then(({ count, data }) => ({
-                count: count || 0,
-                sum: data?.reduce((acc, order) => acc + (order.total_amount || 0), 0) || 0,
-              })),
-            supabase
-              .from('products')
-              .select('id', { count: 'exact', head: true })
-              .eq('shop_id', data.id),
-            supabase
-              .from('messages')
-              .select('id', { count: 'exact', head: true })
-              .eq('shop_id', data.id)
-              .eq('read', false),
-          ]);
+      // Fetch dashboard statistics
+      if (data) {
+        const [
+          { count: ordersCount, sum: revenue },
+          { count: productsCount },
+          { count: unreadCount },
+        ] = await Promise.all([
+          supabase
+            .from('orders')
+            .select('id, total_amount', { count: 'exact', head: false })
+            .eq('shop_id', data.id)
+            .then(({ count, data }) => ({
+              count: count || 0,
+              sum: data?.reduce((acc, order) => acc + (order.total_amount || 0), 0) || 0,
+            })),
+          supabase
+            .from('products')
+            .select('id', { count: 'exact', head: true })
+            .eq('shop_id', data.id),
+          supabase
+            .from('messages')
+            .select('id', { count: 'exact', head: true })
+            .eq('shop_id', data.id)
+            .eq('read', false),
+        ]);
 
-          setStats({
-            totalOrders: ordersCount,
-            totalRevenue: revenue,
-            totalProducts: productsCount || 0,
-            unreadMessages: unreadCount || 0,
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching shop:", error);
-      } finally {
-        setIsLoading(false);
+        setStats({
+          totalOrders: ordersCount,
+          totalRevenue: revenue,
+          totalProducts: productsCount || 0,
+          unreadMessages: unreadCount || 0,
+        });
       }
-    };
+    } catch (error) {
+      console.error("Error fetching shop:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchShop();
   }, [user]);
 
@@ -139,6 +139,12 @@ const ShopDashboard = () => {
           </CardHeader>
           <CardContent>
             <p className="text-sm text-gray-500">{shop.description}</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="py-6">
+            <VerificationSection shop={shop} onVerificationUpdate={fetchShop} />
           </CardContent>
         </Card>
 
@@ -203,7 +209,7 @@ const ShopDashboard = () => {
             </CardHeader>
             <CardContent>
               <Button
-                onClick={() => navigate("/my-shop/products/new")}
+                onClick={() => navigate("/my-shop/products/add")}
                 className="w-full"
               >
                 Add Product

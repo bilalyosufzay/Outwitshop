@@ -317,6 +317,11 @@ export type Database = {
           slug: string
           status: string
           updated_at: string | null
+          verification_documents: Json | null
+          verification_rejected_reason: string | null
+          verification_status: string | null
+          verification_submitted_at: string | null
+          verified: boolean | null
         }
         Insert: {
           address: string
@@ -333,6 +338,11 @@ export type Database = {
           slug: string
           status?: string
           updated_at?: string | null
+          verification_documents?: Json | null
+          verification_rejected_reason?: string | null
+          verification_status?: string | null
+          verification_submitted_at?: string | null
+          verified?: boolean | null
         }
         Update: {
           address?: string
@@ -349,6 +359,11 @@ export type Database = {
           slug?: string
           status?: string
           updated_at?: string | null
+          verification_documents?: Json | null
+          verification_rejected_reason?: string | null
+          verification_status?: string | null
+          verification_submitted_at?: string | null
+          verified?: boolean | null
         }
         Relationships: []
       }
