@@ -3,23 +3,33 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const { signUp } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!captchaToken) {
+      toast.error("Please complete the CAPTCHA verification");
+      return;
+    }
     try {
       setLoading(true);
-      await signUp(email, password);
+      await signUp(email, password, captchaToken);
     } catch (error) {
       // Error is handled in the AuthContext
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCaptchaChange = (token: string | null) => {
+    setCaptchaToken(token);
   };
 
   return (
@@ -71,7 +81,14 @@ const Signup = () => {
             </div>
           </div>
 
-          <Button type="submit" className="w-full" disabled={loading}>
+          <div className="flex justify-center">
+            <ReCAPTCHA
+              sitekey="6LfHGUEpAAAAADVxvRLZ3IOjXNB5jEc3MLDJ0pC5"
+              onChange={handleCaptchaChange}
+            />
+          </div>
+
+          <Button type="submit" className="w-full" disabled={loading || !captchaToken}>
             {loading ? "Creating account..." : "Create account"}
           </Button>
 
