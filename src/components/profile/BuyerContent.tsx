@@ -12,6 +12,8 @@ import {
   Settings,
   Shield,
   HelpCircle,
+  RefreshCcw,
+  Bell,
 } from "lucide-react";
 
 export const BuyerContent = () => {
@@ -19,6 +21,18 @@ export const BuyerContent = () => {
 
   return (
     <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
+      <ProfileSection
+        title="Auto-Reorder Essentials"
+        description="Manage your recurring purchases"
+        icon={RefreshCcw}
+        onClick={() => navigate('/auto-reorder')}
+      />
+      <ProfileSection
+        title="Price Drop Alerts"
+        description="Track prices and get notified"
+        icon={Bell}
+        onClick={() => navigate('/price-alerts')}
+      />
       <ProfileSection
         title="Orders & Shopping"
         icon={ShoppingBag}
