@@ -1,3 +1,4 @@
+
 {
   "header": {
     "notifications": "Notificaciones",
@@ -13,34 +14,34 @@
   },
   "categories": {
     "view_all": "Ver Todo",
-    "fashion": "Moda",
+    "fashion": "Moda y Ropa",
     "electronics": "Electrónica",
     "home_living": "Hogar y Vida",
     "beauty": "Belleza",
     "supermarket": "Supermercado",
-    "sports": "Deportes",
+    "sports": "Deportes y Aire Libre",
     "kids_baby": "Niños y Bebés",
-    "automotive": "Automotriz",
+    "automotive": "Auto y Moto",
     "books_media": "Libros y Medios",
-    "pet_supplies": "Artículos para Mascotas"
+    "pet_supplies": "Mascotas"
   },
   "featured": {
-    "title": "Productos Destacados",
+    "title": "Destacados",
     "view_all": "Ver Todo"
   },
   "trending": {
     "title": "Tendencias",
-    "hot": "Caliente 🔥"
+    "hot": "Popular 🔥"
   },
   "flash_sale": {
-    "title": "Venta Flash 🎉",
-    "subtitle": "Hasta 50% de descuento en productos seleccionados"
+    "title": "Oferta Relámpago 🎉",
+    "subtitle": "Hasta 50% de descuento en artículos seleccionados"
   },
   "shop_now": "Comprar Ahora",
-  "new_arrival": "Nueva Llegada",
-  "summer_collection": "Colección de Verano",
+  "new_arrival": "Recién Llegados",
+  "summer_collection": "Colección Verano",
   "auth": {
-    "create_account": "Crear una cuenta",
+    "create_account": "Crear cuenta",
     "join_today": "Únete a Outwit Shop hoy",
     "email_address": "Correo electrónico",
     "password": "Contraseña",
@@ -50,12 +51,17 @@
     "sign_in": "Iniciar sesión",
     "welcome_back": "Bienvenido de nuevo",
     "please_sign_in": "Por favor, inicia sesión en tu cuenta",
-    "enter_email": "Introduce tu correo electrónico",
+    "enter_email": "Introduce tu correo",
     "enter_password": "Introduce tu contraseña",
     "forgot_password": "¿Olvidaste tu contraseña?",
     "signing_in": "Iniciando sesión...",
     "sign_in_button": "Iniciar sesión",
     "dont_have_account": "¿No tienes una cuenta?",
-    "sign_up": "Registrarse"
+    "sign_up": "Registrarse",
+    "profile": {
+      "edit_profile": "Editar perfil",
+      "sign_out": "Cerrar sesión",
+      "sign_out_confirm": "¿Estás seguro de que quieres cerrar sesión?"
+    }
   }
 }

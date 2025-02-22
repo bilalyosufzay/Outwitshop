@@ -7,27 +7,61 @@
   "navigation": {
     "home": "Accueil",
     "search": "Rechercher",
-    "lucky_draw": "Tirage",
+    "lucky_draw": "Tirage au Sort",
     "cart": "Panier",
     "my_shop": "Ma Boutique",
     "profile": "Profil"
   },
   "categories": {
-    "view_all": "Voir tout"
+    "view_all": "Voir tout",
+    "fashion": "Mode & Vêtements",
+    "electronics": "Électronique",
+    "home_living": "Maison & Vie",
+    "beauty": "Beauté",
+    "supermarket": "Supermarché",
+    "sports": "Sports & Loisirs",
+    "kids_baby": "Enfants & Bébés",
+    "automotive": "Auto & Moto",
+    "books_media": "Livres & Médias",
+    "pet_supplies": "Animalerie"
   },
   "featured": {
-    "title": "Produits en vedette",
+    "title": "Produits Vedettes",
     "view_all": "Voir tout"
   },
   "trending": {
     "title": "Tendances",
-    "hot": "Tendance 🔥"
+    "hot": "Populaire 🔥"
   },
   "flash_sale": {
     "title": "Vente Flash 🎉",
-    "subtitle": "Jusqu'à 50% de réduction sur certains articles"
+    "subtitle": "Jusqu'à 50% de réduction sur une sélection"
   },
-  "shop_now": "Acheter maintenant",
-  "new_arrival": "Nouvelle arrivée",
-  "summer_collection": "Collection d'été"
+  "shop_now": "Acheter",
+  "new_arrival": "Nouveautés",
+  "summer_collection": "Collection Été",
+  "auth": {
+    "create_account": "Créer un compte",
+    "join_today": "Rejoignez Outwit Shop aujourd'hui",
+    "email_address": "Adresse e-mail",
+    "password": "Mot de passe",
+    "creating_account": "Création du compte...",
+    "create_account_button": "Créer un compte",
+    "already_have_account": "Vous avez déjà un compte ?",
+    "sign_in": "Se connecter",
+    "welcome_back": "Bon retour",
+    "please_sign_in": "Veuillez vous connecter à votre compte",
+    "enter_email": "Entrez votre e-mail",
+    "enter_password": "Entrez votre mot de passe",
+    "forgot_password": "Mot de passe oublié ?",
+    "signing_in": "Connexion...",
+    "sign_in_button": "Se connecter",
+    "dont_have_account": "Vous n'avez pas de compte ?",
+    "sign_up": "S'inscrire",
+    "profile": {
+      "edit_profile": "Modifier le profil",
+      "sign_out": "Se déconnecter",
+      "sign_out_confirm": "Êtes-vous sûr de vouloir vous déconnecter ?"
+    }
+  }
 }

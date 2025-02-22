@@ -6,11 +6,13 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { useTranslation } from "react-i18next";
 
 const Profile = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation();
   const [profile, setProfile] = useState<{
     username: string | null;
     avatar_url: string | null;
@@ -94,14 +96,14 @@ const Profile = () => {
                 className="w-full"
                 onClick={() => navigate('/profile/edit')}
               >
-                Edit Profile
+                {t('auth.profile.edit_profile')}
               </Button>
               <Button
                 variant="destructive"
                 className="w-full"
                 onClick={handleSignOut}
               >
-                Sign Out
+                {t('auth.profile.sign_out')}
               </Button>
             </div>
           </div>

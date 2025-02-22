@@ -23,7 +23,7 @@
     "kids_baby": "Kinder & Baby",
     "automotive": "Auto & Motorrad",
     "books_media": "Bücher & Medien",
-    "pet_supplies": "Haustierzubehör"
+    "pet_supplies": "Haustierbedarf"
   },
   "featured": {
     "title": "Ausgewählte Produkte",
@@ -34,20 +34,20 @@
     "hot": "Beliebt 🔥"
   },
   "flash_sale": {
-    "title": "Blitzverkauf 🎉",
+    "title": "Blitzangebot 🎉",
     "subtitle": "Bis zu 50% Rabatt auf ausgewählte Artikel"
   },
-  "shop_now": "Jetzt einkaufen",
+  "shop_now": "Jetzt kaufen",
   "new_arrival": "Neu eingetroffen",
   "summer_collection": "Sommerkollektion",
   "auth": {
     "create_account": "Konto erstellen",
-    "join_today": "Treten Sie Outwit Shop noch heute bei",
+    "join_today": "Heute bei Outwit Shop beitreten",
     "email_address": "E-Mail-Adresse",
     "password": "Passwort",
     "creating_account": "Konto wird erstellt...",
     "create_account_button": "Konto erstellen",
-    "already_have_account": "Haben Sie bereits ein Konto?",
+    "already_have_account": "Bereits ein Konto?",
     "sign_in": "Anmelden",
     "welcome_back": "Willkommen zurück",
     "please_sign_in": "Bitte melden Sie sich bei Ihrem Konto an",
@@ -56,7 +56,12 @@
     "forgot_password": "Passwort vergessen?",
     "signing_in": "Anmeldung läuft...",
     "sign_in_button": "Anmelden",
-    "dont_have_account": "Sie haben noch kein Konto?",
-    "sign_up": "Registrieren"
+    "dont_have_account": "Noch kein Konto?",
+    "sign_up": "Registrieren",
+    "profile": {
+      "edit_profile": "Profil bearbeiten",
+      "sign_out": "Abmelden",
+      "sign_out_confirm": "Möchten Sie sich wirklich abmelden?"
+    }
   }
 }
