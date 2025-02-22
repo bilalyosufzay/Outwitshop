@@ -1,3 +1,4 @@
+
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./contexts/AuthContext";
 import Navigation from "./components/Navigation";
@@ -30,6 +31,9 @@ import QASessions from "./pages/community/QASessions";
 import ShareEarn from "./pages/community/ShareEarn";
 import Wishlists from "./pages/community/Wishlists";
 import Notifications from "./pages/Notifications";
+import Login from "./pages/auth/Login";
+import Signup from "./pages/auth/Signup";
+import ProtectedRoute from "./components/ProtectedRoute";
 import "./App.css";
 import "./i18n/config";
 
@@ -44,48 +48,55 @@ function App() {
           <main className="flex-1 w-full">
             <div className="container mx-auto px-4 py-4">
               <Routes>
+                <Route path="/auth/login" element={<Login />} />
+                <Route path="/auth/signup" element={<Signup />} />
+                
                 <Route 
                   path="/" 
                   element={
-                    <div className="space-y-8">
-                      <HeroSection />
-                      <TrendingSection />
-                      <FlashSaleSection />
-                      <FeaturedSection />
-                    </div>
+                    <ProtectedRoute>
+                      <div className="space-y-8">
+                        <HeroSection />
+                        <TrendingSection />
+                        <FlashSaleSection />
+                        <FeaturedSection />
+                      </div>
+                    </ProtectedRoute>
                   } 
                 />
-                <Route path="/search" element={<Search />} />
-                <Route path="/lucky-draw" element={<LuckyDraw />} />
-                <Route path="/cart" element={<Cart />} />
-                <Route path="/my-shop/*" element={<ShopDashboard />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/security" element={<Security />} />
-                <Route path="/notifications" element={<Notifications />} />
+                
+                {/* Protected Routes */}
+                <Route path="/search" element={<ProtectedRoute><Search /></ProtectedRoute>} />
+                <Route path="/lucky-draw" element={<ProtectedRoute><LuckyDraw /></ProtectedRoute>} />
+                <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
+                <Route path="/my-shop/*" element={<ProtectedRoute><ShopDashboard /></ProtectedRoute>} />
+                <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+                <Route path="/security" element={<ProtectedRoute><Security /></ProtectedRoute>} />
+                <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
                 
                 {/* Buyer Routes */}
-                <Route path="/auto-reorder" element={<AutoReorder />} />
-                <Route path="/orders" element={<Orders />} />
-                <Route path="/payment-methods" element={<PaymentMethods />} />
-                <Route path="/price-alerts" element={<PriceAlerts />} />
-                <Route path="/recently-viewed" element={<RecentlyViewed />} />
-                <Route path="/rewards" element={<Rewards />} />
-                <Route path="/wallet" element={<Wallet />} />
-                <Route path="/addresses" element={<Addresses />} />
+                <Route path="/auto-reorder" element={<ProtectedRoute><AutoReorder /></ProtectedRoute>} />
+                <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
+                <Route path="/payment-methods" element={<ProtectedRoute><PaymentMethods /></ProtectedRoute>} />
+                <Route path="/price-alerts" element={<ProtectedRoute><PriceAlerts /></ProtectedRoute>} />
+                <Route path="/recently-viewed" element={<ProtectedRoute><RecentlyViewed /></ProtectedRoute>} />
+                <Route path="/rewards" element={<ProtectedRoute><Rewards /></ProtectedRoute>} />
+                <Route path="/wallet" element={<ProtectedRoute><Wallet /></ProtectedRoute>} />
+                <Route path="/addresses" element={<ProtectedRoute><Addresses /></ProtectedRoute>} />
 
                 {/* Community Routes */}
-                <Route path="/connections" element={<Connections />} />
-                <Route path="/polls" element={<Polls />} />
-                <Route path="/qa-sessions" element={<QASessions />} />
-                <Route path="/share-earn" element={<ShareEarn />} />
-                <Route path="/wishlists" element={<Wishlists />} />
+                <Route path="/connections" element={<ProtectedRoute><Connections /></ProtectedRoute>} />
+                <Route path="/polls" element={<ProtectedRoute><Polls /></ProtectedRoute>} />
+                <Route path="/qa-sessions" element={<ProtectedRoute><QASessions /></ProtectedRoute>} />
+                <Route path="/share-earn" element={<ProtectedRoute><ShareEarn /></ProtectedRoute>} />
+                <Route path="/wishlists" element={<ProtectedRoute><Wishlists /></ProtectedRoute>} />
 
                 {/* Shop Routes */}
-                <Route path="/shop/reviews" element={<div>Shop Reviews</div>} />
-                <Route path="/shop/messages" element={<div>Shop Messages</div>} />
-                <Route path="/shop/ai-assistant" element={<div>AI Assistant</div>} />
-                <Route path="/shop/social" element={<div>Social Integration</div>} />
+                <Route path="/shop/reviews" element={<ProtectedRoute><div>Shop Reviews</div></ProtectedRoute>} />
+                <Route path="/shop/messages" element={<ProtectedRoute><div>Shop Messages</div></ProtectedRoute>} />
+                <Route path="/shop/ai-assistant" element={<ProtectedRoute><div>AI Assistant</div></ProtectedRoute>} />
+                <Route path="/shop/social" element={<ProtectedRoute><div>Social Integration</div></ProtectedRoute>} />
               </Routes>
             </div>
           </main>
