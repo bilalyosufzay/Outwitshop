@@ -1,3 +1,4 @@
+
 export interface Product {
   id: string;
   name: string;
@@ -30,6 +31,12 @@ export const FEATURED_PRODUCTS: Product[] = [
     price: 199.99,
     category: "Accessories",
     image: "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=800&q=80",
+    images: [
+      "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=800&q=80",
+      "https://images.unsplash.com/photo-1622434641406-a158123450f9?w=800&q=80",
+      "https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?w=800&q=80",
+      "https://images.unsplash.com/photo-1509048191080-d2984bad6ae5?w=800&q=80",
+    ]
   },
   {
     id: "3",
@@ -68,6 +75,12 @@ export const TRENDING_PRODUCTS: Product[] = [
     price: 179.99,
     category: "Accessories",
     image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=800&q=80",
+    images: [
+      "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=800&q=80",
+      "https://images.unsplash.com/photo-1577803645773-f96470509666?w=800&q=80",
+      "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=800&q=80",
+      "https://images.unsplash.com/photo-1560274789-6a6b5ffd1a33?w=800&q=80",
+    ]
   },
   {
     id: "7",
