@@ -4,7 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Loader, MessageCircle, X } from "lucide-react";
+import { Loader, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
 import {
   Sheet,
@@ -19,6 +19,7 @@ export const ChatSupport = () => {
   const { user } = useAuth();
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   const [conversations, setConversations] = useState<any[]>([]);
   const [open, setOpen] = useState(false);
 
@@ -29,17 +30,28 @@ export const ChatSupport = () => {
   }, [user, open]);
 
   const loadChatHistory = async () => {
+    if (!user) return;
+    
+    setIsLoadingHistory(true);
     try {
       const { data, error } = await supabase
         .from("chat_conversations")
         .select("*")
+        .eq("user_id", user.id)
         .order("created_at", { ascending: true });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error loading chat history:", error);
+        toast.error("Failed to load chat history");
+        return;
+      }
+      
       setConversations(data || []);
     } catch (error) {
       console.error("Error loading chat history:", error);
       toast.error("Failed to load chat history");
+    } finally {
+      setIsLoadingHistory(false);
     }
   };
 
@@ -53,7 +65,11 @@ export const ChatSupport = () => {
         body: { message, userId: user.id },
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error sending message:", error);
+        toast.error("Failed to send message");
+        return;
+      }
 
       setMessage("");
       await loadChatHistory();
@@ -85,22 +101,28 @@ export const ChatSupport = () => {
         </SheetHeader>
 
         <ScrollArea className="h-[calc(100vh-12rem)] py-4">
-          <div className="flex flex-col gap-4">
-            {conversations.map((conv) => (
-              <div key={conv.id} className="space-y-2">
-                <div className="flex justify-end">
-                  <div className="rounded-lg bg-primary px-4 py-2 text-primary-foreground">
-                    {conv.message}
+          {isLoadingHistory ? (
+            <div className="flex h-full items-center justify-center">
+              <Loader className="h-6 w-6 animate-spin" />
+            </div>
+          ) : (
+            <div className="flex flex-col gap-4">
+              {conversations.map((conv) => (
+                <div key={conv.id} className="space-y-2">
+                  <div className="flex justify-end">
+                    <div className="rounded-lg bg-primary px-4 py-2 text-primary-foreground">
+                      {conv.message}
+                    </div>
+                  </div>
+                  <div className="flex justify-start">
+                    <div className="rounded-lg bg-muted px-4 py-2">
+                      {conv.response}
+                    </div>
                   </div>
                 </div>
-                <div className="flex justify-start">
-                  <div className="rounded-lg bg-muted px-4 py-2">
-                    {conv.response}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </ScrollArea>
 
         <form
