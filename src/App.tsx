@@ -1,56 +1,115 @@
-
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Index from "@/pages/Index";
+import Profile from "@/pages/Profile";
+import Settings from "@/pages/Settings";
+import Notifications from "@/pages/Notifications";
+import Security from "@/pages/Security";
+import Login from "@/pages/auth/Login";
+import Signup from "@/pages/auth/Signup";
+import Cart from "@/pages/Cart";
+import Search from "@/pages/Search";
+import LuckyDraw from "@/pages/LuckyDraw";
+import NotFound from "@/pages/NotFound";
+import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/contexts/AuthContext";
-import { Header } from "@/components/Header";
-import Index from "./pages/Index";
-import Login from "./pages/auth/Login";
-import Signup from "./pages/auth/Signup";
-import NotFound from "./pages/NotFound";
-import ProtectedRoute from "./components/ProtectedRoute";
-import CreateShop from "./pages/my-shop/CreateShop";
-import ShopDashboard from "./pages/my-shop/ShopDashboard";
-import Profile from "./pages/Profile";
-import Search from "./pages/Search";
-import LuckyDraw from "./pages/LuckyDraw";
-import Cart from "./pages/Cart";
-import ProductsPage from "@/pages/my-shop/products/ProductsPage";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import CreateShop from "@/pages/my-shop/CreateShop";
+import ShopDashboard from "@/pages/my-shop/ShopDashboard";
 import AddProductPage from "@/pages/my-shop/products/AddProductPage";
+import ProductsPage from "@/pages/my-shop/products/ProductsPage";
+import { I18nextProvider } from 'react-i18next';
+import i18n from './i18n';
 
-const queryClient = new QueryClient();
-
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
+const App = () => {
+  return (
+    <I18nextProvider i18n={i18n}>
+      <Router>
         <AuthProvider>
           <Routes>
+            <Route path="/" element={<Index />} />
             <Route path="/auth/login" element={<Login />} />
             <Route path="/auth/signup" element={<Signup />} />
-            <Route element={<ProtectedRoute />}>
-              <Route path="/" element={<Index />} />
-              <Route path="/search" element={<Search />} />
-              <Route path="/lucky-draw" element={<LuckyDraw />} />
-              <Route path="/cart" element={<Cart />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/product/:id" element={<NotFound />} />
-              <Route path="/my-shop" element={<Navigate to="/my-shop/dashboard" replace />} />
-              <Route path="/my-shop/create" element={<CreateShop />} />
-              <Route path="/my-shop/dashboard" element={<ShopDashboard />} />
-              <Route path="/my-shop/products" element={<ProductsPage />} />
-              <Route path="/my-shop/products/add" element={<AddProductPage />} />
-            </Route>
+            <Route path="/lucky-draw" element={<LuckyDraw />} />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/settings"
+              element={
+                <ProtectedRoute>
+                  <Settings />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/notifications"
+              element={
+                <ProtectedRoute>
+                  <Notifications />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/security"
+              element={
+                <ProtectedRoute>
+                  <Security />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/cart"
+              element={
+                <ProtectedRoute>
+                  <Cart />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/search" element={<Search />} />
+            <Route
+              path="/my-shop/create"
+              element={
+                <ProtectedRoute>
+                  <CreateShop />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/my-shop"
+              element={
+                <ProtectedRoute>
+                  <ShopDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/my-shop/products"
+              element={
+                <ProtectedRoute>
+                  <ProductsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/my-shop/products/add"
+              element={
+                <ProtectedRoute>
+                  <AddProductPage />
+                </ProtectedRoute>
+              }
+            />
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <Toaster />
         </AuthProvider>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+      </Router>
+    </I18nextProvider>
+  );
+};
 
 export default App;
