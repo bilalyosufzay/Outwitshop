@@ -6,6 +6,8 @@ export interface Prize {
   name: string;
   color: string;
   icon: React.ReactNode;
+  rarity?: 'common' | 'rare' | 'epic' | 'legendary';
+  points?: number;
 }
 
 export interface PrizeHistoryItem {
@@ -13,4 +15,13 @@ export interface PrizeHistoryItem {
   prize: Prize;
   date: Date;
   claimed: boolean;
+}
+
+export interface SpecialEvent {
+  id: string;
+  title: string;
+  description: string;
+  startDate: Date;
+  endDate: Date;
+  prizes: Prize[];
 }
