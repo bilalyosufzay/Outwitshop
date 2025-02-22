@@ -22,6 +22,7 @@ const LANGUAGES = [
   { code: "de", name: "Deutsch", flag: "🇩🇪" },
   { code: "it", name: "Italiano", flag: "🇮🇹" },
   { code: "pt", name: "Português", flag: "🇵🇹" },
+  { code: "fa", name: "فارسی", flag: "🇮🇷" },
 ];
 
 const FEATURED_PRODUCTS = [
