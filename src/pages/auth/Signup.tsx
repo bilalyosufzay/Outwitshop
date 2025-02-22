@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -19,8 +18,7 @@ const LANGUAGES = [
   { code: "fr", name: "Français", flag: "🇫🇷" },
   { code: "de", name: "Deutsch", flag: "🇩🇪" },
   { code: "tr", name: "Türkçe", flag: "🇹🇷" },
-  { code: "fa", name: "فارسی", flag: "🇮🇷" },
-  { code: "af", name: "دری", flag: "🇦🇫" }
+  { code: "fa", name: "فارسی", flag: "🇮🇷" }
 ];
 
 const Signup = () => {
