@@ -22,27 +22,29 @@ function App() {
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <div className="min-h-screen bg-background pb-16">
+          <div className="flex flex-col min-h-screen bg-background">
             <Header />
-            <main className="container mx-auto px-4">
-              <Routes>
-                <Route 
-                  path="/" 
-                  element={
-                    <div className="space-y-8">
-                      <HeroSection />
-                      <TrendingSection />
-                      <FlashSaleSection />
-                      <FeaturedSection />
-                    </div>
-                  } 
-                />
-                <Route path="/search" element={<div>Search Page</div>} />
-                <Route path="/lucky-draw" element={<div>Lucky Draw Page</div>} />
-                <Route path="/cart" element={<div>Cart Page</div>} />
-                <Route path="/my-shop" element={<div>My Shop Page</div>} />
-                <Route path="/profile" element={<Profile />} />
-              </Routes>
+            <main className="flex-1 w-full">
+              <div className="container mx-auto px-4 py-4">
+                <Routes>
+                  <Route 
+                    path="/" 
+                    element={
+                      <div className="space-y-8">
+                        <HeroSection />
+                        <TrendingSection />
+                        <FlashSaleSection />
+                        <FeaturedSection />
+                      </div>
+                    } 
+                  />
+                  <Route path="/search" element={<div>Search Page</div>} />
+                  <Route path="/lucky-draw" element={<div>Lucky Draw Page</div>} />
+                  <Route path="/cart" element={<div>Cart Page</div>} />
+                  <Route path="/my-shop" element={<div>My Shop Page</div>} />
+                  <Route path="/profile" element={<Profile />} />
+                </Routes>
+              </div>
             </main>
             <Navigation />
             <ChatSupport />
