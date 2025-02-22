@@ -1,4 +1,3 @@
-
 {
   "header": {
     "notifications": "اعلان‌ها",
@@ -14,16 +13,16 @@
   },
   "categories": {
     "view_all": "نمایش همه",
-    "fashion": "مد و پوشاک",
+    "fashion": "مد",
     "electronics": "الکترونیک",
-    "home_living": "خانه و زندگی",
-    "beauty": "زیبایی و سلامت",
+    "home_living": "خانه",
+    "beauty": "زیبایی",
     "supermarket": "سوپرمارکت",
     "sports": "ورزشی",
     "kids_baby": "کودک و نوزاد",
     "automotive": "خودرو",
     "books_media": "کتاب و رسانه",
-    "pet_supplies": "لوازم حیوانات خانگی"
+    "pet_supplies": "حیوانات خانگی"
   },
   "featured": {
     "title": "محصولات ویژه",
