@@ -1,3 +1,4 @@
+
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Index from "@/pages/Index";
 import Profile from "@/pages/Profile";
@@ -18,7 +19,7 @@ import ShopDashboard from "@/pages/my-shop/ShopDashboard";
 import AddProductPage from "@/pages/my-shop/products/AddProductPage";
 import ProductsPage from "@/pages/my-shop/products/ProductsPage";
 import { I18nextProvider } from 'react-i18next';
-import i18n from './i18n';
+import i18n from '@/i18n/config';
 
 const App = () => {
   return (
