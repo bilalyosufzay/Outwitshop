@@ -1,133 +1,68 @@
-import { useState, useEffect } from "react";
+
+import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Gift, Timer, Star, AlertCircle, Percent, Package, Truck, BadgeDollarSign, Trophy, History, Share2, Target } from "lucide-react";
+import { Gift, Timer, Star, AlertCircle, Trophy, History, Share2, Target } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { PrizeCard } from "@/components/lucky-draw/PrizeCard";
 import { PrizeHistory } from "@/components/lucky-draw/PrizeHistory";
 import { Rules } from "@/components/lucky-draw/Rules";
-import { Prize, PrizeHistoryItem, SpecialEvent } from "@/components/lucky-draw/types";
 import { Missions } from "@/components/lucky-draw/Missions";
 import { EventBanner } from "@/components/lucky-draw/EventBanner";
-
-const prizes: Prize[] = [
-  { 
-    id: 1, 
-    name: "5% Discount", 
-    color: "#FF6B6B",
-    icon: <Percent className="h-24 w-24 text-white" />
-  },
-  { 
-    id: 2, 
-    name: "10% Discount", 
-    color: "#4ECDC4",
-    icon: <Percent className="h-24 w-24 text-white" />
-  },
-  { 
-    id: 3, 
-    name: "Free Shipping", 
-    color: "#45B7D1",
-    icon: <Truck className="h-24 w-24 text-white" />
-  },
-  { 
-    id: 4, 
-    name: "20% Discount", 
-    color: "#96CEB4",
-    icon: <Percent className="h-24 w-24 text-white" />
-  },
-  { 
-    id: 5, 
-    name: "100 Points", 
-    color: "#FFEEAD",
-    icon: <BadgeDollarSign className="h-24 w-24 text-white" />
-  },
-  { 
-    id: 6, 
-    name: "Mystery Box", 
-    color: "#D4A5A5",
-    icon: <Package className="h-24 w-24 text-white" />
-  },
-  { 
-    id: 7, 
-    name: "15% Discount", 
-    color: "#9EC1CF",
-    icon: <Percent className="h-24 w-24 text-white" />
-  },
-  { 
-    id: 8, 
-    name: "50 Points", 
-    color: "#FFD93D",
-    icon: <BadgeDollarSign className="h-24 w-24 text-white" />
-  },
-];
-
-const specialEvent: SpecialEvent = {
-  id: 'spring-festival',
-  title: '🌸 Spring Festival Special',
-  description: 'Draw special spring-themed prizes with increased chances of rare rewards!',
-  startDate: new Date(),
-  endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
-  prizes: [
-    {
-      id: 101,
-      name: "Spring Bundle",
-      color: "#FFB7C5",
-      icon: <Gift className="h-24 w-24 text-white" />,
-      rarity: 'legendary',
-      points: 1000
-    }
-  ]
-};
+import { PrizeGrid } from "@/components/lucky-draw/PrizeGrid";
+import { useLuckyDraw } from "@/components/lucky-draw/hooks/useLuckyDraw";
+import { prizes, specialEvent } from "@/components/lucky-draw/constants/prizes";
 
 const LuckyDraw = () => {
   const { toast } = useToast();
-  const [isSpinning, setIsSpinning] = useState(false);
-  const [selectedPrize, setSelectedPrize] = useState<Prize | null>(null);
-  const [nextSpinTime, setNextSpinTime] = useState<Date | null>(null);
-  const [canSpin, setCanSpin] = useState(true);
   const [showCards, setShowCards] = useState(true);
   const [showRules, setShowRules] = useState(false);
-  const [streak, setStreak] = useState(0);
-  const [lastSpinDate, setLastSpinDate] = useState<string | null>(null);
-  const [prizeHistory, setPrizeHistory] = useState<PrizeHistoryItem[]>([]);
   const [showHistory, setShowHistory] = useState(false);
   const [showMissions, setShowMissions] = useState(false);
 
-  useEffect(() => {
-    const lastSpinTime = localStorage.getItem('lastSpinTime');
-    const storedStreak = localStorage.getItem('streak');
-    const storedLastSpinDate = localStorage.getItem('lastSpinDate');
-    const storedPrizeHistory = localStorage.getItem('prizeHistory');
+  const {
+    isSpinning,
+    setIsSpinning,
+    selectedPrize,
+    setSelectedPrize,
+    nextSpinTime,
+    canSpin,
+    setCanSpin,
+    streak,
+    prizeHistory,
+    setPrizeHistory,
+    updateStreak,
+  } = useLuckyDraw();
 
-    if (lastSpinTime) {
-      const nextTime = new Date(Number(lastSpinTime) + 24 * 60 * 60 * 1000);
-      if (nextTime > new Date()) {
-        setCanSpin(false);
-        setNextSpinTime(nextTime);
+  const formatTimeRemaining = () => {
+    if (!nextSpinTime) return "";
+    const now = new Date();
+    const diff = nextSpinTime.getTime() - now.getTime();
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    return `${hours}h ${minutes}m`;
+  };
+
+  const formatEventTimeRemaining = () => {
+    const now = new Date();
+    const diff = specialEvent.endDate.getTime() - now.getTime();
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    return `${days}d ${hours}h`;
+  };
+
+  const shareWin = async () => {
+    if (selectedPrize) {
+      try {
+        await navigator.share({
+          title: 'Lucky Draw Win! 🎉',
+          text: `I just won ${selectedPrize.name} in the Lucky Draw! Come join the fun!`,
+          url: window.location.href,
+        });
+      } catch (err) {
+        console.log('Sharing failed', err);
       }
     }
-
-    if (storedStreak) setStreak(Number(storedStreak));
-    if (storedLastSpinDate) setLastSpinDate(storedLastSpinDate);
-    if (storedPrizeHistory) setPrizeHistory(JSON.parse(storedPrizeHistory));
-  }, []);
-
-  const updateStreak = () => {
-    const today = new Date().toDateString();
-    const yesterday = new Date(Date.now() - 86400000).toDateString();
-    
-    if (lastSpinDate === yesterday) {
-      const newStreak = streak + 1;
-      setStreak(newStreak);
-      localStorage.setItem('streak', String(newStreak));
-    } else if (lastSpinDate !== today) {
-      setStreak(1);
-      localStorage.setItem('streak', '1');
-    }
-    
-    setLastSpinDate(today);
-    localStorage.setItem('lastSpinDate', today);
   };
 
   const spinDraw = () => {
@@ -137,7 +72,7 @@ const LuckyDraw = () => {
     setShowCards(false);
 
     setTimeout(() => {
-      const isSpecialDraw = Math.random() < 0.2; // 20% chance for special prize
+      const isSpecialDraw = Math.random() < 0.2;
       const randomPrize = isSpecialDraw 
         ? specialEvent.prizes[Math.floor(Math.random() * specialEvent.prizes.length)]
         : prizes[Math.floor(Math.random() * prizes.length)];
@@ -145,7 +80,7 @@ const LuckyDraw = () => {
       setSelectedPrize(randomPrize);
       setShowCards(true);
 
-      const newPrize: PrizeHistoryItem = {
+      const newPrize = {
         id: Date.now().toString(),
         prize: randomPrize,
         date: new Date(),
@@ -181,39 +116,8 @@ const LuckyDraw = () => {
       setIsSpinning(false);
       setCanSpin(false);
       localStorage.setItem('lastSpinTime', Date.now().toString());
-      setNextSpinTime(new Date(Date.now() + 24 * 60 * 60 * 1000));
+      
     }, 2000);
-  };
-
-  const formatTimeRemaining = () => {
-    if (!nextSpinTime) return "";
-    const now = new Date();
-    const diff = nextSpinTime.getTime() - now.getTime();
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    return `${hours}h ${minutes}m`;
-  };
-
-  const formatEventTimeRemaining = () => {
-    const now = new Date();
-    const diff = specialEvent.endDate.getTime() - now.getTime();
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    return `${days}d ${hours}h`;
-  };
-
-  const shareWin = async () => {
-    if (selectedPrize) {
-      try {
-        await navigator.share({
-          title: 'Lucky Draw Win! 🎉',
-          text: `I just won ${selectedPrize.name} in the Lucky Draw! Come join the fun!`,
-          url: window.location.href,
-        });
-      } catch (err) {
-        console.log('Sharing failed', err);
-      }
-    }
   };
 
   return (
@@ -257,29 +161,11 @@ const LuckyDraw = () => {
                   </div>
                 </div>
 
-                <div className="relative min-h-[300px] mb-8">
-                  {showCards ? (
-                    <div
-                      className={`grid grid-cols-2 sm:grid-cols-4 gap-4 transition-all duration-500 ${
-                        isSpinning ? 'opacity-0 scale-90 rotate-180' : 'opacity-100 scale-100 rotate-0'
-                      }`}
-                    >
-                      {(selectedPrize ? [selectedPrize] : prizes.slice(0, 8)).map((prize) => (
-                        <PrizeCard
-                          key={prize.id}
-                          {...prize}
-                          isSelected={selectedPrize !== null}
-                        />
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="animate-spin text-primary">
-                        <Gift className="h-12 w-12" />
-                      </div>
-                    </div>
-                  )}
-                </div>
+                <PrizeGrid
+                  prizes={prizes}
+                  selectedPrize={selectedPrize}
+                  isSpinning={isSpinning}
+                />
 
                 <div className="space-y-4">
                   <Button
