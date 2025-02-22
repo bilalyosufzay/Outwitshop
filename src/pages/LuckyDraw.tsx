@@ -3,16 +3,14 @@ import { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Gift, Timer, Star, AlertCircle, Percent, Package, Truck, BadgeDollarSign, BookOpen, Trophy, History, Share2 } from "lucide-react";
+import { Gift, Timer, Star, AlertCircle, Percent, Package, Truck, BadgeDollarSign, Trophy, History, Share2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { PrizeCard } from "@/components/lucky-draw/PrizeCard";
+import { PrizeHistory } from "@/components/lucky-draw/PrizeHistory";
+import { Rules } from "@/components/lucky-draw/Rules";
+import { Prize, PrizeHistoryItem } from "@/components/lucky-draw/types";
 
-const prizes = [
+const prizes: Prize[] = [
   { 
     id: 1, 
     name: "5% Discount", 
@@ -63,24 +61,17 @@ const prizes = [
   },
 ];
 
-interface PrizeHistory {
-  id: string;
-  prize: typeof prizes[0];
-  date: Date;
-  claimed: boolean;
-}
-
 const LuckyDraw = () => {
   const { toast } = useToast();
   const [isSpinning, setIsSpinning] = useState(false);
-  const [selectedPrize, setSelectedPrize] = useState<typeof prizes[0] | null>(null);
+  const [selectedPrize, setSelectedPrize] = useState<Prize | null>(null);
   const [nextSpinTime, setNextSpinTime] = useState<Date | null>(null);
   const [canSpin, setCanSpin] = useState(true);
   const [showCards, setShowCards] = useState(true);
   const [showRules, setShowRules] = useState(false);
   const [streak, setStreak] = useState(0);
   const [lastSpinDate, setLastSpinDate] = useState<string | null>(null);
-  const [prizeHistory, setPrizeHistory] = useState<PrizeHistory[]>([]);
+  const [prizeHistory, setPrizeHistory] = useState<PrizeHistoryItem[]>([]);
   const [showHistory, setShowHistory] = useState(false);
 
   useEffect(() => {
@@ -125,27 +116,24 @@ const LuckyDraw = () => {
     setIsSpinning(true);
     setShowCards(false);
 
-    // Simulate card shuffling animation with multiple stages
     setTimeout(() => {
       const randomPrize = prizes[Math.floor(Math.random() * prizes.length)];
       setSelectedPrize(randomPrize);
       setShowCards(true);
 
-      // Add to prize history
-      const newPrize: PrizeHistory = {
+      const newPrize: PrizeHistoryItem = {
         id: Date.now().toString(),
         prize: randomPrize,
         date: new Date(),
         claimed: false,
       };
-      const updatedHistory = [newPrize, ...prizeHistory].slice(0, 10); // Keep last 10 prizes
+
+      const updatedHistory = [newPrize, ...prizeHistory].slice(0, 10);
       setPrizeHistory(updatedHistory);
       localStorage.setItem('prizeHistory', JSON.stringify(updatedHistory));
 
-      // Update streak
       updateStreak();
 
-      // Show win animation and toast
       toast({
         title: `Congratulations! 🎉 Day ${streak}`,
         description: (
@@ -201,77 +189,7 @@ const LuckyDraw = () => {
                 <Gift className="h-5 w-5" />
                 Lucky Draw
               </CardTitle>
-              <TooltipProvider>
-                <Tooltip open={showRules} onOpenChange={setShowRules}>
-                  <TooltipTrigger asChild>
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className="h-8 w-8 relative cursor-pointer"
-                      onClick={() => setShowRules(!showRules)}
-                    >
-                      <BookOpen className="h-4 w-4" />
-                      <span className="sr-only">View Rules</span>
-                      <span className="absolute -bottom-1 -right-1 text-[10px] text-muted-foreground">Tap</span>
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent 
-                    className="w-[400px] p-4"
-                    onPointerDownOutside={() => setShowRules(false)}
-                  >
-                    <div className="space-y-4">
-                      <h4 className="font-semibold text-base">Lucky Draw Rules</h4>
-                      
-                      <div>
-                        <h5 className="font-medium mb-1">1. Entry Options</h5>
-                        <ul className="list-disc ml-4 space-y-1 text-sm">
-                          <li>Daily Spin: Users can participate once per day</li>
-                          <li>Bonus Entries: Earn extra spins by inviting friends or making purchases</li>
-                          <li>VIP Entries: Special spins for premium members or high-spending customers</li>
-                        </ul>
-                      </div>
-
-                      <div>
-                        <h5 className="font-medium mb-1">2. Prize Categories</h5>
-                        <ul className="list-disc ml-4 space-y-1 text-sm">
-                          <li>Discount Coupons: 5%, 10%, 20% off on purchases</li>
-                          <li>Free Products: Select items from our store</li>
-                          <li>Cashback Rewards: Win a percentage of your last order back</li>
-                          <li>Exclusive Deals: Limited-time offers for winners</li>
-                          <li>Loyalty Points: Points added to your account for future use</li>
-                        </ul>
-                      </div>
-
-                      <div>
-                        <h5 className="font-medium mb-1">3. Spin Customization</h5>
-                        <ul className="list-disc ml-4 space-y-1 text-sm">
-                          <li>Spin the Wheel: Rotating wheel with different prize sections</li>
-                          <li>Scratch Cards: Digital scratch cards with hidden prizes</li>
-                          <li>Mystery Box: Open a box to reveal your reward</li>
-                        </ul>
-                      </div>
-
-                      <div>
-                        <h5 className="font-medium mb-1">4. Winner Announcement</h5>
-                        <ul className="list-disc ml-4 space-y-1 text-sm">
-                          <li>Instant Win Popup: See what you won immediately</li>
-                          <li>Leaderboard: View recent winners</li>
-                          <li>Push Notifications: Get reminded when you can spin again</li>
-                        </ul>
-                      </div>
-
-                      <div>
-                        <h5 className="font-medium mb-1">5. Redemption Rules</h5>
-                        <ul className="list-disc ml-4 space-y-1 text-sm">
-                          <li>Claim Time Limit: Must claim prizes within the specified period</li>
-                          <li>Minimum Order Requirement: Some rewards require minimum purchase value</li>
-                          <li>Non-Transferable: Prizes are bound to winner's account only</li>
-                        </ul>
-                      </div>
-                    </div>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <Rules showRules={showRules} setShowRules={setShowRules} />
             </div>
           </CardHeader>
           <CardContent className="text-center">
@@ -299,20 +217,11 @@ const LuckyDraw = () => {
                   }`}
                 >
                   {(selectedPrize ? [selectedPrize] : prizes.slice(0, 8)).map((prize) => (
-                    <div
+                    <PrizeCard
                       key={prize.id}
-                      className={`aspect-[3/4] rounded-xl shadow-lg flex flex-col items-center justify-center p-4 transition-all duration-300 hover:scale-105 ${
-                        selectedPrize ? 'animate-bounce-once' : ''
-                      }`}
-                      style={{ backgroundColor: prize.color }}
-                    >
-                      <div className="mb-4">
-                        {prize.icon}
-                      </div>
-                      <div className="text-white text-xl font-semibold text-center mt-2">
-                        {prize.name}
-                      </div>
-                    </div>
+                      {...prize}
+                      isSelected={selectedPrize !== null}
+                    />
                   ))}
                 </div>
               ) : (
@@ -356,30 +265,7 @@ const LuckyDraw = () => {
             </div>
 
             {showHistory && prizeHistory.length > 0 && (
-              <div className="mt-8 border rounded-lg p-4">
-                <h3 className="text-lg font-semibold mb-4">Recent Prizes</h3>
-                <div className="space-y-2">
-                  {prizeHistory.map((item) => (
-                    <div
-                      key={item.id}
-                      className="flex items-center justify-between p-2 bg-muted rounded"
-                    >
-                      <div className="flex items-center gap-2">
-                        <div
-                          className="w-8 h-8 rounded flex items-center justify-center"
-                          style={{ backgroundColor: item.prize.color }}
-                        >
-                          {item.prize.icon}
-                        </div>
-                        <span>{item.prize.name}</span>
-                      </div>
-                      <span className="text-sm text-muted-foreground">
-                        {new Date(item.date).toLocaleDateString()}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <PrizeHistory history={prizeHistory} />
             )}
 
             <div className="mt-6 text-sm text-muted-foreground space-y-2">
