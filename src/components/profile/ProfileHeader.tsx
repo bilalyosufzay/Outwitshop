@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import type { ProfileData } from "@/types/profile";
+import { LevelDisplay } from "./LevelDisplay";
 
 interface ProfileHeaderProps {
   profile: ProfileData | null;
@@ -34,7 +35,17 @@ export const ProfileHeader = ({ profile, userEmail }: ProfileHeaderProps) => {
         <h1 className="text-2xl font-semibold mb-1">
           {profile?.username || 'User'}
         </h1>
-        <p className="text-muted-foreground mb-2">{userEmail}</p>
+        <p className="text-muted-foreground mb-4">{userEmail}</p>
+        
+        <div className="w-full max-w-md mb-6">
+          <LevelDisplay
+            type="buyer"
+            level="Newbie Shopper"
+            progress={30}
+            nextLevel="Frequent Buyer"
+          />
+        </div>
+
         <Button
           variant="outline"
           size="sm"
