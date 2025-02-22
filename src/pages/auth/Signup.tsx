@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import ReCAPTCHA from "react-google-recaptcha";
+import { toast } from "sonner";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
