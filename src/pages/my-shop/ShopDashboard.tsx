@@ -3,18 +3,15 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Loader2, DollarSign, Package, MessageSquare, BarChart3 } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Loader2 } from "lucide-react";
 import { Shop } from "@/types/shop";
 import { DashboardStats } from "@/types/dashboard";
 import { VerificationSection } from "./components/VerificationSection";
+import { StatsCards } from "./components/StatsCards";
+import { ShopInfoCard } from "./components/ShopInfoCard";
+import { ActionCards } from "./components/ActionCards";
+import { WelcomeCard } from "./components/WelcomeCard";
 
 const ShopDashboard = () => {
   const { user } = useAuth();
@@ -95,10 +92,6 @@ const ShopDashboard = () => {
     fetchShop();
   }, [user]);
 
-  const handleCancel = () => {
-    navigate("/");
-  };
-
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -108,49 +101,13 @@ const ShopDashboard = () => {
   }
 
   if (!shop) {
-    return (
-      <div className="container mx-auto px-4 py-8 max-w-2xl">
-        <Card>
-          <CardHeader>
-            <CardTitle>Welcome to Outwit Shop</CardTitle>
-            <CardDescription>
-              Start your journey as a seller by creating your own shop.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <Button
-              onClick={() => navigate("/my-shop/create")}
-              className="w-full"
-            >
-              Create Your Shop
-            </Button>
-            <Button
-              variant="outline"
-              onClick={handleCancel}
-              className="w-full"
-            >
-              Cancel
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
+    return <WelcomeCard onCancel={() => navigate("/")} />;
   }
 
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="grid gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>{shop.name}</CardTitle>
-            <CardDescription>
-              Shop Status: <span className="capitalize">{shop.status}</span>
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-gray-500">{shop.description}</p>
-          </CardContent>
-        </Card>
+        <ShopInfoCard shop={shop} />
 
         <Card>
           <CardContent className="py-6">
@@ -158,105 +115,8 @@ const ShopDashboard = () => {
           </CardContent>
         </Card>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">${stats.totalRevenue.toFixed(2)}</div>
-              <p className="text-xs text-muted-foreground">
-                Lifetime earnings
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Orders</CardTitle>
-              <Package className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.totalOrders}</div>
-              <p className="text-xs text-muted-foreground">
-                Total orders received
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Products</CardTitle>
-              <BarChart3 className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.totalProducts}</div>
-              <p className="text-xs text-muted-foreground">
-                Active listings
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Messages</CardTitle>
-              <MessageSquare className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.unreadMessages}</div>
-              <p className="text-xs text-muted-foreground">
-                Unread messages
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Products</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Button
-                onClick={() => navigate("/my-shop/products/add")}
-                className="w-full"
-              >
-                Add Product
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Orders</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Button
-                variant="secondary"
-                onClick={() => navigate("/my-shop/orders")}
-                className="w-full"
-              >
-                View Orders
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Settings</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Button
-                variant="outline"
-                onClick={() => navigate("/my-shop/settings")}
-                className="w-full"
-              >
-                Manage Shop
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
+        <StatsCards stats={stats} />
+        <ActionCards />
       </div>
     </div>
   );
