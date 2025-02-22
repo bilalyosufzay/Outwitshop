@@ -14,14 +14,14 @@
   },
   "categories": {
     "view_all": "Tümünü Gör",
-    "fashion": "Moda",
-    "electronics": "Elektronik",
+    "fashion": "Moda ve Giyim",
+    "electronics": "Elektronik Ürünler",
     "home_living": "Ev ve Yaşam",
-    "beauty": "Güzellik",
+    "beauty": "Güzellik ve Bakım",
     "supermarket": "Süpermarket",
-    "sports": "Spor",
+    "sports": "Spor ve Outdoor",
     "kids_baby": "Çocuk ve Bebek",
-    "automotive": "Otomotiv",
+    "automotive": "Otomotiv ve Motorsiklet",
     "books_media": "Kitap ve Medya",
     "pet_supplies": "Evcil Hayvan Ürünleri"
   },
@@ -30,15 +30,15 @@
     "view_all": "Tümünü Gör"
   },
   "trending": {
-    "title": "Trend",
+    "title": "Trend Ürünler",
     "hot": "Popüler 🔥"
   },
   "flash_sale": {
-    "title": "Flaş Satış 🎉",
+    "title": "Flaş İndirim 🎉",
     "subtitle": "Seçili ürünlerde %50'ye varan indirim"
   },
-  "shop_now": "Şimdi Alışveriş Yap",
-  "new_arrival": "Yeni Gelen",
+  "shop_now": "Hemen Alışveriş Yap",
+  "new_arrival": "Yeni Gelenler",
   "summer_collection": "Yaz Koleksiyonu",
   "auth": {
     "create_account": "Hesap Oluştur",
