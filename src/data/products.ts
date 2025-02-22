@@ -1,4 +1,3 @@
-
 export interface Product {
   id: string;
   name: string;
@@ -6,6 +5,7 @@ export interface Product {
   originalPrice?: number;
   category: string;
   image: string;
+  countryAvailability?: string[]; // List of country codes where product is available
 }
 
 export const FEATURED_PRODUCTS: Product[] = [
@@ -15,6 +15,7 @@ export const FEATURED_PRODUCTS: Product[] = [
     price: 299.99,
     category: "Electronics",
     image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80",
+    countryAvailability: ["US", "DE", "ES"],
   },
   {
     id: "2",
@@ -46,6 +47,7 @@ export const TRENDING_PRODUCTS: Product[] = [
     price: 159.99,
     category: "Electronics",
     image: "https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=800&q=80",
+    countryAvailability: ["US", "DE", "ES"],
   },
   {
     id: "6",
@@ -78,6 +80,7 @@ export const SALE_PRODUCTS: Product[] = [
     originalPrice: 79.99,
     category: "Fashion",
     image: "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=800&q=80",
+    countryAvailability: ["US", "DE", "ES"],
   },
   {
     id: "10",

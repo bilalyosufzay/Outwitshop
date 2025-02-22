@@ -1,6 +1,8 @@
 
 import { Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
+import { getLocalizedPrice, getUserCountry } from "@/utils/localization";
 
 interface ProductCardProps {
   id: string;
@@ -23,6 +25,23 @@ const ProductCard = ({
   onClick,
   className,
 }: ProductCardProps) => {
+  const [localizedPrice, setLocalizedPrice] = useState(getLocalizedPrice(price));
+  const [localizedOriginalPrice, setLocalizedOriginalPrice] = useState(
+    originalPrice ? getLocalizedPrice(originalPrice) : null
+  );
+
+  useEffect(() => {
+    const initializeLocalization = async () => {
+      const country = await getUserCountry();
+      setLocalizedPrice(getLocalizedPrice(price, country));
+      if (originalPrice) {
+        setLocalizedOriginalPrice(getLocalizedPrice(originalPrice, country));
+      }
+    };
+
+    initializeLocalization();
+  }, [price, originalPrice]);
+
   return (
     <div
       onClick={onClick}
@@ -54,11 +73,11 @@ const ProductCard = ({
         <h3 className="font-medium text-gray-900 truncate">{name}</h3>
         <div className="flex items-center gap-2">
           <p className="font-semibold text-accent">
-            ${price.toLocaleString("en-US", { minimumFractionDigits: 2 })}
+            {localizedPrice.formatted}
           </p>
-          {originalPrice && (
+          {localizedOriginalPrice && (
             <p className="text-sm text-gray-500 line-through">
-              ${originalPrice.toLocaleString("en-US", { minimumFractionDigits: 2 })}
+              {localizedOriginalPrice.formatted}
             </p>
           )}
         </div>
