@@ -6,14 +6,14 @@ import { Gift, Timer, Star, AlertCircle, Ticket, Package, Truck, Percent } from 
 import { useToast } from "@/hooks/use-toast";
 
 const prizes = [
-  { id: 1, name: "5% Discount", color: "#FF6B6B", icon: <Percent className="h-4 w-4" /> },
-  { id: 2, name: "10% Discount", color: "#4ECDC4", icon: <Percent className="h-4 w-4" /> },
-  { id: 3, name: "Free Shipping", color: "#45B7D1", icon: <Truck className="h-4 w-4" /> },
-  { id: 4, name: "20% Discount", color: "#96CEB4", icon: <Percent className="h-4 w-4" /> },
-  { id: 5, name: "100 Points", color: "#FFEEAD", icon: <Star className="h-4 w-4" /> },
-  { id: 6, name: "Mystery Box", color: "#D4A5A5", icon: <Package className="h-4 w-4" /> },
-  { id: 7, name: "15% Discount", color: "#9EC1CF", icon: <Percent className="h-4 w-4" /> },
-  { id: 8, name: "50 Points", color: "#FFD93D", icon: <Star className="h-4 w-4" /> },
+  { id: 1, name: "5% Discount", color: "#FF6B6B", icon: <Percent className="h-6 w-6" /> },
+  { id: 2, name: "10% Discount", color: "#4ECDC4", icon: <Percent className="h-6 w-6" /> },
+  { id: 3, name: "Free Shipping", color: "#45B7D1", icon: <Truck className="h-6 w-6" /> },
+  { id: 4, name: "20% Discount", color: "#96CEB4", icon: <Percent className="h-6 w-6" /> },
+  { id: 5, name: "100 Points", color: "#FFEEAD", icon: <Star className="h-6 w-6" /> },
+  { id: 6, name: "Mystery Box", color: "#D4A5A5", icon: <Package className="h-6 w-6" /> },
+  { id: 7, name: "15% Discount", color: "#9EC1CF", icon: <Percent className="h-6 w-6" /> },
+  { id: 8, name: "50 Points", color: "#FFD93D", icon: <Star className="h-6 w-6" /> },
 ];
 
 const LuckyDraw = () => {
@@ -108,7 +108,7 @@ const LuckyDraw = () => {
             </div>
 
             {/* Spinning Wheel */}
-            <div className="relative w-72 h-72 mx-auto mb-8">
+            <div className="relative w-[320px] h-[320px] sm:w-[400px] sm:h-[400px] mx-auto mb-8">
               <div
                 className="absolute w-full h-full rounded-full transition-transform duration-[5000ms] ease-out shadow-lg"
                 style={{
@@ -123,13 +123,13 @@ const LuckyDraw = () => {
                 {prizes.map((prize, index) => (
                   <div
                     key={prize.id}
-                    className="absolute w-full h-full text-sm font-medium text-white flex items-center justify-center"
+                    className="absolute w-full h-full text-base sm:text-lg font-medium text-white flex items-center justify-center"
                     style={{
                       transform: `rotate(${index * 45 + 22.5}deg)`,
                     }}
                   >
                     <div 
-                      className="absolute flex flex-col items-center gap-1 bg-black/20 px-2 py-1 rounded" 
+                      className="absolute flex flex-col items-center gap-2 bg-black/30 px-3 py-2 rounded" 
                       style={{ transform: "rotate(-90deg)" }}
                     >
                       {prize.icon}
@@ -139,8 +139,8 @@ const LuckyDraw = () => {
                 ))}
               </div>
               {/* Center pointer */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4">
-                <div className="w-0 h-0 border-l-[8px] border-l-transparent border-b-[16px] border-b-red-500 border-r-[8px] border-r-transparent absolute -top-[16px] left-1/2 -translate-x-1/2"></div>
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6">
+                <div className="w-0 h-0 border-l-[12px] border-l-transparent border-b-[24px] border-b-red-500 border-r-[12px] border-r-transparent absolute -top-[24px] left-1/2 -translate-x-1/2"></div>
               </div>
             </div>
 
@@ -149,7 +149,7 @@ const LuckyDraw = () => {
               disabled={isSpinning || !canSpin}
               className="w-full max-w-xs text-lg font-medium"
             >
-              <Gift className="h-5 w-5" />
+              <Gift className="h-5 w-5 mr-2" />
               {isSpinning ? "Spinning..." : "Spin to Win!"}
             </Button>
 
