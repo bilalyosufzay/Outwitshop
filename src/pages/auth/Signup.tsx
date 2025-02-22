@@ -15,14 +15,20 @@ const Signup = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Form submitted, captchaToken:", captchaToken);
+    
     if (!captchaToken) {
+      console.log("No CAPTCHA token available");
       toast.error("Please complete the CAPTCHA verification");
       return;
     }
+
     try {
       setLoading(true);
+      console.log("Attempting signup with token:", captchaToken);
       await signUp(email, password, captchaToken);
     } catch (error) {
+      console.error("Signup error:", error);
       // Error is handled in the AuthContext
     } finally {
       setLoading(false);
@@ -30,6 +36,7 @@ const Signup = () => {
   };
 
   const handleCaptchaChange = (token: string | null) => {
+    console.log("CAPTCHA callback triggered, token:", token ? "received" : "null");
     setCaptchaToken(token);
   };
 
@@ -106,3 +113,4 @@ const Signup = () => {
 };
 
 export default Signup;
+
