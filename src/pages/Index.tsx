@@ -1,9 +1,10 @@
+
 import { useNavigate } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import ProductCard from "@/components/ProductCard";
 import {
   MoreVertical,
-  type LucideIcon
+  Globe,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -12,6 +13,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { CATEGORIES } from "@/data/categories";
+import { useState } from "react";
+
+const LANGUAGES = [
+  { code: "en", name: "English", flag: "🇺🇸" },
+  { code: "es", name: "Español", flag: "🇪🇸" },
+  { code: "fr", name: "Français", flag: "🇫🇷" },
+  { code: "de", name: "Deutsch", flag: "🇩🇪" },
+  { code: "it", name: "Italiano", flag: "🇮🇹" },
+  { code: "pt", name: "Português", flag: "🇵🇹" },
+];
 
 const FEATURED_PRODUCTS = [
   {
@@ -112,18 +123,41 @@ const SALE_PRODUCTS = [
 
 const Index = () => {
   const navigate = useNavigate();
+  const [currentLanguage, setCurrentLanguage] = useState(LANGUAGES[0]);
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
       <header className="sticky top-0 z-10 bg-white/80 backdrop-blur-lg border-b border-gray-200">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <img
-              src="/lovable-uploads/b7de9b33-d899-4c4a-a399-3655bbb16b4c.png"
-              alt="Outwit Shop"
-              className="h-8 w-auto"
-            />
-            <h1 className="text-xl font-semibold text-gray-900">Outwit Shop</h1>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <img
+                src="/lovable-uploads/b7de9b33-d899-4c4a-a399-3655bbb16b4c.png"
+                alt="Outwit Shop"
+                className="h-8 w-auto"
+              />
+              <h1 className="text-xl font-semibold text-gray-900">Outwit Shop</h1>
+            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="flex items-center gap-1.5 px-2 py-1 text-sm text-gray-600 hover:text-gray-900 rounded-md hover:bg-gray-100">
+                  <Globe className="w-4 h-4" />
+                  <span>{currentLanguage.flag}</span>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-48">
+                {LANGUAGES.map((language) => (
+                  <DropdownMenuItem
+                    key={language.code}
+                    onClick={() => setCurrentLanguage(language)}
+                    className="flex items-center gap-2 px-3 py-2 cursor-pointer"
+                  >
+                    <span className="text-base">{language.flag}</span>
+                    <span>{language.name}</span>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
           <div className="flex items-center gap-2">
             <button className="p-2 rounded-full hover:bg-gray-100">
