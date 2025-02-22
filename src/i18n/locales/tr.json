@@ -13,7 +13,17 @@
     "profile": "Profil"
   },
   "categories": {
-    "view_all": "Tümünü Gör"
+    "view_all": "Tümünü Gör",
+    "fashion": "Moda",
+    "electronics": "Elektronik",
+    "home_living": "Ev ve Yaşam",
+    "beauty": "Güzellik",
+    "supermarket": "Süpermarket",
+    "sports": "Spor",
+    "kids_baby": "Çocuk ve Bebek",
+    "automotive": "Otomotiv",
+    "books_media": "Kitap ve Medya",
+    "pet_supplies": "Evcil Hayvan Ürünleri"
   },
   "featured": {
     "title": "Öne Çıkanlar",
@@ -29,5 +39,24 @@
   },
   "shop_now": "Şimdi Alışveriş Yap",
   "new_arrival": "Yeni Gelen",
-  "summer_collection": "Yaz Koleksiyonu"
+  "summer_collection": "Yaz Koleksiyonu",
+  "auth": {
+    "create_account": "Hesap Oluştur",
+    "join_today": "Outwit Shop'a bugün katılın",
+    "email_address": "E-posta adresi",
+    "password": "Şifre",
+    "creating_account": "Hesap oluşturuluyor...",
+    "create_account_button": "Hesap oluştur",
+    "already_have_account": "Zaten hesabınız var mı?",
+    "sign_in": "Giriş yap",
+    "welcome_back": "Tekrar hoş geldiniz",
+    "please_sign_in": "Lütfen hesabınıza giriş yapın",
+    "enter_email": "E-posta adresinizi girin",
+    "enter_password": "Şifrenizi girin",
+    "forgot_password": "Şifrenizi mi unuttunuz?",
+    "signing_in": "Giriş yapılıyor...",
+    "sign_in_button": "Giriş yap",
+    "dont_have_account": "Hesabınız yok mu?",
+    "sign_up": "Üye ol"
+  }
 }

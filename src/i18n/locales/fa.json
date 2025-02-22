@@ -13,7 +13,17 @@
     "profile": "پروفایل"
   },
   "categories": {
-    "view_all": "مشاهده همه"
+    "view_all": "مشاهده همه",
+    "fashion": "مد و پوشاک",
+    "electronics": "الکترونیک",
+    "home_living": "خانه و زندگی",
+    "beauty": "زیبایی",
+    "supermarket": "سوپرمارکت",
+    "sports": "ورزشی",
+    "kids_baby": "کودک و نوزاد",
+    "automotive": "خودرو",
+    "books_media": "کتاب و رسانه",
+    "pet_supplies": "لوازم حیوانات خانگی"
   },
   "featured": {
     "title": "محصولات ویژه",
@@ -29,5 +39,24 @@
   },
   "shop_now": "خرید",
   "new_arrival": "جدیدترین‌ها",
-  "summer_collection": "کلکسیون تابستان"
+  "summer_collection": "کلکسیون تابستان",
+  "auth": {
+    "create_account": "ایجاد حساب کاربری",
+    "join_today": "همین امروز به Outwit Shop بپیوندید",
+    "email_address": "آدرس ایمیل",
+    "password": "رمز عبور",
+    "creating_account": "در حال ایجاد حساب...",
+    "create_account_button": "ایجاد حساب",
+    "already_have_account": "قبلاً حساب کاربری دارید؟",
+    "sign_in": "ورود",
+    "welcome_back": "خوش آمدید",
+    "please_sign_in": "لطفاً وارد حساب کاربری خود شوید",
+    "enter_email": "ایمیل خود را وارد کنید",
+    "enter_password": "رمز عبور خود را وارد کنید",
+    "forgot_password": "رمز عبور خود را فراموش کرده‌اید؟",
+    "signing_in": "در حال ورود...",
+    "sign_in_button": "ورود",
+    "dont_have_account": "حساب کاربری ندارید؟",
+    "sign_up": "ثبت‌نام"
+  }
 }

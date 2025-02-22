@@ -13,7 +13,17 @@
     "profile": "پروفایل"
   },
   "categories": {
-    "view_all": "ټول وګورئ"
+    "view_all": "ټول وګورئ",
+    "fashion": "موډ او جامې",
+    "electronics": "برقي سامان",
+    "home_living": "کور او ژوند",
+    "beauty": "ښکلا",
+    "supermarket": "سوپر مارکیټ",
+    "sports": "سپورت",
+    "kids_baby": "ماشومان او کوچنیان",
+    "automotive": "موټر",
+    "books_media": "کتابونه او رسنۍ",
+    "pet_supplies": "د څارویو سامان"
   },
   "featured": {
     "title": "ځانګړي محصولات",
@@ -29,5 +39,24 @@
   },
   "shop_now": "اوس یې واخلئ",
   "new_arrival": "نوی رارسیدلی",
-  "summer_collection": "د اوړي کلکسیون"
+  "summer_collection": "د اوړي کلکسیون",
+  "auth": {
+    "create_account": "حساب جوړول",
+    "join_today": "نن Outwit Shop سره یوځای شئ",
+    "email_address": "بریښنالیک پته",
+    "password": "پټ نوم",
+    "creating_account": "حساب جوړیږي...",
+    "create_account_button": "حساب جوړ کړئ",
+    "already_have_account": "دمخه حساب لرئ؟",
+    "sign_in": "ننوتل",
+    "welcome_back": "بیرته ښه راغلاست",
+    "please_sign_in": "مهرباني وکړئ خپل حساب ته ننوځئ",
+    "enter_email": "خپل بریښنالیک دننه کړئ",
+    "enter_password": "خپل پټ نوم دننه کړئ",
+    "forgot_password": "پټ نوم مو هیر شوی؟",
+    "signing_in": "ننوتل کیږي...",
+    "sign_in_button": "ننوتل",
+    "dont_have_account": "حساب نه لرئ؟",
+    "sign_up": "نوم لیکنه"
+  }
 }
