@@ -41,7 +41,7 @@ export const BuyerContent = () => {
       <ProfileSection
         title="Wishlist"
         icon={Heart}
-        onClick={() => navigate('/wishlist')}
+        onClick={() => navigate('/wishlists')}
       />
       <ProfileSection
         title="Recently Viewed"
