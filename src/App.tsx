@@ -13,6 +13,9 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import CreateShop from "./pages/my-shop/CreateShop";
 import ShopDashboard from "./pages/my-shop/ShopDashboard";
 import Profile from "./pages/Profile";
+import Search from "./pages/Search";
+import LuckyDraw from "./pages/LuckyDraw";
+import Cart from "./pages/Cart";
 
 const queryClient = new QueryClient();
 
@@ -28,9 +31,9 @@ const App = () => (
             <Route path="/auth/signup" element={<Signup />} />
             <Route element={<ProtectedRoute />}>
               <Route path="/" element={<Index />} />
-              <Route path="/search" element={<NotFound />} />
-              <Route path="/lucky-draw" element={<NotFound />} />
-              <Route path="/cart" element={<NotFound />} />
+              <Route path="/search" element={<Search />} />
+              <Route path="/lucky-draw" element={<LuckyDraw />} />
+              <Route path="/cart" element={<Cart />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/product/:id" element={<NotFound />} />
               <Route path="/my-shop" element={<Navigate to="/my-shop/dashboard" replace />} />
