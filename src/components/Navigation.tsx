@@ -1,5 +1,5 @@
 
-import { Home, Search, Gift, ShoppingBag, User } from "lucide-react";
+import { Home, Search, Gift, ShoppingBag, User, Store } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
@@ -12,6 +12,7 @@ const Navigation = () => {
     { icon: Search, label: "Search", path: "/search" },
     { icon: Gift, label: "Lucky Draw", path: "/lucky-draw" },
     { icon: ShoppingBag, label: "Cart", path: "/cart" },
+    { icon: Store, label: "My Shop", path: "/my-shop" },
     { icon: User, label: "Profile", path: "/profile" },
   ];
 
