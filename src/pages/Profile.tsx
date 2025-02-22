@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import Navigation from "@/components/Navigation";
@@ -37,7 +38,6 @@ const Profile = () => {
 
         if (error) throw error;
         
-        // Transform the data to match ProfileData interface
         const transformedData: ProfileData = {
           username: data.username,
           avatar_url: data.avatar_url,
@@ -74,6 +74,10 @@ const Profile = () => {
     }
   };
 
+  const handleNavigation = (path: string) => {
+    navigate(path);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background pb-20">
@@ -106,7 +110,11 @@ const Profile = () => {
         </Card>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Button variant="outline" className="flex items-center gap-2 h-auto py-4" onClick={() => navigate('/settings')}>
+          <Button 
+            variant="outline" 
+            className="flex items-center gap-2 h-auto py-4" 
+            onClick={() => handleNavigation('/settings')}
+          >
             <Settings2 className="h-5 w-5" />
             <div className="text-left">
               <div className="font-medium">Settings</div>
@@ -114,7 +122,11 @@ const Profile = () => {
             </div>
           </Button>
           
-          <Button variant="outline" className="flex items-center gap-2 h-auto py-4" onClick={() => navigate('/notifications')}>
+          <Button 
+            variant="outline" 
+            className="flex items-center gap-2 h-auto py-4" 
+            onClick={() => handleNavigation('/notifications')}
+          >
             <Bell className="h-5 w-5" />
             <div className="text-left">
               <div className="font-medium">Notifications</div>
@@ -122,7 +134,11 @@ const Profile = () => {
             </div>
           </Button>
 
-          <Button variant="outline" className="flex items-center gap-2 h-auto py-4" onClick={() => navigate('/security')}>
+          <Button 
+            variant="outline" 
+            className="flex items-center gap-2 h-auto py-4" 
+            onClick={() => handleNavigation('/security')}
+          >
             <Shield className="h-5 w-5" />
             <div className="text-left">
               <div className="font-medium">Security</div>
