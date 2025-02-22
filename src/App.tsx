@@ -1,10 +1,10 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
+import Header from "@/components/Header";
 import Index from "./pages/Index";
 import Login from "./pages/auth/Login";
 import Signup from "./pages/auth/Signup";
@@ -16,6 +16,8 @@ import Profile from "./pages/Profile";
 import Search from "./pages/Search";
 import LuckyDraw from "./pages/LuckyDraw";
 import Cart from "./pages/Cart";
+import ProductsPage from "@/pages/my-shop/products/ProductsPage";
+import AddProductPage from "@/pages/my-shop/products/AddProductPage";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +41,8 @@ const App = () => (
               <Route path="/my-shop" element={<Navigate to="/my-shop/dashboard" replace />} />
               <Route path="/my-shop/create" element={<CreateShop />} />
               <Route path="/my-shop/dashboard" element={<ShopDashboard />} />
+              <Route path="/my-shop/products" element={<ProductsPage />} />
+              <Route path="/my-shop/products/add" element={<AddProductPage />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
