@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Bell, ShoppingBag, Heart, MessageSquare, Gift } from "lucide-react";
 import Navigation from "@/components/Navigation";
+import { BackButton } from "@/components/BackButton";
 
 export default function Notifications() {
   const notifications = [
@@ -42,9 +43,10 @@ export default function Notifications() {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <div className="min-h-screen bg-background pb-20 relative">
+      <BackButton />
       <div className="container mx-auto p-6">
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-6 mt-8">
           <h1 className="text-2xl font-bold">Notifications</h1>
           <Badge variant="outline" className="py-1">
             {notifications.filter(n => !n.read).length} unread

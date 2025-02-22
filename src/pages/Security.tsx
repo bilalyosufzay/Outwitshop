@@ -1,4 +1,3 @@
-
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,6 +8,7 @@ import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import Navigation from "@/components/Navigation";
 import { supabase } from "@/integrations/supabase/client";
+import { BackButton } from "@/components/BackButton";
 
 export default function Security() {
   const { user } = useAuth();
@@ -39,9 +39,10 @@ export default function Security() {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <div className="min-h-screen bg-background pb-20 relative">
+      <BackButton />
       <div className="container mx-auto p-6 space-y-6">
-        <h1 className="text-2xl font-bold">Security Settings</h1>
+        <h1 className="text-2xl font-bold mt-8">Security Settings</h1>
 
         <Card>
           <CardContent className="p-6 space-y-6">

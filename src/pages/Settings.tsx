@@ -9,6 +9,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import Navigation from "@/components/Navigation";
+import { BackButton } from "@/components/BackButton";
 
 export default function Settings() {
   const { user } = useAuth();
@@ -37,9 +38,10 @@ export default function Settings() {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <div className="min-h-screen bg-background pb-20 relative">
+      <BackButton />
       <div className="container mx-auto p-6 space-y-6">
-        <h1 className="text-2xl font-bold">Account Settings</h1>
+        <h1 className="text-2xl font-bold mt-8">Account Settings</h1>
         
         <Card>
           <CardContent className="p-6 space-y-6">
