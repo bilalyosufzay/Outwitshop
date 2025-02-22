@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,9 +20,10 @@ const prizes = [
 const LuckyDraw = () => {
   const { toast } = useToast();
   const [isSpinning, setIsSpinning] = useState(false);
-  const [rotation, setRotation] = useState(0);
+  const [selectedPrize, setSelectedPrize] = useState<typeof prizes[0] | null>(null);
   const [nextSpinTime, setNextSpinTime] = useState<Date | null>(null);
   const [canSpin, setCanSpin] = useState(true);
+  const [showCards, setShowCards] = useState(true);
 
   useEffect(() => {
     const lastSpinTime = localStorage.getItem('lastSpinTime');
@@ -49,22 +51,21 @@ const LuckyDraw = () => {
     }
   }, [nextSpinTime, canSpin]);
 
-  const spinWheel = () => {
+  const spinDraw = () => {
     if (!canSpin) return;
 
     setIsSpinning(true);
-    const randomDegrees = Math.floor(Math.random() * 360) + 1440; // At least 4 full rotations
-    setRotation(rotation + randomDegrees);
+    setShowCards(false);
 
-    // Calculate which prize was won based on final rotation
+    // Simulate card shuffling animation
     setTimeout(() => {
-      const normalizedDegree = (rotation + randomDegrees) % 360;
-      const prizeIndex = Math.floor((normalizedDegree / 45) % 8);
-      const prize = prizes[prizeIndex];
+      const randomPrize = prizes[Math.floor(Math.random() * prizes.length)];
+      setSelectedPrize(randomPrize);
+      setShowCards(true);
 
       toast({
         title: "Congratulations! 🎉",
-        description: `You won: ${prize.name}`,
+        description: `You won: ${randomPrize.name}`,
         duration: 5000,
       });
 
@@ -72,7 +73,7 @@ const LuckyDraw = () => {
       setCanSpin(false);
       localStorage.setItem('lastSpinTime', Date.now().toString());
       setNextSpinTime(new Date(Date.now() + 24 * 60 * 60 * 1000));
-    }, 5000);
+    }, 2000);
   };
 
   const formatTimeRemaining = () => {
@@ -97,66 +98,57 @@ const LuckyDraw = () => {
           <CardContent className="text-center">
             <div className="mb-6">
               <p className="text-muted-foreground">
-                Spin the wheel and win amazing prizes!
+                Draw a card and win amazing prizes!
               </p>
               {!canSpin && nextSpinTime && (
                 <div className="flex items-center justify-center gap-2 mt-2 text-sm text-yellow-600">
                   <Timer className="h-4 w-4" />
-                  Next spin available in: {formatTimeRemaining()}
+                  Next draw available in: {formatTimeRemaining()}
                 </div>
               )}
             </div>
 
-            {/* Spinning Wheel */}
-            <div className="relative w-[350px] h-[350px] sm:w-[500px] sm:h-[500px] mx-auto mb-8">
-              <div
-                className="absolute w-full h-full rounded-full transition-transform duration-[5000ms] ease-out shadow-lg"
-                style={{
-                  transform: `rotate(${rotation}deg)`,
-                  background: `conic-gradient(
-                    ${prizes.map((prize, index) => 
-                      `${prize.color} ${index * 45}deg ${(index + 1) * 45}deg`
-                    ).join(', ')}
-                  )`,
-                }}
-              >
-                {prizes.map((prize, index) => (
-                  <div
-                    key={prize.id}
-                    className="absolute w-full h-full text-lg sm:text-2xl font-medium text-white flex items-center justify-center"
-                    style={{
-                      transform: `rotate(${index * 45 + 22.5}deg)`,
-                    }}
-                  >
-                    <div 
-                      className="absolute flex flex-col items-center gap-3 bg-black/40 px-4 py-3 rounded" 
-                      style={{ transform: "rotate(-90deg)" }}
+            {/* Cards Display */}
+            <div className="relative min-h-[300px] mb-8">
+              {showCards ? (
+                <div className={`grid grid-cols-2 sm:grid-cols-4 gap-4 transition-all duration-500 ${isSpinning ? 'opacity-0 scale-90' : 'opacity-100 scale-100'}`}>
+                  {(selectedPrize ? [selectedPrize] : prizes.slice(0, 8)).map((prize) => (
+                    <div
+                      key={prize.id}
+                      className="aspect-[3/4] rounded-xl shadow-lg flex flex-col items-center justify-center p-4 transition-transform hover:scale-105"
+                      style={{ backgroundColor: prize.color }}
                     >
-                      {prize.icon}
-                      {prize.name}
+                      <div className="text-white mb-4">
+                        {prize.icon}
+                      </div>
+                      <div className="text-white text-lg font-semibold text-center">
+                        {prize.name}
+                      </div>
                     </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="animate-spin text-primary">
+                    <Gift className="h-12 w-12" />
                   </div>
-                ))}
-              </div>
-              {/* Center pointer */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8">
-                <div className="w-0 h-0 border-l-[16px] border-l-transparent border-b-[32px] border-b-red-500 border-r-[16px] border-r-transparent absolute -top-[32px] left-1/2 -translate-x-1/2"></div>
-              </div>
+                </div>
+              )}
             </div>
 
             <Button
-              onClick={spinWheel}
+              onClick={spinDraw}
               disabled={isSpinning || !canSpin}
               className="w-full max-w-xs text-lg font-medium"
             >
               <Gift className="h-5 w-5 mr-2" />
-              {isSpinning ? "Spinning..." : "Spin to Win!"}
+              {isSpinning ? "Drawing..." : "Draw a Card!"}
             </Button>
 
             <div className="mt-6 text-sm text-muted-foreground">
               <div className="flex items-center justify-center gap-1">
                 <Star className="h-4 w-4 text-yellow-500" />
-                <span>One free spin available every 24 hours</span>
+                <span>One free draw available every 24 hours</span>
               </div>
               <div className="flex items-center justify-center gap-1 mt-2">
                 <AlertCircle className="h-4 w-4 text-blue-500" />
