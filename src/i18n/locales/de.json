@@ -16,14 +16,14 @@
     "view_all": "Alle anzeigen",
     "fashion": "Mode",
     "electronics": "Elektronik",
-    "home_living": "Haus & Wohnen",
-    "beauty": "Beauty & Pflege",
-    "supermarket": "Supermarkt",
+    "home": "Haus",
+    "beauty": "Beauty",
+    "grocery": "Markt",
     "sports": "Sport",
-    "kids_baby": "Kinder & Baby",
-    "automotive": "Auto & Motorrad",
-    "books_media": "Bücher & Medien",
-    "pet_supplies": "Haustierbedarf"
+    "kids": "Kinder",
+    "auto": "Auto",
+    "books": "Bücher",
+    "pets": "Haustiere"
   },
   "featured": {
     "title": "Ausgewählte Produkte",

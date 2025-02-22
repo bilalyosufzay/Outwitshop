@@ -1,3 +1,4 @@
+
 {
   "header": {
     "notifications": "Notifications",
@@ -15,14 +16,14 @@
     "view_all": "View All",
     "fashion": "Fashion",
     "electronics": "Electronics",
-    "home_living": "Home",
+    "home": "Home",
     "beauty": "Beauty",
-    "supermarket": "Supermarket",
+    "grocery": "Grocery",
     "sports": "Sports",
-    "kids_baby": "Kids & Baby",
-    "automotive": "Auto",
-    "books_media": "Books",
-    "pet_supplies": "Pets"
+    "kids": "Kids",
+    "auto": "Auto",
+    "books": "Books",
+    "pets": "Pets"
   },
   "featured": {
     "title": "Featured Products",

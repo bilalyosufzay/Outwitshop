@@ -16,14 +16,14 @@
     "view_all": "Tümünü Gör",
     "fashion": "Moda",
     "electronics": "Elektronik",
-    "home_living": "Ev ve Yaşam",
+    "home": "Ev",
     "beauty": "Güzellik",
-    "supermarket": "Süpermarket",
+    "grocery": "Market",
     "sports": "Spor",
-    "kids_baby": "Çocuk ve Bebek",
-    "automotive": "Otomotiv",
-    "books_media": "Kitap ve Medya",
-    "pet_supplies": "Evcil Hayvan"
+    "kids": "Çocuk",
+    "auto": "Oto",
+    "books": "Kitap",
+    "pets": "Evcil Hayvan"
   },
   "featured": {
     "title": "Öne Çıkanlar",
