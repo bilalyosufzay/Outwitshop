@@ -10,57 +10,57 @@ const prizes = [
     id: 1, 
     name: "5% Discount", 
     color: "#FF6B6B", 
-    image: "/discount-5.png",
-    icon: <img src="/discount-5.png" alt="" className="h-24 w-24 object-contain" />
+    image: "/placeholder.svg",
+    icon: <img src="/placeholder.svg" alt="" className="h-24 w-24 object-contain rounded-lg" />
   },
   { 
     id: 2, 
     name: "10% Discount", 
     color: "#4ECDC4", 
-    image: "/discount-10.png",
-    icon: <img src="/discount-10.png" alt="" className="h-24 w-24 object-contain" />
+    image: "/placeholder.svg",
+    icon: <img src="/placeholder.svg" alt="" className="h-24 w-24 object-contain rounded-lg" />
   },
   { 
     id: 3, 
     name: "Free Shipping", 
     color: "#45B7D1", 
-    image: "/shipping.png",
-    icon: <img src="/shipping.png" alt="" className="h-24 w-24 object-contain" />
+    image: "/placeholder.svg",
+    icon: <img src="/placeholder.svg" alt="" className="h-24 w-24 object-contain rounded-lg" />
   },
   { 
     id: 4, 
     name: "20% Discount", 
     color: "#96CEB4", 
-    image: "/discount-20.png",
-    icon: <img src="/discount-20.png" alt="" className="h-24 w-24 object-contain" />
+    image: "/placeholder.svg",
+    icon: <img src="/placeholder.svg" alt="" className="h-24 w-24 object-contain rounded-lg" />
   },
   { 
     id: 5, 
     name: "100 Points", 
     color: "#FFEEAD", 
-    image: "/points-100.png",
-    icon: <img src="/points-100.png" alt="" className="h-24 w-24 object-contain" />
+    image: "/placeholder.svg",
+    icon: <img src="/placeholder.svg" alt="" className="h-24 w-24 object-contain rounded-lg" />
   },
   { 
     id: 6, 
     name: "Mystery Box", 
     color: "#D4A5A5", 
-    image: "/mystery-box.png",
-    icon: <img src="/mystery-box.png" alt="" className="h-24 w-24 object-contain" />
+    image: "/placeholder.svg",
+    icon: <img src="/placeholder.svg" alt="" className="h-24 w-24 object-contain rounded-lg" />
   },
   { 
     id: 7, 
     name: "15% Discount", 
     color: "#9EC1CF", 
-    image: "/discount-15.png",
-    icon: <img src="/discount-15.png" alt="" className="h-24 w-24 object-contain" />
+    image: "/placeholder.svg",
+    icon: <img src="/placeholder.svg" alt="" className="h-24 w-24 object-contain rounded-lg" />
   },
   { 
     id: 8, 
     name: "50 Points", 
     color: "#FFD93D", 
-    image: "/points-50.png",
-    icon: <img src="/points-50.png" alt="" className="h-24 w-24 object-contain" />
+    image: "/placeholder.svg",
+    icon: <img src="/placeholder.svg" alt="" className="h-24 w-24 object-contain rounded-lg" />
   },
 ];
 
@@ -165,7 +165,7 @@ const LuckyDraw = () => {
                       className="aspect-[3/4] rounded-xl shadow-lg flex flex-col items-center justify-center p-4 transition-transform hover:scale-105"
                       style={{ backgroundColor: prize.color }}
                     >
-                      <div className="mb-4">
+                      <div className="mb-4 bg-white/10 p-3 rounded-lg">
                         {prize.icon}
                       </div>
                       <div className="text-white text-xl font-semibold text-center mt-2">
