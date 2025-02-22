@@ -12,6 +12,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  CardFooter,
 } from "@/components/ui/card";
 import {
   Form,
@@ -44,6 +45,10 @@ const CreateShop = () => {
       contactEmail: user?.email || "",
     },
   });
+
+  const handleCancel = () => {
+    navigate("/");
+  };
 
   const onSubmit = async (data: CreateShopFormData) => {
     if (!user) {
@@ -170,9 +175,23 @@ const CreateShop = () => {
                 )}
               />
 
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Creating Shop..." : "Create Shop"}
-              </Button>
+              <div className="flex gap-4">
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={handleCancel}
+                  className="w-full"
+                >
+                  Cancel
+                </Button>
+                <Button 
+                  type="submit" 
+                  className="w-full" 
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Creating Shop..." : "Create Shop"}
+                </Button>
+              </div>
             </form>
           </Form>
         </CardContent>

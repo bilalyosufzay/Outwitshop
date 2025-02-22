@@ -10,6 +10,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  CardFooter,
 } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 
@@ -34,12 +35,12 @@ const ShopDashboard = () => {
       try {
         const { data, error } = await supabase
           .from("shops")
-          .select("*")
+          .select()
           .eq("owner_id", user.id)
           .single();
 
         if (error) throw error;
-        setShop(data);
+        setShop(data as Shop);
       } catch (error) {
         console.error("Error fetching shop:", error);
       } finally {
@@ -49,6 +50,10 @@ const ShopDashboard = () => {
 
     fetchShop();
   }, [user]);
+
+  const handleCancel = () => {
+    navigate("/");
+  };
 
   if (isLoading) {
     return (
@@ -68,12 +73,19 @@ const ShopDashboard = () => {
               Start your journey as a seller by creating your own shop.
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-4">
             <Button
               onClick={() => navigate("/my-shop/create")}
               className="w-full"
             >
               Create Your Shop
+            </Button>
+            <Button
+              variant="outline"
+              onClick={handleCancel}
+              className="w-full"
+            >
+              Cancel
             </Button>
           </CardContent>
         </Card>
@@ -94,6 +106,15 @@ const ShopDashboard = () => {
           <CardContent>
             <p className="text-sm text-gray-500">{shop.description}</p>
           </CardContent>
+          <CardFooter>
+            <Button
+              variant="outline"
+              onClick={handleCancel}
+              className="w-full"
+            >
+              Exit Shop Dashboard
+            </Button>
+          </CardFooter>
         </Card>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
