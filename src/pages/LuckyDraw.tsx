@@ -2,8 +2,14 @@ import { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Gift, Timer, Star, AlertCircle, Percent, Package, Truck, BadgeDollarSign } from "lucide-react";
+import { Gift, Timer, Star, AlertCircle, Percent, Package, Truck, BadgeDollarSign, BookOpen } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const prizes = [
   { 
@@ -142,11 +148,33 @@ const LuckyDraw = () => {
     <div className="min-h-screen bg-background pb-20">
       <div className="container mx-auto px-4 py-8">
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Gift className="h-5 w-5" />
-              Lucky Draw
-            </CardTitle>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div className="flex items-center gap-4">
+              <CardTitle className="flex items-center gap-2">
+                <Gift className="h-5 w-5" />
+                Lucky Draw
+              </CardTitle>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="ghost" size="icon" className="h-8 w-8">
+                      <BookOpen className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent className="w-80 p-4">
+                    <div className="space-y-2">
+                      <h4 className="font-semibold">Lucky Draw Rules:</h4>
+                      <ul className="list-disc ml-4 space-y-1 text-sm">
+                        <li>One free draw is available every 24 hours</li>
+                        <li>All prizes are automatically added to your account</li>
+                        <li>Prizes include discounts, points, and special rewards</li>
+                        <li>The prize selection is completely random</li>
+                      </ul>
+                    </div>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
           </CardHeader>
           <CardContent className="text-center">
             <div className="mb-6">
