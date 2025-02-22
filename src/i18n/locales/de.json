@@ -1,0 +1,25 @@
+
+{
+  "header": {
+    "notifications": "Benachrichtigungen",
+    "menu": "Menü"
+  },
+  "categories": {
+    "view_all": "Alle anzeigen"
+  },
+  "featured": {
+    "title": "Ausgewählte Produkte",
+    "view_all": "Alle anzeigen"
+  },
+  "trending": {
+    "title": "Trending",
+    "hot": "Beliebt 🔥"
+  },
+  "flash_sale": {
+    "title": "Blitzverkauf 🎉",
+    "subtitle": "Bis zu 50% Rabatt auf ausgewählte Artikel"
+  },
+  "shop_now": "Jetzt einkaufen",
+  "new_arrival": "Neu eingetroffen",
+  "summer_collection": "Sommerkollektion"
+}

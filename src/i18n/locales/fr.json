@@ -1,0 +1,25 @@
+
+{
+  "header": {
+    "notifications": "Notifications",
+    "menu": "Menu"
+  },
+  "categories": {
+    "view_all": "Voir tout"
+  },
+  "featured": {
+    "title": "Produits en vedette",
+    "view_all": "Voir tout"
+  },
+  "trending": {
+    "title": "Tendances",
+    "hot": "Tendance 🔥"
+  },
+  "flash_sale": {
+    "title": "Vente Flash 🎉",
+    "subtitle": "Jusqu'à 50% de réduction sur certains articles"
+  },
+  "shop_now": "Acheter maintenant",
+  "new_arrival": "Nouvelle arrivée",
+  "summer_collection": "Collection d'été"
+}
