@@ -18,6 +18,11 @@ import CreateShop from "@/pages/my-shop/CreateShop";
 import ShopDashboard from "@/pages/my-shop/ShopDashboard";
 import AddProductPage from "@/pages/my-shop/products/AddProductPage";
 import ProductsPage from "@/pages/my-shop/products/ProductsPage";
+import QASessions from "@/pages/community/QASessions";
+import Polls from "@/pages/community/Polls";
+import Wishlists from "@/pages/community/Wishlists";
+import Connections from "@/pages/community/Connections";
+import ShareEarn from "@/pages/community/ShareEarn";
 import { I18nextProvider } from 'react-i18next';
 import i18n from '@/i18n/config';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -84,6 +89,46 @@ const App = () => {
                 }
               />
               <Route path="/search" element={<Search />} />
+              <Route
+                path="/qa-sessions"
+                element={
+                  <ProtectedRoute>
+                    <QASessions />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/polls"
+                element={
+                  <ProtectedRoute>
+                    <Polls />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/wishlists"
+                element={
+                  <ProtectedRoute>
+                    <Wishlists />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/connections"
+                element={
+                  <ProtectedRoute>
+                    <Connections />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/share-earn"
+                element={
+                  <ProtectedRoute>
+                    <ShareEarn />
+                  </ProtectedRoute>
+                }
+              />
               <Route
                 path="/my-shop/create"
                 element={
