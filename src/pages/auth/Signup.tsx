@@ -91,7 +91,7 @@ const Signup = () => {
 
           <div className="flex justify-center">
             <HCaptcha
-              sitekey="43ce83e4-04e0488c-a52e89a069be0868"
+              sitekey="43ce83e4-a4e0-488c-a52e-89a069be0868"
               onVerify={handleCaptchaChange}
             />
           </div>
