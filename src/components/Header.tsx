@@ -18,13 +18,15 @@ export const Header = () => {
     <header className="sticky top-0 z-10 bg-white/80 backdrop-blur-lg border-b border-gray-200">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 group">
             <img
               src="/lovable-uploads/b7de9b33-d899-4c4a-a399-3655bbb16b4c.png"
               alt="Outwit Shop"
-              className="h-8 w-auto"
+              className="h-8 w-auto group-hover:scale-110 transition-transform duration-300"
             />
-            <h1 className="text-xl font-semibold text-gray-900">Outwit Shop</h1>
+            <h1 className="text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500 animate-pulse hover:scale-105 transition-transform duration-300">
+              Outwit Shop
+            </h1>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -75,3 +77,4 @@ export const Header = () => {
     </header>
   );
 };
+
