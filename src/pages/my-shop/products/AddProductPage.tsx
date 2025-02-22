@@ -18,13 +18,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
+import { Loader } from "lucide-react";
 
 const productSchema = z.object({
   name: z.string().min(1, "Name is required"),
   description: z.string().optional(),
-  price: z.string().min(1, "Price is required").transform(Number),
-  stock_quantity: z.string().min(1, "Stock quantity is required").transform(Number),
+  price: z.coerce.number().min(0, "Price must be greater than or equal to 0"),
+  stock_quantity: z.coerce.number().min(0, "Stock quantity must be greater than or equal to 0"),
 });
 
 type ProductFormValues = z.infer<typeof productSchema>;
@@ -40,8 +41,8 @@ const AddProductPage = () => {
     defaultValues: {
       name: "",
       description: "",
-      price: "",
-      stock_quantity: "",
+      price: 0,
+      stock_quantity: 0,
     },
   });
 
@@ -181,7 +182,7 @@ const AddProductPage = () => {
                 <Button type="submit" disabled={isLoading}>
                   {isLoading ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <Loader className="mr-2 h-4 w-4 animate-spin" />
                       Adding...
                     </>
                   ) : (
