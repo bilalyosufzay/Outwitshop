@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -98,6 +99,20 @@ const LuckyDraw = () => {
     }
   }, [nextSpinTime, canSpin]);
 
+  const resetDraw = () => {
+    localStorage.removeItem('lastSpinTime');
+    setCanSpin(true);
+    setNextSpinTime(null);
+    setSelectedPrize(null);
+    setShowCards(true);
+    setIsSpinning(false);
+    toast({
+      title: "Reset Complete",
+      description: "You can now try the lucky draw again!",
+      duration: 3000,
+    });
+  };
+
   const spinDraw = () => {
     if (!canSpin) return;
 
@@ -136,11 +151,19 @@ const LuckyDraw = () => {
     <div className="min-h-screen bg-background pb-20">
       <div className="container mx-auto px-4 py-8">
         <Card>
-          <CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="flex items-center gap-2">
               <Gift className="h-5 w-5" />
               Lucky Draw
             </CardTitle>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={resetDraw}
+              className="text-xs"
+            >
+              Reset Timer
+            </Button>
           </CardHeader>
           <CardContent className="text-center">
             <div className="mb-6">
