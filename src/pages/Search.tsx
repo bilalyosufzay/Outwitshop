@@ -21,6 +21,15 @@ interface SponsoredProduct {
   boost_level: number;
 }
 
+interface DatabaseProduct {
+  id: string;
+  name: string;
+  price: number;
+  category: string;
+  image: string;
+  images?: string[];
+}
+
 interface ProductWithSponsorship extends Product {
   isSponsored?: boolean;
   boostLevel?: number;
@@ -38,7 +47,7 @@ const Search = () => {
       const { data: sponsoredProducts, error: sponsoredError } = await supabase
         .rpc('search_sponsored_products', {
           search_query: searchQuery
-        });
+        }) as unknown as { data: SponsoredProduct[] | null; error: null };
 
       if (sponsoredError) {
         console.error('Error fetching sponsored products:', sponsoredError);
@@ -47,9 +56,9 @@ const Search = () => {
       // Then, get regular products
       const { data: regularProducts, error: regularError } = await supabase
         .from('products')
-        .select('id, name, price, category, image, images')
+        .select('id, name, price, image, images')
         .textSearch('name', searchQuery)
-        .limit(20);
+        .limit(20) as unknown as { data: DatabaseProduct[] | null; error: null };
 
       if (regularError) {
         console.error('Error fetching regular products:', regularError);
@@ -71,7 +80,7 @@ const Search = () => {
         id: p.id,
         name: p.name,
         price: p.price,
-        category: p.category,
+        category: 'general', // Since category is not in the products table
         image: p.image,
         images: p.images,
         isSponsored: false
