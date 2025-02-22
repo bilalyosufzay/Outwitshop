@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -70,6 +69,7 @@ const LuckyDraw = () => {
   const [nextSpinTime, setNextSpinTime] = useState<Date | null>(null);
   const [canSpin, setCanSpin] = useState(true);
   const [showCards, setShowCards] = useState(true);
+  const [showRules, setShowRules] = useState(false);
 
   useEffect(() => {
     const lastSpinTime = localStorage.getItem('lastSpinTime');
@@ -156,13 +156,23 @@ const LuckyDraw = () => {
                 Lucky Draw
               </CardTitle>
               <TooltipProvider>
-                <Tooltip>
+                <Tooltip open={showRules} onOpenChange={setShowRules}>
                   <TooltipTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-8 w-8">
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="h-8 w-8 relative cursor-pointer"
+                      onClick={() => setShowRules(!showRules)}
+                    >
                       <BookOpen className="h-4 w-4" />
+                      <span className="sr-only">View Rules</span>
+                      <span className="absolute -bottom-1 -right-1 text-[10px] text-muted-foreground">Tap</span>
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent className="w-[400px] p-4">
+                  <TooltipContent 
+                    className="w-[400px] p-4"
+                    onPointerDownOutside={() => setShowRules(false)}
+                  >
                     <div className="space-y-4">
                       <h4 className="font-semibold text-base">Lucky Draw Rules</h4>
                       
