@@ -1,20 +1,17 @@
 import { useNavigate } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import ProductCard from "@/components/ProductCard";
-import { 
-  Smartphone,
-  ShirtIcon,
-  Home,
-  Sparkles,
-  ShoppingCart,
-  Dumbbell,
-  Baby,
-  Car,
-  BookOpen,
-  Cat,
+import {
   MoreVertical,
   type LucideIcon
 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { CATEGORIES } from "@/data/categories";
 
 const FEATURED_PRODUCTS = [
   {
@@ -113,76 +110,6 @@ const SALE_PRODUCTS = [
   },
 ];
 
-interface Category {
-  id: string;
-  name: string;
-  icon: LucideIcon;
-  subcategories: string[];
-}
-
-const CATEGORIES: Category[] = [
-  {
-    id: "fashion",
-    name: "Fashion",
-    icon: ShirtIcon,
-    subcategories: ["Women's Clothing", "Men's Clothing", "Children's", "Shoes & Bags", "Accessories"],
-  },
-  {
-    id: "electronics",
-    name: "Electronics",
-    icon: Smartphone,
-    subcategories: ["Phones", "Computers", "Home Appliances", "Audio & Video"],
-  },
-  {
-    id: "home",
-    name: "Home & Living",
-    icon: Home,
-    subcategories: ["Furniture", "Décor", "Kitchen", "Bedding & Bath"],
-  },
-  {
-    id: "beauty",
-    name: "Beauty",
-    icon: Sparkles,
-    subcategories: ["Cosmetics", "Skincare", "Haircare", "Fragrances"],
-  },
-  {
-    id: "grocery",
-    name: "Supermarket",
-    icon: ShoppingCart,
-    subcategories: ["Food & Beverages", "Household", "Personal Care"],
-  },
-  {
-    id: "sports",
-    name: "Sports",
-    icon: Dumbbell,
-    subcategories: ["Equipment", "Activewear", "Outdoor Gear"],
-  },
-  {
-    id: "kids",
-    name: "Kids & Baby",
-    icon: Baby,
-    subcategories: ["Toys", "Baby Essentials", "Maternity"],
-  },
-  {
-    id: "auto",
-    name: "Automotive",
-    icon: Car,
-    subcategories: ["Accessories", "Motorcycle", "Spare Parts"],
-  },
-  {
-    id: "books",
-    name: "Books & Media",
-    icon: BookOpen,
-    subcategories: ["Books", "Magazines", "Music & Movies"],
-  },
-  {
-    id: "pets",
-    name: "Pet Supplies",
-    icon: Cat,
-    subcategories: ["Pet Food", "Accessories", "Aquarium"],
-  },
-];
-
 const Index = () => {
   const navigate = useNavigate();
 
@@ -218,10 +145,29 @@ const Index = () => {
                 </svg>
               </div>
             </button>
-            <button className="p-2 rounded-full hover:bg-gray-100">
-              <span className="sr-only">Menu</span>
-              <MoreVertical className="w-6 h-6 text-gray-600" />
-            </button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="p-2 rounded-full hover:bg-gray-100">
+                  <span className="sr-only">Menu</span>
+                  <MoreVertical className="w-6 h-6 text-gray-600" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                {CATEGORIES.map((category) => {
+                  const Icon = category.icon;
+                  return (
+                    <DropdownMenuItem
+                      key={category.id}
+                      onClick={() => navigate(`/category/${category.id}`)}
+                      className="flex items-center gap-2 px-3 py-2 cursor-pointer"
+                    >
+                      <Icon className="w-4 h-4 text-accent" />
+                      <span>{category.name}</span>
+                    </DropdownMenuItem>
+                  );
+                })}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </header>
@@ -246,44 +192,12 @@ const Index = () => {
 
         <section>
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">Categories</h2>
-            <button className="text-sm text-accent hover:underline">
-              View All
-            </button>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {CATEGORIES.map(({ id, name, icon: Icon }) => (
-              <button
-                key={id}
-                onClick={() => navigate(`/category/${id}`)}
-                className="flex flex-col items-center p-4 bg-white rounded-xl shadow-sm 
-                         hover:shadow-md transition-all duration-300 group space-y-2"
-              >
-                <div className="p-3 rounded-full bg-accent/10 group-hover:bg-accent/20 
-                             transition-colors duration-300">
-                  <Icon className="w-6 h-6 text-accent" />
-                </div>
-                <span className="text-sm font-medium text-gray-900 text-center">
-                  {name}
-                </span>
-              </button>
-            ))}
-          </div>
-        </section>
-
-        <section>
-          <div className="flex justify-between items-center mb-4">
-            <div className="flex items-center gap-2">
-              <h2 className="text-lg font-semibold text-gray-900">
-                Trending Now
-              </h2>
-              <span className="px-2 py-1 bg-accent/10 text-accent text-xs font-medium rounded-full">
-                Hot 🔥
-              </span>
-            </div>
-            <button className="text-sm text-accent hover:underline">
-              View All
-            </button>
+            <h2 className="text-lg font-semibold text-gray-900">
+              Trending Now
+            </h2>
+            <span className="px-2 py-1 bg-accent/10 text-accent text-xs font-medium rounded-full">
+              Hot 🔥
+            </span>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {TRENDING_PRODUCTS.map((product) => (
