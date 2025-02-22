@@ -6,6 +6,7 @@ export interface Product {
   category: string;
   image: string;
   countryAvailability?: string[]; // List of country codes where product is available
+  images?: string[]; // Array of rotating images
 }
 
 export const FEATURED_PRODUCTS: Product[] = [
@@ -16,6 +17,12 @@ export const FEATURED_PRODUCTS: Product[] = [
     category: "Electronics",
     image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80",
     countryAvailability: ["US", "DE", "ES"],
+    images: [
+      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80",
+      "https://images.unsplash.com/photo-1487215078519-e21cc028cb29?w=800&q=80",
+      "https://images.unsplash.com/photo-1484704849700-f032a568e944?w=800&q=80",
+      "https://images.unsplash.com/photo-1599669454699-248893623440?w=800&q=80",
+    ]
   },
   {
     id: "2",
@@ -48,6 +55,12 @@ export const TRENDING_PRODUCTS: Product[] = [
     category: "Electronics",
     image: "https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=800&q=80",
     countryAvailability: ["US", "DE", "ES"],
+    images: [
+      "https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=800&q=80",
+      "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=800&q=80",
+      "https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=800&q=80",
+      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80",
+    ]
   },
   {
     id: "6",

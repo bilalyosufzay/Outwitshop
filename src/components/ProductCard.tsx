@@ -10,6 +10,7 @@ interface ProductCardProps {
   price: number;
   originalPrice?: number;
   image: string;
+  images?: string[];
   category: string;
   onClick?: () => void;
   className?: string;
@@ -21,6 +22,7 @@ const ProductCard = ({
   price,
   originalPrice,
   image,
+  images,
   category,
   onClick,
   className,
@@ -29,6 +31,7 @@ const ProductCard = ({
   const [localizedOriginalPrice, setLocalizedOriginalPrice] = useState(
     originalPrice ? getLocalizedPrice(originalPrice) : null
   );
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
     const initializeLocalization = async () => {
@@ -42,6 +45,18 @@ const ProductCard = ({
     initializeLocalization();
   }, [price, originalPrice]);
 
+  useEffect(() => {
+    if (!images || images.length <= 1) return;
+
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => 
+        prevIndex === images.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [images]);
+
   return (
     <div
       onClick={onClick}
@@ -52,7 +67,7 @@ const ProductCard = ({
     >
       <div className="relative aspect-square overflow-hidden rounded-xl mb-4">
         <img
-          src={image}
+          src={images ? images[currentImageIndex] : image}
           alt={name}
           className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
         />
