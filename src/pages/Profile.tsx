@@ -12,6 +12,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ProfileHeader } from "@/components/profile/ProfileHeader";
 import { BuyerContent } from "@/components/profile/BuyerContent";
 import { SellerContent } from "@/components/profile/SellerContent";
+import { SocialContent } from "@/components/profile/SocialContent";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Settings2, Bell, Shield, LogOut } from "lucide-react";
@@ -29,7 +30,7 @@ const Profile = () => {
       try {
         const { data, error } = await supabase
           .from('profiles')
-          .select('username, avatar_url')
+          .select('*')
           .eq('id', user?.id)
           .single();
 
@@ -114,6 +115,10 @@ const Profile = () => {
             </div>
           </Button>
         </div>
+
+        <Separator className="my-6" />
+
+        <SocialContent />
 
         <Separator className="my-6" />
 

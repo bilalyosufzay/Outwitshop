@@ -9,27 +9,140 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      poll_votes: {
+        Row: {
+          created_at: string | null
+          id: string
+          option_id: string
+          poll_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          option_id: string
+          poll_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          option_id?: string
+          poll_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "poll_votes_poll_id_fkey"
+            columns: ["poll_id"]
+            isOneToOne: false
+            referencedRelation: "polls"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      polls: {
+        Row: {
+          creator_id: string | null
+          description: string | null
+          end_date: string | null
+          id: string
+          options: Json
+          start_date: string | null
+          status: string | null
+          title: string
+        }
+        Insert: {
+          creator_id?: string | null
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          options: Json
+          start_date?: string | null
+          status?: string | null
+          title: string
+        }
+        Update: {
+          creator_id?: string | null
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          options?: Json
+          start_date?: string | null
+          status?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
+          bio: string | null
           created_at: string
+          followers_count: number | null
+          following_count: number | null
           id: string
+          social_links: Json | null
           updated_at: string | null
           username: string | null
+          wishlist_public: boolean | null
         }
         Insert: {
           avatar_url?: string | null
+          bio?: string | null
           created_at?: string
+          followers_count?: number | null
+          following_count?: number | null
           id: string
+          social_links?: Json | null
           updated_at?: string | null
           username?: string | null
+          wishlist_public?: boolean | null
         }
         Update: {
           avatar_url?: string | null
+          bio?: string | null
           created_at?: string
+          followers_count?: number | null
+          following_count?: number | null
           id?: string
+          social_links?: Json | null
           updated_at?: string | null
           username?: string | null
+          wishlist_public?: boolean | null
+        }
+        Relationships: []
+      }
+      questions: {
+        Row: {
+          answer: string | null
+          answered_at: string | null
+          asker_id: string | null
+          created_at: string | null
+          id: string
+          question: string
+          seller_id: string | null
+          status: string | null
+        }
+        Insert: {
+          answer?: string | null
+          answered_at?: string | null
+          asker_id?: string | null
+          created_at?: string | null
+          id?: string
+          question: string
+          seller_id?: string | null
+          status?: string | null
+        }
+        Update: {
+          answer?: string | null
+          answered_at?: string | null
+          asker_id?: string | null
+          created_at?: string | null
+          id?: string
+          question?: string
+          seller_id?: string | null
+          status?: string | null
         }
         Relationships: []
       }
@@ -66,6 +179,36 @@ export type Database = {
           slug?: string
           status?: string
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      wishlists: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          is_public: boolean | null
+          name: string
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_public?: boolean | null
+          name: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_public?: boolean | null
+          name?: string
+          updated_at?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
