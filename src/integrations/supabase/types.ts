@@ -148,34 +148,49 @@ export type Database = {
       }
       shops: {
         Row: {
+          address: string
+          business_license: string | null
           contact_email: string
           created_at: string
           description: string | null
           id: string
+          id_card_number: string
           name: string
           owner_id: string
+          owner_name: string
+          phone_number: string
           slug: string
           status: string
           updated_at: string | null
         }
         Insert: {
+          address: string
+          business_license?: string | null
           contact_email: string
           created_at?: string
           description?: string | null
           id?: string
+          id_card_number: string
           name: string
           owner_id: string
+          owner_name: string
+          phone_number: string
           slug: string
           status?: string
           updated_at?: string | null
         }
         Update: {
+          address?: string
+          business_license?: string | null
           contact_email?: string
           created_at?: string
           description?: string | null
           id?: string
+          id_card_number?: string
           name?: string
           owner_id?: string
+          owner_name?: string
+          phone_number?: string
           slug?: string
           status?: string
           updated_at?: string | null
