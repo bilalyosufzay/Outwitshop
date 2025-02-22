@@ -35,7 +35,19 @@ const Profile = () => {
           .single();
 
         if (error) throw error;
-        setProfile(data);
+        
+        // Transform the data to match ProfileData interface
+        const transformedData: ProfileData = {
+          username: data.username,
+          avatar_url: data.avatar_url,
+          bio: data.bio,
+          social_links: data.social_links as Record<string, string> || {},
+          wishlist_public: data.wishlist_public || false,
+          followers_count: data.followers_count || 0,
+          following_count: data.following_count || 0
+        };
+
+        setProfile(transformedData);
       } catch (error) {
         console.error('Error fetching profile:', error);
         toast.error('Failed to load profile');
