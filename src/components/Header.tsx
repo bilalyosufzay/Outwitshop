@@ -64,7 +64,7 @@ export const Header = () => {
                     className="flex items-center gap-2 px-3 py-2 cursor-pointer"
                   >
                     <Icon className="w-4 h-4 text-accent" />
-                    <span>{category.name}</span>
+                    <span>{t(`categories.${category.id}`)}</span>
                   </DropdownMenuItem>
                 );
               })}

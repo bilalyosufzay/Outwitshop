@@ -13,7 +13,17 @@
     "profile": "Perfil"
   },
   "categories": {
-    "view_all": "Ver Todo"
+    "view_all": "Ver Todo",
+    "fashion": "Moda",
+    "electronics": "Electrónica",
+    "home_living": "Hogar y Vida",
+    "beauty": "Belleza",
+    "supermarket": "Supermercado",
+    "sports": "Deportes",
+    "kids_baby": "Niños y Bebés",
+    "automotive": "Automotriz",
+    "books_media": "Libros y Medios",
+    "pet_supplies": "Artículos para Mascotas"
   },
   "featured": {
     "title": "Productos Destacados",

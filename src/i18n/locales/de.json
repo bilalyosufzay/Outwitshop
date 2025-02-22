@@ -13,7 +13,17 @@
     "profile": "Profil"
   },
   "categories": {
-    "view_all": "Alle anzeigen"
+    "view_all": "Alle anzeigen",
+    "fashion": "Mode",
+    "electronics": "Elektronik",
+    "home_living": "Haus & Wohnen",
+    "beauty": "Schönheit",
+    "supermarket": "Supermarkt",
+    "sports": "Sport",
+    "kids_baby": "Kinder & Baby",
+    "automotive": "Automobil",
+    "books_media": "Bücher & Medien",
+    "pet_supplies": "Haustierbedarf"
   },
   "featured": {
     "title": "Ausgewählte Produkte",
