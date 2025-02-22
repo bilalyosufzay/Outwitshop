@@ -4,22 +4,22 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 
 export const useTrackProductView = (productId: string) => {
-  const { session } = useAuth();
+  const { user } = useAuth(); // Changed from session to user since that's what our AuthContext provides
 
   useEffect(() => {
     const trackView = async () => {
-      if (!session?.user) return;
+      if (!user) return;
 
       const { error } = await supabase
         .from('product_views')
         .upsert(
           {
-            user_id: session.user.id,
+            user_id: user.id,
             product_id: productId,
             viewed_at: new Date().toISOString(),
           },
           {
-            onConflict: 'user_id,product_id'
+            onConflict: 'unique_user_product_view'
           }
         );
 
@@ -29,5 +29,5 @@ export const useTrackProductView = (productId: string) => {
     };
 
     trackView();
-  }, [productId, session?.user]);
+  }, [productId, user]);
 };

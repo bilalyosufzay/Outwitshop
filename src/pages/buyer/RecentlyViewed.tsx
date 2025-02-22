@@ -8,7 +8,7 @@ import { Card } from "@/components/ui/card";
 import ProductCard from "@/components/ProductCard";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
-import { Product } from "@/data/products";
+import { Product, FEATURED_PRODUCTS, TRENDING_PRODUCTS, SALE_PRODUCTS } from "@/data/products";
 
 const RecentlyViewed = () => {
   const navigate = useNavigate();
@@ -18,7 +18,7 @@ const RecentlyViewed = () => {
     queryFn: async () => {
       const { data: views, error } = await supabase
         .from('product_views')
-        .select('product_id')
+        .select('product_id, viewed_at')
         .order('viewed_at', { ascending: false })
         .limit(10);
 
@@ -32,14 +32,15 @@ const RecentlyViewed = () => {
   useEffect(() => {
     if (recentViews) {
       // Map product IDs to actual product data from our static data
-      const products = recentViews.map(view => {
-        const allProducts = [
-          ...FEATURED_PRODUCTS,
-          ...TRENDING_PRODUCTS,
-          ...SALE_PRODUCTS,
-        ];
-        return allProducts.find(p => p.id === view.product_id);
-      }).filter((p): p is Product => p !== undefined);
+      const allProducts = [
+        ...FEATURED_PRODUCTS,
+        ...TRENDING_PRODUCTS,
+        ...SALE_PRODUCTS,
+      ];
+      
+      const products = recentViews
+        .map(view => allProducts.find(p => p.id === view.product_id))
+        .filter((p): p is Product => p !== undefined);
       
       setRecentProducts(products);
     }
