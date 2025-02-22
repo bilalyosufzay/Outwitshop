@@ -47,17 +47,22 @@ export const VerificationSection = ({ shop, onVerificationUpdate }: Verification
         .from('verification_documents')
         .getPublicUrl(filePath);
 
-      // Update shop verification documents
-      const newDocument: VerificationDocument = {
+      // Create the new document in the correct format for Supabase
+      const newDocument = {
         type,
         url: publicUrl,
         uploaded_at: new Date().toISOString(),
       };
 
+      // Get existing documents and add the new one
+      const existingDocs = shop.verification_documents || [];
+      const updatedDocs = [...existingDocs, newDocument];
+
+      // Update shop verification documents
       const { error: updateError } = await supabase
         .from('shops')
         .update({
-          verification_documents: [...(shop.verification_documents || []), newDocument],
+          verification_documents: updatedDocs,
           verification_status: 'pending',
           verification_submitted_at: new Date().toISOString(),
         })

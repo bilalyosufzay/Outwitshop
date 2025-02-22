@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -39,9 +38,18 @@ const ShopDashboard = () => {
         .single();
 
       if (error) throw error;
-      setShop(data as Shop);
+      
+      const transformedShop: Shop = {
+        ...data,
+        verification_documents: (data.verification_documents as any[] || []).map((doc: any) => ({
+          type: doc.type,
+          url: doc.url,
+          uploaded_at: doc.uploaded_at,
+        })),
+      };
+      
+      setShop(transformedShop);
 
-      // Fetch dashboard statistics
       if (data) {
         const [
           { count: ordersCount, sum: revenue },
