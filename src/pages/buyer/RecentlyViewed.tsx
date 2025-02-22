@@ -22,13 +22,12 @@ const RecentlyViewed = () => {
     queryKey: ['recentViews'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('product_views' as any)
+        .from('product_views')
         .select('product_id, viewed_at')
         .order('viewed_at', { ascending: false })
         .limit(10);
 
       if (error) throw error;
-      // First cast to unknown, then to our specific type to avoid type errors
       return (data as unknown) as ProductView[];
     },
   });
@@ -60,7 +59,7 @@ const RecentlyViewed = () => {
           onClick={() => navigate(-1)}
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Profile
+          Back
         </Button>
 
         <div className="flex items-center gap-2 mb-6">
