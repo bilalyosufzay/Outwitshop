@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,56 +11,56 @@ const prizes = [
     name: "5% Discount", 
     color: "#FF6B6B", 
     image: "/placeholder.svg",
-    icon: <img src="/placeholder.svg" alt="" className="h-24 w-24 object-contain rounded-lg" />
+    icon: <img src="/placeholder.svg" alt="5% Discount" className="h-24 w-24 object-contain rounded-lg bg-white/90" />
   },
   { 
     id: 2, 
     name: "10% Discount", 
     color: "#4ECDC4", 
     image: "/placeholder.svg",
-    icon: <img src="/placeholder.svg" alt="" className="h-24 w-24 object-contain rounded-lg" />
+    icon: <img src="/placeholder.svg" alt="10% Discount" className="h-24 w-24 object-contain rounded-lg bg-white/90" />
   },
   { 
     id: 3, 
     name: "Free Shipping", 
     color: "#45B7D1", 
     image: "/placeholder.svg",
-    icon: <img src="/placeholder.svg" alt="" className="h-24 w-24 object-contain rounded-lg" />
+    icon: <img src="/placeholder.svg" alt="Free Shipping" className="h-24 w-24 object-contain rounded-lg bg-white/90" />
   },
   { 
     id: 4, 
     name: "20% Discount", 
     color: "#96CEB4", 
     image: "/placeholder.svg",
-    icon: <img src="/placeholder.svg" alt="" className="h-24 w-24 object-contain rounded-lg" />
+    icon: <img src="/placeholder.svg" alt="20% Discount" className="h-24 w-24 object-contain rounded-lg bg-white/90" />
   },
   { 
     id: 5, 
     name: "100 Points", 
     color: "#FFEEAD", 
     image: "/placeholder.svg",
-    icon: <img src="/placeholder.svg" alt="" className="h-24 w-24 object-contain rounded-lg" />
+    icon: <img src="/placeholder.svg" alt="100 Points" className="h-24 w-24 object-contain rounded-lg bg-white/90" />
   },
   { 
     id: 6, 
     name: "Mystery Box", 
     color: "#D4A5A5", 
     image: "/placeholder.svg",
-    icon: <img src="/placeholder.svg" alt="" className="h-24 w-24 object-contain rounded-lg" />
+    icon: <img src="/placeholder.svg" alt="Mystery Box" className="h-24 w-24 object-contain rounded-lg bg-white/90" />
   },
   { 
     id: 7, 
     name: "15% Discount", 
     color: "#9EC1CF", 
     image: "/placeholder.svg",
-    icon: <img src="/placeholder.svg" alt="" className="h-24 w-24 object-contain rounded-lg" />
+    icon: <img src="/placeholder.svg" alt="15% Discount" className="h-24 w-24 object-contain rounded-lg bg-white/90" />
   },
   { 
     id: 8, 
     name: "50 Points", 
     color: "#FFD93D", 
     image: "/placeholder.svg",
-    icon: <img src="/placeholder.svg" alt="" className="h-24 w-24 object-contain rounded-lg" />
+    icon: <img src="/placeholder.svg" alt="50 Points" className="h-24 w-24 object-contain rounded-lg bg-white/90" />
   },
 ];
 
@@ -151,19 +150,11 @@ const LuckyDraw = () => {
     <div className="min-h-screen bg-background pb-20">
       <div className="container mx-auto px-4 py-8">
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
+          <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Gift className="h-5 w-5" />
               Lucky Draw
             </CardTitle>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={resetDraw}
-              className="text-xs"
-            >
-              Reset Timer
-            </Button>
           </CardHeader>
           <CardContent className="text-center">
             <div className="mb-6">
@@ -188,7 +179,7 @@ const LuckyDraw = () => {
                       className="aspect-[3/4] rounded-xl shadow-lg flex flex-col items-center justify-center p-4 transition-transform hover:scale-105"
                       style={{ backgroundColor: prize.color }}
                     >
-                      <div className="mb-4 bg-white/10 p-3 rounded-lg">
+                      <div className="mb-4 p-3 rounded-lg">
                         {prize.icon}
                       </div>
                       <div className="text-white text-xl font-semibold text-center mt-2">
