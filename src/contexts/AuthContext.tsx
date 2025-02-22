@@ -2,7 +2,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "sonner";
 
 interface AuthContextType {
@@ -19,22 +19,29 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     // Check active sessions and sets the user
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
       setLoading(false);
+      if (session?.user && location.pathname.startsWith('/auth/')) {
+        navigate('/');
+      }
     });
 
     // Listen for changes on auth state (signed in, signed out, etc.)
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
       setLoading(false);
+      if (session?.user && location.pathname.startsWith('/auth/')) {
+        navigate('/');
+      }
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [navigate, location]);
 
   const signIn = async (email: string, password: string) => {
     try {
@@ -48,7 +55,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       navigate("/");
       toast.success("Welcome back!");
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Error signing in");
+      const message = error instanceof Error ? error.message : "Error signing in";
+      toast.error(message);
       throw error;
     }
   };
@@ -65,7 +73,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       toast.success("Check your email to confirm your account!");
       navigate("/auth/login");
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Error signing up");
+      const message = error instanceof Error ? error.message : "Error signing up";
+      toast.error(message);
       throw error;
     }
   };
@@ -75,8 +84,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
       navigate("/auth/login");
+      toast.success("Successfully signed out!");
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Error signing out");
+      const message = error instanceof Error ? error.message : "Error signing out";
+      toast.error(message);
       throw error;
     }
   };
