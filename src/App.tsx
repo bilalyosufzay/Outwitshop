@@ -1,5 +1,3 @@
-
-import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./contexts/AuthContext";
 import Navigation from "./components/Navigation";
@@ -39,66 +37,64 @@ const queryClient = new QueryClient();
 
 function App() {
   return (
-    <BrowserRouter>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <div className="flex flex-col min-h-screen bg-background">
-            <Header />
-            <main className="flex-1 w-full">
-              <div className="container mx-auto px-4 py-4">
-                <Routes>
-                  <Route 
-                    path="/" 
-                    element={
-                      <div className="space-y-8">
-                        <HeroSection />
-                        <TrendingSection />
-                        <FlashSaleSection />
-                        <FeaturedSection />
-                      </div>
-                    } 
-                  />
-                  <Route path="/search" element={<Search />} />
-                  <Route path="/lucky-draw" element={<LuckyDraw />} />
-                  <Route path="/cart" element={<Cart />} />
-                  <Route path="/my-shop/*" element={<ShopDashboard />} />
-                  <Route path="/profile" element={<Profile />} />
-                  <Route path="/settings" element={<Settings />} />
-                  <Route path="/security" element={<Security />} />
-                  <Route path="/notifications" element={<Notifications />} />
-                  
-                  {/* Buyer Routes */}
-                  <Route path="/auto-reorder" element={<AutoReorder />} />
-                  <Route path="/orders" element={<Orders />} />
-                  <Route path="/payment-methods" element={<PaymentMethods />} />
-                  <Route path="/price-alerts" element={<PriceAlerts />} />
-                  <Route path="/recently-viewed" element={<RecentlyViewed />} />
-                  <Route path="/rewards" element={<Rewards />} />
-                  <Route path="/wallet" element={<Wallet />} />
-                  <Route path="/addresses" element={<Addresses />} />
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <div className="flex flex-col min-h-screen bg-background">
+          <Header />
+          <main className="flex-1 w-full">
+            <div className="container mx-auto px-4 py-4">
+              <Routes>
+                <Route 
+                  path="/" 
+                  element={
+                    <div className="space-y-8">
+                      <HeroSection />
+                      <TrendingSection />
+                      <FlashSaleSection />
+                      <FeaturedSection />
+                    </div>
+                  } 
+                />
+                <Route path="/search" element={<Search />} />
+                <Route path="/lucky-draw" element={<LuckyDraw />} />
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/my-shop/*" element={<ShopDashboard />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="/security" element={<Security />} />
+                <Route path="/notifications" element={<Notifications />} />
+                
+                {/* Buyer Routes */}
+                <Route path="/auto-reorder" element={<AutoReorder />} />
+                <Route path="/orders" element={<Orders />} />
+                <Route path="/payment-methods" element={<PaymentMethods />} />
+                <Route path="/price-alerts" element={<PriceAlerts />} />
+                <Route path="/recently-viewed" element={<RecentlyViewed />} />
+                <Route path="/rewards" element={<Rewards />} />
+                <Route path="/wallet" element={<Wallet />} />
+                <Route path="/addresses" element={<Addresses />} />
 
-                  {/* Community Routes */}
-                  <Route path="/connections" element={<Connections />} />
-                  <Route path="/polls" element={<Polls />} />
-                  <Route path="/qa-sessions" element={<QASessions />} />
-                  <Route path="/share-earn" element={<ShareEarn />} />
-                  <Route path="/wishlists" element={<Wishlists />} />
+                {/* Community Routes */}
+                <Route path="/connections" element={<Connections />} />
+                <Route path="/polls" element={<Polls />} />
+                <Route path="/qa-sessions" element={<QASessions />} />
+                <Route path="/share-earn" element={<ShareEarn />} />
+                <Route path="/wishlists" element={<Wishlists />} />
 
-                  {/* Shop Routes */}
-                  <Route path="/shop/reviews" element={<div>Shop Reviews</div>} />
-                  <Route path="/shop/messages" element={<div>Shop Messages</div>} />
-                  <Route path="/shop/ai-assistant" element={<div>AI Assistant</div>} />
-                  <Route path="/shop/social" element={<div>Social Integration</div>} />
-                </Routes>
-              </div>
-            </main>
-            <Navigation />
-            <ChatSupport />
-          </div>
-          <Toaster />
-        </AuthProvider>
-      </QueryClientProvider>
-    </BrowserRouter>
+                {/* Shop Routes */}
+                <Route path="/shop/reviews" element={<div>Shop Reviews</div>} />
+                <Route path="/shop/messages" element={<div>Shop Messages</div>} />
+                <Route path="/shop/ai-assistant" element={<div>AI Assistant</div>} />
+                <Route path="/shop/social" element={<div>Social Integration</div>} />
+              </Routes>
+            </div>
+          </main>
+          <Navigation />
+          <ChatSupport />
+        </div>
+        <Toaster />
+      </AuthProvider>
+    </QueryClientProvider>
   );
 }
 
