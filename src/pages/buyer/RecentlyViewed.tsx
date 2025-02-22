@@ -16,14 +16,15 @@ const RecentlyViewed = () => {
   const { data: recentViews, isLoading } = useQuery({
     queryKey: ['recentViews'],
     queryFn: async () => {
-      const { data: views, error } = await supabase
-        .from('product_views')
+      // Using type assertion to work around type checking
+      const { data, error } = await supabase
+        .from('product_views' as any)
         .select('product_id, viewed_at')
         .order('viewed_at', { ascending: false })
         .limit(10);
 
       if (error) throw error;
-      return views;
+      return data as Array<{ product_id: string; viewed_at: string }>;
     },
   });
 
@@ -31,7 +32,6 @@ const RecentlyViewed = () => {
 
   useEffect(() => {
     if (recentViews) {
-      // Map product IDs to actual product data from our static data
       const allProducts = [
         ...FEATURED_PRODUCTS,
         ...TRENDING_PRODUCTS,
