@@ -2,18 +2,20 @@
 import { Home, Search, Gift, ShoppingBag, User, Store } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 const Navigation = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTranslation();
 
   const navItems = [
-    { icon: Home, label: "Home", path: "/" },
-    { icon: Search, label: "Search", path: "/search" },
-    { icon: Gift, label: "Lucky Draw", path: "/lucky-draw" },
-    { icon: ShoppingBag, label: "Cart", path: "/cart" },
-    { icon: Store, label: "My Shop", path: "/my-shop" },
-    { icon: User, label: "Profile", path: "/profile" },
+    { icon: Home, label: t("navigation.home"), path: "/" },
+    { icon: Search, label: t("navigation.search"), path: "/search" },
+    { icon: Gift, label: t("navigation.lucky_draw"), path: "/lucky-draw" },
+    { icon: ShoppingBag, label: t("navigation.cart"), path: "/cart" },
+    { icon: Store, label: t("navigation.my_shop"), path: "/my-shop" },
+    { icon: User, label: t("navigation.profile"), path: "/profile" },
   ];
 
   return (

@@ -4,6 +4,14 @@
     "notifications": "اعلان‌ها",
     "menu": "منو"
   },
+  "navigation": {
+    "home": "خانه",
+    "search": "جستجو",
+    "lucky_draw": "قرعه‌کشی",
+    "cart": "سبد خرید",
+    "my_shop": "فروشگاه من",
+    "profile": "پروفایل"
+  },
   "categories": {
     "view_all": "مشاهده همه"
   },

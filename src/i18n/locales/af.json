@@ -4,6 +4,14 @@
     "notifications": "خبرتیاوې",
     "menu": "مینو"
   },
+  "navigation": {
+    "home": "کور",
+    "search": "لټون",
+    "lucky_draw": "بختور قرعه",
+    "cart": "کارټ",
+    "my_shop": "زما دوکان",
+    "profile": "پروفایل"
+  },
   "categories": {
     "view_all": "ټول وګورئ"
   },

@@ -4,6 +4,14 @@
     "notifications": "Bildirimler",
     "menu": "Menü"
   },
+  "navigation": {
+    "home": "Ana Sayfa",
+    "search": "Arama",
+    "lucky_draw": "Çekiliş",
+    "cart": "Sepet",
+    "my_shop": "Mağazam",
+    "profile": "Profil"
+  },
   "categories": {
     "view_all": "Tümünü Gör"
   },
