@@ -28,7 +28,6 @@ const ProductCard = ({
   className,
 }: ProductCardProps) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  // Default to US pricing if country detection fails
   const [localizedPrice, setLocalizedPrice] = useState(getLocalizedPrice(price, "US"));
   const [localizedOriginalPrice, setLocalizedOriginalPrice] = useState(
     originalPrice ? getLocalizedPrice(originalPrice, "US") : null
@@ -68,7 +67,7 @@ const ProductCard = ({
           className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
           onError={(e) => {
             const target = e.target as HTMLImageElement;
-            target.src = "/placeholder.svg"; // Fallback image
+            target.src = "/placeholder.svg";
           }}
         />
         <button
