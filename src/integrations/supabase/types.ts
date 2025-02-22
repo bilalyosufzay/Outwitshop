@@ -33,6 +33,42 @@ export type Database = {
         }
         Relationships: []
       }
+      shops: {
+        Row: {
+          contact_email: string
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          owner_id: string
+          slug: string
+          status: string
+          updated_at: string | null
+        }
+        Insert: {
+          contact_email: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          owner_id: string
+          slug: string
+          status?: string
+          updated_at?: string | null
+        }
+        Update: {
+          contact_email?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          owner_id?: string
+          slug?: string
+          status?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

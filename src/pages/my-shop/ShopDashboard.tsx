@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -13,14 +12,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
-
-interface Shop {
-  id: string;
-  name: string;
-  description: string;
-  status: string;
-  created_at: string;
-}
+import { Shop } from "@/types/shop";
 
 const ShopDashboard = () => {
   const { user } = useAuth();
@@ -34,7 +26,7 @@ const ShopDashboard = () => {
 
       try {
         const { data, error } = await supabase
-          .from("shops")
+          .from('shops')
           .select()
           .eq("owner_id", user.id)
           .single();

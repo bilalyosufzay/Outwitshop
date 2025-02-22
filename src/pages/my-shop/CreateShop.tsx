@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Shop } from "@/types/shop";
 
 interface CreateShopFormData {
   name: string;
@@ -58,14 +59,16 @@ const CreateShop = () => {
 
     setIsLoading(true);
     try {
-      const { error } = await supabase.from("shops").insert({
-        owner_id: user.id,
-        name: data.name,
-        description: data.description,
-        slug: data.slug.toLowerCase(),
-        contact_email: data.contactEmail,
-        status: "pending",
-      });
+      const { error } = await supabase
+        .from('shops')
+        .insert({
+          owner_id: user.id,
+          name: data.name,
+          description: data.description,
+          slug: data.slug.toLowerCase(),
+          contact_email: data.contactEmail,
+          status: 'pending',
+        } as Partial<Shop>);
 
       if (error) throw error;
 
