@@ -25,7 +25,6 @@ interface DatabaseProduct {
   id: string;
   name: string;
   price: number;
-  category: string;
   image: string;
   images?: string[];
 }
@@ -34,6 +33,11 @@ interface ProductWithSponsorship extends Product {
   isSponsored?: boolean;
   boostLevel?: number;
 }
+
+type SearchSponsoredProductsFn = {
+  data: SponsoredProduct[] | null;
+  error: null;
+};
 
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -45,9 +49,9 @@ const Search = () => {
 
       // First, get sponsored products
       const { data: sponsoredProducts, error: sponsoredError } = await supabase
-        .rpc('search_sponsored_products', {
+        .rpc<SearchSponsoredProductsFn>('search_sponsored_products', {
           search_query: searchQuery
-        }) as unknown as { data: SponsoredProduct[] | null; error: null };
+        });
 
       if (sponsoredError) {
         console.error('Error fetching sponsored products:', sponsoredError);
