@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Index from "@/pages/Index";
 import Profile from "@/pages/Profile";
@@ -23,11 +22,18 @@ import Polls from "@/pages/community/Polls";
 import Wishlists from "@/pages/community/Wishlists";
 import Connections from "@/pages/community/Connections";
 import ShareEarn from "@/pages/community/ShareEarn";
+import AutoReorder from "@/pages/buyer/AutoReorder";
+import PriceAlerts from "@/pages/buyer/PriceAlerts";
+import Orders from "@/pages/buyer/Orders";
+import RecentlyViewed from "@/pages/buyer/RecentlyViewed";
+import Addresses from "@/pages/buyer/Addresses";
+import PaymentMethods from "@/pages/buyer/PaymentMethods";
+import WalletPage from "@/pages/buyer/Wallet";
+import Rewards from "@/pages/buyer/Rewards";
 import { I18nextProvider } from 'react-i18next';
 import i18n from '@/i18n/config';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-// Create a client
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -158,6 +164,70 @@ const App = () => {
                 element={
                   <ProtectedRoute>
                     <AddProductPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/auto-reorder"
+                element={
+                  <ProtectedRoute>
+                    <AutoReorder />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/price-alerts"
+                element={
+                  <ProtectedRoute>
+                    <PriceAlerts />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/orders"
+                element={
+                  <ProtectedRoute>
+                    <Orders />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/recently-viewed"
+                element={
+                  <ProtectedRoute>
+                    <RecentlyViewed />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/addresses"
+                element={
+                  <ProtectedRoute>
+                    <Addresses />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/payment-methods"
+                element={
+                  <ProtectedRoute>
+                    <PaymentMethods />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/wallet"
+                element={
+                  <ProtectedRoute>
+                    <WalletPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/rewards"
+                element={
+                  <ProtectedRoute>
+                    <Rewards />
                   </ProtectedRoute>
                 }
               />
