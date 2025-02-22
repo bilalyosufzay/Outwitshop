@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import Navigation from "@/components/Navigation";
@@ -17,6 +16,7 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Settings2, Bell, Shield, LogOut } from "lucide-react";
 import type { ProfileData } from "@/types/profile";
+import { useUserLevels } from "@/hooks/useUserLevels";
 
 const Profile = () => {
   const { user, signOut } = useAuth();
@@ -24,6 +24,7 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const { t } = useTranslation();
   const [profile, setProfile] = useState<ProfileData | null>(null);
+  const { data: levels } = useUserLevels(user?.id);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -44,7 +45,9 @@ const Profile = () => {
           social_links: data.social_links as Record<string, string> || {},
           wishlist_public: data.wishlist_public || false,
           followers_count: data.followers_count || 0,
-          following_count: data.following_count || 0
+          following_count: data.following_count || 0,
+          buyer_level: levels?.buyer || undefined,
+          seller_level: levels?.seller || undefined,
         };
 
         setProfile(transformedData);
@@ -59,7 +62,7 @@ const Profile = () => {
     if (user) {
       fetchProfile();
     }
-  }, [user]);
+  }, [user, levels]);
 
   const handleSignOut = async () => {
     try {

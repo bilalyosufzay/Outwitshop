@@ -37,13 +37,24 @@ export const ProfileHeader = ({ profile, userEmail }: ProfileHeaderProps) => {
         </h1>
         <p className="text-muted-foreground mb-4">{userEmail}</p>
         
-        <div className="w-full max-w-md mb-6">
-          <LevelDisplay
-            type="buyer"
-            level="Newbie Shopper"
-            progress={30}
-            nextLevel="Frequent Buyer"
-          />
+        <div className="w-full max-w-md space-y-4 mb-6">
+          {profile?.buyer_level && (
+            <LevelDisplay
+              type="buyer"
+              level={profile.buyer_level.current}
+              progress={profile.buyer_level.progress}
+              nextLevel={profile.buyer_level.next}
+            />
+          )}
+          
+          {profile?.seller_level && (
+            <LevelDisplay
+              type="seller"
+              level={profile.seller_level.current}
+              progress={profile.seller_level.progress}
+              nextLevel={profile.seller_level.next}
+            />
+          )}
         </div>
 
         <Button

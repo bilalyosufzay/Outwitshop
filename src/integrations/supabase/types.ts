@@ -400,6 +400,48 @@ export type Database = {
         }
         Relationships: []
       }
+      user_levels: {
+        Row: {
+          average_rating: number | null
+          created_at: string
+          current_level: string
+          id: string
+          points: number | null
+          total_orders: number | null
+          total_sales: number | null
+          total_spent: number | null
+          type: Database["public"]["Enums"]["user_level_type"]
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          average_rating?: number | null
+          created_at?: string
+          current_level: string
+          id?: string
+          points?: number | null
+          total_orders?: number | null
+          total_sales?: number | null
+          total_spent?: number | null
+          type: Database["public"]["Enums"]["user_level_type"]
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          average_rating?: number | null
+          created_at?: string
+          current_level?: string
+          id?: string
+          points?: number | null
+          total_orders?: number | null
+          total_sales?: number | null
+          total_spent?: number | null
+          type?: Database["public"]["Enums"]["user_level_type"]
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       wishlists: {
         Row: {
           created_at: string | null
@@ -438,7 +480,17 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      buyer_level_name:
+        | "Newbie Shopper"
+        | "Frequent Buyer"
+        | "VIP Shopper"
+        | "Elite Member"
+      seller_level_name:
+        | "Starter Seller"
+        | "Growing Seller"
+        | "Top Seller"
+        | "Platinum Seller"
+      user_level_type: "buyer" | "seller"
     }
     CompositeTypes: {
       [_ in never]: never
