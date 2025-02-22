@@ -23,6 +23,7 @@ const LANGUAGES = [
   { code: "it", name: "Italiano", flag: "🇮🇹" },
   { code: "pt", name: "Português", flag: "🇵🇹" },
   { code: "fa", name: "فارسی", flag: "🇮🇷" },
+  { code: "prs", name: "دری", flag: "🇦🇫" },
 ];
 
 const FEATURED_PRODUCTS = [
