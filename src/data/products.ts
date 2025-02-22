@@ -1,4 +1,3 @@
-
 export interface Product {
   id: string;
   name: string;
@@ -90,6 +89,32 @@ export const FEATURED_PRODUCTS: Product[] = [
       "https://images.unsplash.com/photo-1595225353939-8883a9a4a008?w=800&q=80",
       "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=800&q=80",
     ]
+  },
+  {
+    id: "15",
+    name: "Smart Plant Pot",
+    price: 49.99,
+    category: "Home",
+    image: "https://images.unsplash.com/photo-1592170577795-dcc7116cafcd?w=800&q=80",
+    images: [
+      "https://images.unsplash.com/photo-1592170577795-dcc7116cafcd?w=800&q=80",
+      "https://images.unsplash.com/photo-1585590853943-b46826da32fa?w=800&q=80",
+      "https://images.unsplash.com/photo-1591454371758-644f9d123a81?w=800&q=80",
+      "https://images.unsplash.com/photo-1591454371758-644f9d123a81?w=800&q=80"
+    ]
+  },
+  {
+    id: "16",
+    name: "Yoga Mat Premium",
+    price: 89.99,
+    category: "Sports",
+    image: "https://images.unsplash.com/photo-1592432678016-e910b6506c3d?w=800&q=80",
+    images: [
+      "https://images.unsplash.com/photo-1592432678016-e910b6506c3d?w=800&q=80",
+      "https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?w=800&q=80",
+      "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=800&q=80",
+      "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=800&q=80"
+    ]
   }
 ];
 
@@ -155,9 +180,9 @@ export const TRENDING_PRODUCTS: Product[] = [
     image: "https://images.unsplash.com/photo-1592170577795-dcc7116cafcd?w=800&q=80",
     images: [
       "https://images.unsplash.com/photo-1592170577795-dcc7116cafcd?w=800&q=80",
-      "https://images.unsplash.com/photo-1592170577795-dcc7116cafcd?w=800&q=80",
-      "https://images.unsplash.com/photo-1592170577795-dcc7116cafcd?w=800&q=80",
-      "https://images.unsplash.com/photo-1592170577795-dcc7116cafcd?w=800&q=80",
+      "https://images.unsplash.com/photo-1585590853943-b46826da32fa?w=800&q=80",
+      "https://images.unsplash.com/photo-1591454371758-644f9d123a81?w=800&q=80",
+      "https://images.unsplash.com/photo-1591454371758-644f9d123a81?w=800&q=80"
     ]
   },
   {
@@ -168,9 +193,9 @@ export const TRENDING_PRODUCTS: Product[] = [
     image: "https://images.unsplash.com/photo-1592432678016-e910b6506c3d?w=800&q=80",
     images: [
       "https://images.unsplash.com/photo-1592432678016-e910b6506c3d?w=800&q=80",
-      "https://images.unsplash.com/photo-1592432678016-e910b6506c3d?w=800&q=80",
-      "https://images.unsplash.com/photo-1592432678016-e910b6506c3d?w=800&q=80",
-      "https://images.unsplash.com/photo-1592432678016-e910b6506c3d?w=800&q=80",
+      "https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?w=800&q=80",
+      "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=800&q=80",
+      "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=800&q=80"
     ]
   }
 ];
