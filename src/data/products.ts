@@ -6,8 +6,8 @@ export interface Product {
   originalPrice?: number;
   category: string;
   image: string;
-  countryAvailability?: string[]; // List of country codes where product is available
-  images?: string[]; // Array of rotating images
+  countryAvailability?: string[];
+  images?: string[];
 }
 
 export const FEATURED_PRODUCTS: Product[] = [
@@ -40,7 +40,7 @@ export const FEATURED_PRODUCTS: Product[] = [
   },
   {
     id: "3",
-    name: "Modern Desk Lamp",
+    name: "Artistic Table Lamp",
     price: 89.99,
     category: "Home",
     image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=800&q=80",
@@ -90,7 +90,7 @@ export const TRENDING_PRODUCTS: Product[] = [
   },
   {
     id: "7",
-    name: "Premium Coffee Maker",
+    name: "Barista Coffee Machine",
     price: 249.99,
     category: "Home",
     image: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&q=80",
@@ -138,7 +138,7 @@ export const SALE_PRODUCTS: Product[] = [
   },
   {
     id: "12",
-    name: "Kitchen Mixer",
+    name: "Professional Stand Mixer",
     price: 199.99,
     originalPrice: 299.99,
     category: "Home",
