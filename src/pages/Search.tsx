@@ -10,7 +10,14 @@ import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface SponsoredProduct {
-  products: Product;
+  products: {
+    id: string;
+    name: string;
+    price: number;
+    category: string;
+    image: string;
+    images?: string[];
+  };
   boost_level: number;
 }
 
@@ -31,7 +38,7 @@ const Search = () => {
       const { data: sponsoredProducts, error: sponsoredError } = await supabase
         .rpc('search_sponsored_products', {
           search_query: searchQuery
-        }) as { data: SponsoredProduct[] | null; error: any };
+        });
 
       if (sponsoredError) {
         console.error('Error fetching sponsored products:', sponsoredError);
@@ -49,14 +56,24 @@ const Search = () => {
       }
 
       // Combine and format results
-      const sponsored = (sponsoredProducts || []).map(sp => ({
-        ...sp.products,
+      const sponsored = (sponsoredProducts || []).map((sp: SponsoredProduct) => ({
+        id: sp.products.id,
+        name: sp.products.name,
+        price: sp.products.price,
+        category: sp.products.category,
+        image: sp.products.image,
+        images: sp.products.images,
         isSponsored: true,
         boostLevel: sp.boost_level
       })) as ProductWithSponsorship[];
 
       const regular = (regularProducts || []).map(p => ({
-        ...p,
+        id: p.id,
+        name: p.name,
+        price: p.price,
+        category: p.category,
+        image: p.image,
+        images: p.images,
         isSponsored: false
       })) as ProductWithSponsorship[];
 
