@@ -34,10 +34,9 @@ interface ProductWithSponsorship extends Product {
   boostLevel?: number;
 }
 
-type SearchSponsoredProductsFn = {
-  data: SponsoredProduct[] | null;
-  error: null;
-};
+interface SearchSponsoredProductsParams {
+  search_query: string;
+}
 
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -49,7 +48,7 @@ const Search = () => {
 
       // First, get sponsored products
       const { data: sponsoredProducts, error: sponsoredError } = await supabase
-        .rpc<SearchSponsoredProductsFn>('search_sponsored_products', {
+        .rpc<SearchSponsoredProductsParams, SponsoredProduct[]>('search_sponsored_products', {
           search_query: searchQuery
         });
 
