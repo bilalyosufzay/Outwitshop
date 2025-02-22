@@ -10,13 +10,17 @@ import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { Product, FEATURED_PRODUCTS, TRENDING_PRODUCTS, SALE_PRODUCTS } from "@/data/products";
 
+interface ProductView {
+  product_id: string;
+  viewed_at: string;
+}
+
 const RecentlyViewed = () => {
   const navigate = useNavigate();
 
   const { data: recentViews, isLoading } = useQuery({
     queryKey: ['recentViews'],
     queryFn: async () => {
-      // Using type assertion to work around type checking
       const { data, error } = await supabase
         .from('product_views' as any)
         .select('product_id, viewed_at')
@@ -24,7 +28,8 @@ const RecentlyViewed = () => {
         .limit(10);
 
       if (error) throw error;
-      return data as Array<{ product_id: string; viewed_at: string }>;
+      // First cast to unknown, then to our specific type to avoid type errors
+      return (data as unknown) as ProductView[];
     },
   });
 
