@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Index from "./pages/Index";
 import Login from "./pages/auth/Login";
@@ -32,6 +32,7 @@ const App = () => (
               <Route path="/cart" element={<NotFound />} />
               <Route path="/profile" element={<NotFound />} />
               <Route path="/product/:id" element={<NotFound />} />
+              <Route path="/my-shop" element={<Navigate to="/my-shop/dashboard" replace />} />
               <Route path="/my-shop/create" element={<CreateShop />} />
               <Route path="/my-shop/dashboard" element={<ShopDashboard />} />
             </Route>
