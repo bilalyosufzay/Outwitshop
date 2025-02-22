@@ -71,10 +71,10 @@ const Signup = () => {
             className="mx-auto h-24 w-auto"
           />
           <h2 className="mt-6 text-2xl font-semibold text-gray-900">
-            Create an account
+            {t('auth.create_account')}
           </h2>
           <p className="mt-2 text-sm text-gray-600">
-            Join Outwit Shop today
+            {t('auth.join_today')}
           </p>
           <div className="mt-4">
             <DropdownMenu>
@@ -104,7 +104,7 @@ const Signup = () => {
           <div className="space-y-4">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email address
+                {t('auth.email_address')}
               </label>
               <input
                 id="email"
@@ -113,12 +113,12 @@ const Signup = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 className="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-accent focus:ring-accent"
-                placeholder="Enter your email"
+                placeholder={t('auth.enter_email')}
               />
             </div>
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Password
+                {t('auth.password')}
               </label>
               <input
                 id="password"
@@ -127,20 +127,20 @@ const Signup = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 className="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-accent focus:ring-accent"
-                placeholder="Choose a password"
+                placeholder={t('auth.enter_password')}
                 minLength={6}
               />
             </div>
           </div>
 
           <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? "Creating account..." : "Create account"}
+            {loading ? t('auth.creating_account') : t('auth.create_account_button')}
           </Button>
 
           <div className="text-center text-sm text-gray-600">
-            Already have an account?{" "}
+            {t('auth.already_have_account')}{" "}
             <Link to="/auth/login" className="text-accent hover:underline">
-              Sign in
+              {t('auth.sign_in')}
             </Link>
           </div>
         </form>

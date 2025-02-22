@@ -1,4 +1,3 @@
-
 {
   "header": {
     "notifications": "Notificaciones",
@@ -39,5 +38,24 @@
   },
   "shop_now": "Comprar Ahora",
   "new_arrival": "Nueva Llegada",
-  "summer_collection": "Colección de Verano"
+  "summer_collection": "Colección de Verano",
+  "auth": {
+    "create_account": "Crear una cuenta",
+    "join_today": "Únete a Outwit Shop hoy",
+    "email_address": "Correo electrónico",
+    "password": "Contraseña",
+    "creating_account": "Creando cuenta...",
+    "create_account_button": "Crear cuenta",
+    "already_have_account": "¿Ya tienes una cuenta?",
+    "sign_in": "Iniciar sesión",
+    "welcome_back": "Bienvenido de nuevo",
+    "please_sign_in": "Por favor, inicia sesión en tu cuenta",
+    "enter_email": "Introduce tu correo electrónico",
+    "enter_password": "Introduce tu contraseña",
+    "forgot_password": "¿Olvidaste tu contraseña?",
+    "signing_in": "Iniciando sesión...",
+    "sign_in_button": "Iniciar sesión",
+    "dont_have_account": "¿No tienes una cuenta?",
+    "sign_up": "Registrarse"
+  }
 }
