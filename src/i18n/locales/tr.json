@@ -1,0 +1,25 @@
+
+{
+  "header": {
+    "notifications": "Bildirimler",
+    "menu": "Menü"
+  },
+  "categories": {
+    "view_all": "Tümünü Gör"
+  },
+  "featured": {
+    "title": "Öne Çıkanlar",
+    "view_all": "Tümünü Gör"
+  },
+  "trending": {
+    "title": "Trend",
+    "hot": "Popüler 🔥"
+  },
+  "flash_sale": {
+    "title": "Flaş Satış 🎉",
+    "subtitle": "Seçili ürünlerde %50'ye varan indirim"
+  },
+  "shop_now": "Şimdi Alışveriş Yap",
+  "new_arrival": "Yeni Gelen",
+  "summer_collection": "Yaz Koleksiyonu"
+}

@@ -1,0 +1,25 @@
+
+{
+  "header": {
+    "notifications": "خبرتیاوې",
+    "menu": "مینو"
+  },
+  "categories": {
+    "view_all": "ټول وګورئ"
+  },
+  "featured": {
+    "title": "ځانګړي محصولات",
+    "view_all": "ټول وګورئ"
+  },
+  "trending": {
+    "title": "مشهور",
+    "hot": "تود 🔥"
+  },
+  "flash_sale": {
+    "title": "فلش خرڅلاو 🎉",
+    "subtitle": "په ځانګړو توکو تر ۵۰٪ رعایت"
+  },
+  "shop_now": "اوس یې واخلئ",
+  "new_arrival": "نوی رارسیدلی",
+  "summer_collection": "د اوړي کلکسیون"
+}

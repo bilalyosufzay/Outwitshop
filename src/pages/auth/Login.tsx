@@ -17,7 +17,10 @@ const LANGUAGES = [
   { code: "en", name: "English", flag: "🇺🇸" },
   { code: "es", name: "Español", flag: "🇪🇸" },
   { code: "fr", name: "Français", flag: "🇫🇷" },
-  { code: "de", name: "Deutsch", flag: "🇩🇪" }
+  { code: "de", name: "Deutsch", flag: "🇩🇪" },
+  { code: "tr", name: "Türkçe", flag: "🇹🇷" },
+  { code: "fa", name: "فارسی", flag: "🇮🇷" },
+  { code: "af", name: "دری", flag: "🇦🇫" }
 ];
 
 const Login = () => {
