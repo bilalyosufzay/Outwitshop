@@ -1,4 +1,5 @@
 
+import { Gift } from "lucide-react";
 import { Prize } from "./types";
 import { PrizeCard } from "./PrizeCard";
 
