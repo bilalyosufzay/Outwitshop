@@ -6,7 +6,7 @@ const config: CapacitorConfig = {
   appName: 'wishful-shopper',
   webDir: 'dist',
   server: {
-    url: 'https://wishful-shopper.com', // Changed to use your domain
+    url: 'https://outwitshop.netlify.app', // Updated to use Netlify URL
     cleartext: true
   },
   ios: {
