@@ -6,23 +6,64 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useAuth } from "@/contexts/AuthContext";
-import { LogIn, Mail, Lock } from "lucide-react";
+import { LogIn, Mail, Lock, Languages } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+const LANGUAGES = [
+  { code: 'en', name: 'English' },
+  { code: 'es', name: 'Español' },
+  { code: 'fr', name: 'Français' },
+  { code: 'de', name: 'Deutsch' },
+  { code: 'tr', name: 'Türkçe' },
+  { code: 'fa', name: 'فارسی' }
+];
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const { signIn } = useAuth();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await signIn(email, password);
   };
 
+  const changeLanguage = (lng: string) => {
+    i18n.changeLanguage(lng);
+    localStorage.setItem('preferred-language', lng);
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-accent/10 to-background p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-accent/10 to-background p-4 relative">
+      <div className="absolute top-4 left-4">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="w-10 h-10">
+              <Languages className="h-5 w-5" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start">
+            {LANGUAGES.map((lang) => (
+              <DropdownMenuItem
+                key={lang.code}
+                onClick={() => changeLanguage(lang.code)}
+                className="cursor-pointer"
+              >
+                {lang.name}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-6 text-center">
           <div className="mx-auto w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center">
