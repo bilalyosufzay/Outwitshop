@@ -1,3 +1,4 @@
+
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/contexts/AuthContext";
@@ -21,9 +22,14 @@ function App() {
           <Route path="/welcome" element={<Welcome />} />
 
           {/* Protected Routes */}
-          <Route element={<ProtectedRoute />}>
-            <Route path="/" element={<Dashboard />} />
-          </Route>
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
 
           {/* 404 Route */}
           <Route path="*" element={<NotFound />} />
