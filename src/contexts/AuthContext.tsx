@@ -27,8 +27,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       console.log("Session check result:", session ? "Session found" : "No session");
       setUser(session?.user ?? null);
       setLoading(false);
-      if (session?.user && location.pathname.startsWith('/auth/')) {
-        navigate('/');
+      
+      if (session?.user) {
+        if (location.pathname === '/auth/login') {
+          navigate('/');
+        }
+      } else if (location.pathname !== '/auth/login' && 
+                 location.pathname !== '/auth/signup' && 
+                 location.pathname !== '/auth/forgot-password') {
+        navigate('/auth/login');
       }
     });
 
@@ -36,13 +43,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       console.log("Auth state changed:", event, session ? "Session exists" : "No session");
       setUser(session?.user ?? null);
       setLoading(false);
-      if (session?.user && location.pathname.startsWith('/auth/')) {
+
+      if (event === 'SIGNED_IN') {
         navigate('/');
+      } else if (event === 'SIGNED_OUT') {
+        navigate('/auth/login');
       }
     });
 
     return () => subscription.unsubscribe();
-  }, [navigate, location]);
+  }, [navigate, location.pathname]);
 
   const handleAuthError = (error: AuthError) => {
     console.error('Auth error details:', {
@@ -70,8 +80,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const signIn = async (email: string, password: string) => {
-    console.log("Attempting to sign in with email:", email);
     try {
+      console.log("Attempting to sign in with email:", email);
       const { error, data } = await supabase.auth.signInWithPassword({
         email,
         password,
