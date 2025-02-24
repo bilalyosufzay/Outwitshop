@@ -31,32 +31,61 @@ const ResetPassword = () => {
 
     try {
       setLoading(true);
+      
+      // Check if we have access to update the user's password
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        toast.error("Password reset session has expired. Please request a new reset link.");
+        navigate("/auth/forgot-password");
+        return;
+      }
+
       const { error } = await supabase.auth.updateUser({
         password: password
       });
 
       if (error) throw error;
       
-      toast.success("Password has been reset successfully!");
+      toast.success("Password has been reset successfully! Please log in with your new password.");
+      // Sign out the user after successful password reset
+      await supabase.auth.signOut();
       navigate("/auth/login");
     } catch (error) {
       console.error("Reset password error:", error);
-      toast.error("Failed to reset password. Please try again.");
+      toast.error("Failed to reset password. Please try again or request a new reset link.");
     } finally {
       setLoading(false);
     }
   };
 
-  // Verify that we have a valid session for password reset
+  // Check for valid reset token in URL
   useEffect(() => {
-    const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        toast.error("Invalid or expired reset link");
-        navigate("/auth/login");
+    const checkResetToken = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        const hashParams = new URLSearchParams(window.location.hash.substring(1));
+        const accessToken = hashParams.get("access_token");
+        const refreshToken = hashParams.get("refresh_token");
+        const type = hashParams.get("type");
+
+        console.log("Reset password flow - URL type:", type);
+        console.log("Reset password flow - Has access token:", !!accessToken);
+        console.log("Reset password flow - Has refresh token:", !!refreshToken);
+        console.log("Reset password flow - Has session:", !!session);
+
+        // Only redirect if we don't have any recovery flow parameters
+        if (!session && !accessToken && !type) {
+          console.log("No valid reset password session found, redirecting...");
+          toast.error("Invalid or expired reset link. Please request a new one.");
+          navigate("/auth/forgot-password");
+        }
+      } catch (error) {
+        console.error("Error checking reset token:", error);
       }
     };
-    checkSession();
+
+    checkResetToken();
   }, [navigate]);
 
   return (
