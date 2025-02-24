@@ -1,8 +1,10 @@
+
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { Puzzle, Mail, Lock } from "lucide-react";
@@ -10,6 +12,7 @@ import { Puzzle, Mail, Lock } from "lucide-react";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const { signIn } = useAuth();
   const navigate = useNavigate();
@@ -19,6 +22,11 @@ const Login = () => {
     try {
       setLoading(true);
       await signIn(email, password);
+      if (rememberMe) {
+        localStorage.setItem('rememberedEmail', email);
+      } else {
+        localStorage.removeItem('rememberedEmail');
+      }
       navigate("/");
     } catch (error) {
       console.error("Login error:", error);
@@ -26,6 +34,15 @@ const Login = () => {
       setLoading(false);
     }
   };
+
+  // Load remembered email on component mount
+  React.useEffect(() => {
+    const rememberedEmail = localStorage.getItem('rememberedEmail');
+    if (rememberedEmail) {
+      setEmail(rememberedEmail);
+      setRememberMe(true);
+    }
+  }, []);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-blue-50 p-4">
@@ -73,7 +90,21 @@ const Login = () => {
                   required
                 />
               </div>
-              <div className="text-right">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="remember"
+                    checked={rememberMe}
+                    onCheckedChange={(checked) => setRememberMe(checked as boolean)}
+                    className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                  />
+                  <label
+                    htmlFor="remember"
+                    className="text-sm text-muted-foreground cursor-pointer"
+                  >
+                    Remember me
+                  </label>
+                </div>
                 <Link 
                   to="/auth/forgot-password" 
                   className="text-sm text-primary hover:underline"
