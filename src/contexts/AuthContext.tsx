@@ -1,6 +1,6 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { User } from "@supabase/supabase-js";
+import { User, AuthError } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "sonner";
@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     });
 
     // Listen for changes on auth state (signed in, signed out, etc.)
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setUser(session?.user ?? null);
       setLoading(false);
       if (session?.user && location.pathname.startsWith('/auth/')) {
@@ -43,6 +43,25 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return () => subscription.unsubscribe();
   }, [navigate, location]);
 
+  const handleAuthError = (error: AuthError) => {
+    console.error('Auth error:', error);
+    
+    // Handle specific error cases
+    switch (true) {
+      case error.message.includes('Email not confirmed'):
+        toast.error('Please verify your email before logging in');
+        break;
+      case error.message.includes('Invalid login credentials'):
+        toast.error('Invalid email or password');
+        break;
+      case error.message.includes('Rate limit'):
+        toast.error('Too many attempts. Please try again later');
+        break;
+      default:
+        toast.error(error.message);
+    }
+  };
+
   const signIn = async (email: string, password: string) => {
     try {
       const { error, data } = await supabase.auth.signInWithPassword({
@@ -51,23 +70,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       });
 
       if (error) {
-        if (error.message.includes("Email not confirmed")) {
-          toast.error("Please verify your email before logging in. Check your inbox for the verification link.");
-        } else if (error.message.includes("Invalid login credentials")) {
-          toast.error("Invalid email or password. Please try again.");
-        } else {
-          toast.error(error.message);
-        }
-        throw error;
+        handleAuthError(error);
+        return;
       }
 
-      if (data?.user?.aud === 'authenticated') {
-        navigate("/");
-        toast.success("Welcome back!");
+      if (data?.user) {
+        toast.success('Welcome back!');
+        navigate('/');
       }
     } catch (error) {
-      console.error("Login error:", error);
-      throw error;
+      if (error instanceof Error) {
+        toast.error(error.message);
+      }
+      console.error('Login error:', error);
     }
   };
 
@@ -78,31 +93,43 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         password,
         options: {
           captchaToken,
-          emailRedirectTo: `${window.location.origin}/auth/login`
+          emailRedirectTo: `${window.location.origin}/auth/login`,
+          data: {
+            email,
+          }
         }
       });
 
-      if (error) throw error;
-      
-      toast.success("Please check your email to confirm your account!");
-      navigate("/auth/login");
+      if (error) {
+        handleAuthError(error);
+        return;
+      }
+
+      toast.success('Please check your email to confirm your account!');
+      navigate('/auth/login');
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Error signing up";
-      toast.error(message);
-      throw error;
+      if (error instanceof Error) {
+        toast.error(error.message);
+      }
+      console.error('Signup error:', error);
     }
   };
 
   const signOut = async () => {
     try {
       const { error } = await supabase.auth.signOut();
-      if (error) throw error;
-      navigate("/auth/login");
-      toast.success("Successfully signed out!");
+      if (error) {
+        handleAuthError(error);
+        return;
+      }
+      
+      toast.success('Successfully signed out!');
+      navigate('/auth/login');
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Error signing out";
-      toast.error(message);
-      throw error;
+      if (error instanceof Error) {
+        toast.error(error.message);
+      }
+      console.error('Signout error:', error);
     }
   };
 
@@ -116,7 +143,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };
