@@ -425,6 +425,7 @@ export type Database = {
           slug: string
           status: string
           updated_at: string | null
+          verification_details: Json | null
           verification_documents: Json | null
           verification_rejected_reason: string | null
           verification_status: string | null
@@ -446,6 +447,7 @@ export type Database = {
           slug: string
           status?: string
           updated_at?: string | null
+          verification_details?: Json | null
           verification_documents?: Json | null
           verification_rejected_reason?: string | null
           verification_status?: string | null
@@ -467,6 +469,7 @@ export type Database = {
           slug?: string
           status?: string
           updated_at?: string | null
+          verification_details?: Json | null
           verification_documents?: Json | null
           verification_rejected_reason?: string | null
           verification_status?: string | null
