@@ -17,15 +17,20 @@ const ForgotPassword = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      // Use the full URL instead of relying on window.location.origin
+      
+      // Get the current domain and protocol
+      const baseUrl = window.location.href.split('/auth/')[0];
+      console.log("Current base URL:", baseUrl); // Debugging log
+      
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: 'https://mfxlprqblsrrihkiotcy.lovable.dev/auth/reset-password',
+        redirectTo: `${baseUrl}/auth/reset-password`,
       });
 
       if (error) throw error;
       
       setSubmitted(true);
       toast.success("Password reset instructions have been sent to your email");
+      console.log("Password reset email sent successfully"); // Debugging log
     } catch (error) {
       console.error("Reset password error:", error);
       toast.error("Failed to send reset instructions. Please try again.");
