@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import Navigation from "@/components/Navigation";
@@ -45,11 +44,19 @@ const Profile = () => {
         }
         
         if (data) {
+          const socialLinks: Record<string, string> = 
+            typeof data.social_links === 'object' && data.social_links !== null
+              ? Object.entries(data.social_links).reduce((acc, [key, value]) => ({
+                  ...acc,
+                  [key]: String(value)
+                }), {})
+              : {};
+
           const transformedData: ProfileData = {
             username: data.username,
             avatar_url: data.avatar_url,
             bio: data.bio,
-            social_links: data.social_links || {},
+            social_links: socialLinks,
             wishlist_public: data.wishlist_public || false,
             followers_count: data.followers_count || 0,
             following_count: data.following_count || 0,
@@ -85,7 +92,6 @@ const Profile = () => {
     navigate(path);
   };
 
-  // Loading state
   if (loading) {
     return (
       <div className="min-h-screen bg-background pb-20">
@@ -100,7 +106,6 @@ const Profile = () => {
     );
   }
 
-  // If no user, redirect to login
   if (!user) {
     navigate('/auth/login');
     return null;
