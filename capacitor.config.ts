@@ -6,7 +6,7 @@ const config: CapacitorConfig = {
   appName: 'outwitshop',
   webDir: 'dist',
   server: {
-    url: 'https://outwitshop.netlify.app', // Updated to use Netlify URL
+    url: 'https://yourdomain.com', // Replace with your actual custom domain
     cleartext: true
   },
   ios: {
