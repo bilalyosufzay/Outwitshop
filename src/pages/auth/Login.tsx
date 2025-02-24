@@ -4,12 +4,14 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useAuth } from "@/contexts/AuthContext";
-import { LogIn } from "lucide-react";
+import { LogIn, Mail, Lock } from "lucide-react";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
   const { signIn } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -18,38 +20,89 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-accent/10 to-background p-4">
       <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1 text-center">
-          <CardTitle className="text-2xl">Welcome back</CardTitle>
+        <CardHeader className="space-y-6 text-center">
+          <div className="mx-auto w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center">
+            <LogIn className="w-8 h-8 text-accent" />
+          </div>
+          <div className="space-y-2">
+            <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              Welcome Back
+            </CardTitle>
+            <p className="text-muted-foreground">
+              Sign in to your account to continue
+            </p>
+          </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-6">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
+              <div className="relative">
+                <Mail className="w-5 h-5 absolute left-3 top-2.5 text-muted-foreground" />
+                <Input
+                  type="email"
+                  placeholder="Email address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="pl-10"
+                />
+              </div>
             </div>
             <div className="space-y-2">
-              <Input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
+              <div className="relative">
+                <Lock className="w-5 h-5 absolute left-3 top-2.5 text-muted-foreground" />
+                <Input
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="pl-10"
+                />
+              </div>
             </div>
-            <Button type="submit" className="w-full">
-              <LogIn className="w-4 h-4 mr-2" />
+
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Checkbox 
+                  id="remember"
+                  checked={rememberMe}
+                  onCheckedChange={(checked) => setRememberMe(checked as boolean)}
+                />
+                <label
+                  htmlFor="remember"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  Remember me
+                </label>
+              </div>
+              <Link
+                to="/auth/forgot-password"
+                className="text-sm font-medium text-accent hover:text-accent/80"
+              >
+                Forgot password?
+              </Link>
+            </div>
+
+            <Button type="submit" size="lg" className="w-full gap-2 h-12">
+              <LogIn className="w-5 h-5" />
               Sign In
             </Button>
           </form>
-          <div className="mt-4 text-center text-sm">
-            <Link to="/" className="text-primary hover:underline">
+
+          <div className="text-center space-y-2">
+            <p className="text-sm text-muted-foreground">
+              Don't have an account?{" "}
+              <Link to="/auth/signup" className="font-medium text-accent hover:text-accent/80">
+                Sign up
+              </Link>
+            </p>
+            <Link
+              to="/"
+              className="text-sm font-medium text-muted-foreground hover:text-foreground block"
+            >
               Back to Home
             </Link>
           </div>
