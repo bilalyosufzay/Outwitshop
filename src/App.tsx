@@ -18,6 +18,7 @@ import AddProductPage from "@/pages/my-shop/products/AddProductPage";
 import VerificationForm from "@/pages/my-shop/verification/VerificationForm";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { AuthProvider } from "./contexts/AuthContext";
+import LuckyDraw from "@/pages/LuckyDraw";
 import "./App.css";
 
 const App = () => {
@@ -33,6 +34,7 @@ const App = () => {
           <Route path="/products" element={<Products />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/welcome" element={<Welcome />} />
+          <Route path="/lucky-draw" element={<LuckyDraw />} />
           
           {/* Auth Routes */}
           <Route path="/auth/login" element={<Login />} />
