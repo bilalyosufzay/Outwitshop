@@ -1,3 +1,4 @@
+
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import ProductCard from "./ProductCard";
@@ -13,14 +14,10 @@ export const FeaturedSection = () => {
     const interval = setInterval(() => {
       setCurrentProducts((prevProducts) => {
         const newProducts = [...prevProducts];
-        // Rotate product details while keeping images fixed
+        // Rotate all product details including images
         for (let i = 0; i < newProducts.length; i++) {
           const nextIndex = (i + 1) % FEATURED_PRODUCTS.length;
-          newProducts[i] = {
-            ...FEATURED_PRODUCTS[nextIndex],
-            image: FEATURED_PRODUCTS[i].image, // Keep original image
-            images: FEATURED_PRODUCTS[i].images, // Keep original images array
-          };
+          newProducts[i] = FEATURED_PRODUCTS[nextIndex];
         }
         return newProducts;
       });
