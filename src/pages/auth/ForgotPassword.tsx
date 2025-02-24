@@ -23,6 +23,7 @@ const ForgotPassword = () => {
       
       console.log("Sending reset password email with redirect to:", `${SITE_URL}/auth/reset-password`);
       
+      // First, initiate the password reset with Supabase
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${SITE_URL}/auth/reset-password`,
       });
@@ -30,6 +31,19 @@ const ForgotPassword = () => {
       if (error) {
         console.error("Reset password error:", error);
         throw error;
+      }
+
+      // If successful, send a custom email using our Edge Function
+      const { error: emailError } = await supabase.functions.invoke('send-password-reset', {
+        body: {
+          email,
+          resetUrl: `${SITE_URL}/auth/reset-password`
+        }
+      });
+
+      if (emailError) {
+        console.error("Send email error:", emailError);
+        throw emailError;
       }
       
       setSubmitted(true);
