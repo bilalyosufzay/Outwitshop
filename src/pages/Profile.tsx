@@ -29,39 +29,46 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchProfile = async () => {
+      if (!user) return;
+      
       try {
         const { data, error } = await supabase
           .from('profiles')
           .select('*')
-          .eq('id', user?.id)
-          .single();
+          .eq('id', user.id)
+          .maybeSingle();
 
-        if (error) throw error;
+        if (error) {
+          console.error('Error fetching profile:', error);
+          toast.error('Failed to load profile');
+          return;
+        }
         
-        const transformedData: ProfileData = {
-          username: data.username,
-          avatar_url: data.avatar_url,
-          bio: data.bio,
-          social_links: data.social_links as Record<string, string> || {},
-          wishlist_public: data.wishlist_public || false,
-          followers_count: data.followers_count || 0,
-          following_count: data.following_count || 0,
-          buyer_level: levels?.buyer || undefined,
-          seller_level: levels?.seller || undefined,
-        };
-
-        setProfile(transformedData);
+        if (data) {
+          const transformedData: ProfileData = {
+            username: data.username,
+            avatar_url: data.avatar_url,
+            bio: data.bio,
+            social_links: data.social_links || {},
+            wishlist_public: data.wishlist_public || false,
+            followers_count: data.followers_count || 0,
+            following_count: data.following_count || 0,
+            buyer_level: levels?.buyer || undefined,
+            seller_level: levels?.seller || undefined,
+          };
+          setProfile(transformedData);
+        } else {
+          console.log('No profile found for user:', user.id);
+        }
       } catch (error) {
-        console.error('Error fetching profile:', error);
+        console.error('Error in fetchProfile:', error);
         toast.error('Failed to load profile');
       } finally {
         setLoading(false);
       }
     };
 
-    if (user) {
-      fetchProfile();
-    }
+    fetchProfile();
   }, [user, levels]);
 
   const handleSignOut = async () => {
@@ -78,6 +85,7 @@ const Profile = () => {
     navigate(path);
   };
 
+  // Loading state
   if (loading) {
     return (
       <div className="min-h-screen bg-background pb-20">
@@ -90,6 +98,12 @@ const Profile = () => {
         <Navigation />
       </div>
     );
+  }
+
+  // If no user, redirect to login
+  if (!user) {
+    navigate('/auth/login');
+    return null;
   }
 
   return (
