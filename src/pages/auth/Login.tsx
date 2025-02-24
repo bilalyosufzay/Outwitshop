@@ -93,7 +93,7 @@ const Login = () => {
 
           <div className="space-y-2">
             <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              {t("auth.welcome_back")}
+              Outwit Shop
             </CardTitle>
             <p className="text-muted-foreground">
               {t("auth.please_sign_in")}
