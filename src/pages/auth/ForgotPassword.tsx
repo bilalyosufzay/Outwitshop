@@ -17,8 +17,9 @@ const ForgotPassword = () => {
     e.preventDefault();
     try {
       setLoading(true);
+      // Use the full URL instead of relying on window.location.origin
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/auth/reset-password`,
+        redirectTo: 'https://mfxlprqblsrrihkiotcy.lovable.dev/auth/reset-password',
       });
 
       if (error) throw error;
