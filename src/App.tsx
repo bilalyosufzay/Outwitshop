@@ -16,6 +16,7 @@ import LuckyDraw from "@/pages/LuckyDraw";
 import Feeds from "@/pages/Feeds";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/contexts/AuthContext";
+import Login from "@/pages/auth/Login";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/search" element={<Search />} />
           <Route path="/notifications" element={<Notifications />} />
+          <Route path="/auth/login" element={<Login />} />
           <Route 
             path="/profile" 
             element={
