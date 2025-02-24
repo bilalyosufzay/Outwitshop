@@ -7,17 +7,15 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "react-i18next";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent } from "@/components/ui/card";
-import { ProfileHeader } from "@/components/profile/ProfileHeader";
-import { BuyerContent } from "@/components/profile/BuyerContent";
-import { SellerContent } from "@/components/profile/SellerContent";
-import { SocialContent } from "@/components/profile/SocialContent";
 import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
-import { Settings2, Bell, Shield, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 import type { ProfileData } from "@/types/profile";
 import { useUserLevels } from "@/hooks/useUserLevels";
+import { ProfileHeader } from "@/components/profile/ProfileHeader";
+import { AccountStatus } from "@/components/profile/AccountStatus";
+import { QuickActions } from "@/components/profile/QuickActions";
+import { SocialContent } from "@/components/profile/SocialContent";
+import { ProfileTabs } from "@/components/profile/ProfileTabs";
 
 const Profile = () => {
   const { user, signOut } = useAuth();
@@ -116,78 +114,12 @@ const Profile = () => {
     <div className="min-h-screen bg-background pb-20">
       <div className="container mx-auto px-4 py-8 space-y-6">
         <ProfileHeader profile={profile} userEmail={user?.email} />
-
-        <Card className="border-none shadow-none bg-accent/5 p-4">
-          <CardContent className="p-0 flex items-center justify-between">
-            <div className="space-y-1">
-              <h3 className="font-semibold">Account Status</h3>
-              <p className="text-sm text-muted-foreground">Your account is in good standing</p>
-            </div>
-            <Badge variant="default" className="bg-green-500/10 text-green-500 hover:bg-green-500/20">
-              Active
-            </Badge>
-          </CardContent>
-        </Card>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Button 
-            variant="outline" 
-            className="flex items-center gap-2 h-auto py-4" 
-            onClick={() => handleNavigation('/settings')}
-          >
-            <Settings2 className="h-5 w-5" />
-            <div className="text-left">
-              <div className="font-medium">Settings</div>
-              <div className="text-sm text-muted-foreground">Manage your preferences</div>
-            </div>
-          </Button>
-          
-          <Button 
-            variant="outline" 
-            className="flex items-center gap-2 h-auto py-4" 
-            onClick={() => handleNavigation('/notifications')}
-          >
-            <Bell className="h-5 w-5" />
-            <div className="text-left">
-              <div className="font-medium">Notifications</div>
-              <div className="text-sm text-muted-foreground">Configure alerts</div>
-            </div>
-          </Button>
-
-          <Button 
-            variant="outline" 
-            className="flex items-center gap-2 h-auto py-4" 
-            onClick={() => handleNavigation('/security')}
-          >
-            <Shield className="h-5 w-5" />
-            <div className="text-left">
-              <div className="font-medium">Security</div>
-              <div className="text-sm text-muted-foreground">Protect your account</div>
-            </div>
-          </Button>
-        </div>
-
+        <AccountStatus />
+        <QuickActions onNavigate={handleNavigation} />
         <Separator className="my-6" />
-
         <SocialContent />
-
         <Separator className="my-6" />
-
-        <Tabs defaultValue="buyer" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="buyer">Buyer Profile</TabsTrigger>
-            <TabsTrigger value="seller">Seller Dashboard</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="buyer" className="space-y-6 mt-6">
-            <BuyerContent />
-          </TabsContent>
-
-          <TabsContent value="seller" className="space-y-6 mt-6">
-            <SellerContent />
-          </TabsContent>
-        </Tabs>
-
+        <ProfileTabs />
         <Button
           variant="destructive"
           className="w-full flex items-center justify-center gap-2"
