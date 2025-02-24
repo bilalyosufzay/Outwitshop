@@ -2,17 +2,75 @@
 import { Header } from "@/components/Header";
 import Navigation from "@/components/Navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MessageSquare, Video } from "lucide-react";
+import { MessageSquare, Video, Camera, Plus } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Form, FormField, FormItem, FormLabel, FormControl } from "@/components/ui/form";
+import { Textarea } from "@/components/ui/textarea";
+import { useForm } from "react-hook-form";
+import { useToast } from "@/hooks/use-toast";
 
 const Feeds = () => {
+  const { toast } = useToast();
+  const form = useForm({
+    defaultValues: {
+      review: "",
+      image: null as File | null,
+      shopId: ""
+    }
+  });
+
   const sampleShops = [
     { id: 1, name: "Tech Haven" },
     { id: 2, name: "Fashion Corner" },
     { id: 3, name: "Home Essentials" }
   ];
+
+  const handleCapture = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      const video = document.createElement('video');
+      video.srcObject = stream;
+      await video.play();
+
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      canvas.getContext('2d')?.drawImage(video, 0, 0);
+
+      // Convert to file
+      canvas.toBlob((blob) => {
+        if (blob) {
+          const file = new File([blob], "review-image.jpg", { type: "image/jpeg" });
+          form.setValue("image", file);
+          toast({
+            title: "Image captured",
+            description: "Your photo has been captured successfully"
+          });
+        }
+      }, 'image/jpeg');
+
+      // Stop camera
+      stream.getTracks().forEach(track => track.stop());
+    } catch (error) {
+      toast({
+        title: "Camera Error",
+        description: "Unable to access camera. Please check permissions.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const onSubmit = (data: any) => {
+    // Here you would typically send the data to your backend
+    console.log("Review submitted:", data);
+    toast({
+      title: "Review Posted",
+      description: "Your review has been posted successfully"
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
@@ -31,6 +89,79 @@ const Feeds = () => {
           </TabsList>
 
           <TabsContent value="reviews" className="mt-4 space-y-4">
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button className="w-full mb-4">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Review
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Post a Review</DialogTitle>
+                </DialogHeader>
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                    <FormField
+                      control={form.control}
+                      name="shopId"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Select Shop</FormLabel>
+                          <FormControl>
+                            <select 
+                              {...field} 
+                              className="w-full p-2 border rounded-md"
+                            >
+                              <option value="">Select a shop</option>
+                              {sampleShops.map(shop => (
+                                <option key={shop.id} value={shop.id}>
+                                  {shop.name}
+                                </option>
+                              ))}
+                            </select>
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="review"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Your Review</FormLabel>
+                          <FormControl>
+                            <Textarea 
+                              placeholder="Write your review here..." 
+                              {...field}
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+
+                    <div className="space-y-2">
+                      <FormLabel>Add Photo</FormLabel>
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        className="w-full"
+                        onClick={handleCapture}
+                      >
+                        <Camera className="w-4 h-4 mr-2" />
+                        Take Photo
+                      </Button>
+                    </div>
+
+                    <Button type="submit" className="w-full">
+                      Post Review
+                    </Button>
+                  </form>
+                </Form>
+              </DialogContent>
+            </Dialog>
+
             {/* Sample Product Reviews */}
             {Array.from({ length: 3 }).map((_, i) => (
               <Card key={i}>
