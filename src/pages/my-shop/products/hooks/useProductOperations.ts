@@ -25,13 +25,26 @@ export const useProductOperations = () => {
 
       if (!shop) throw new Error("Shop not found");
 
+      // First, upload images if they're file objects
+      const uploadedImages = values.images;
+
       const { error } = await supabase.from("products").insert({
         name: values.name,
-        description: values.description || null,
+        description: values.description,
         price: values.price,
         stock_quantity: values.stock_quantity,
         shop_id: shop.id,
         status: "active",
+        category: values.category,
+        subcategory: values.subcategory || null,
+        sku: values.sku || null,
+        weight: values.weight || null,
+        dimensions: values.dimensions || null,
+        features: values.features || [],
+        specifications: values.specifications || [],
+        images: uploadedImages,
+        video_url: values.video_url || null,
+        shipping_info: values.shipping_info || null,
       });
 
       if (error) throw error;
