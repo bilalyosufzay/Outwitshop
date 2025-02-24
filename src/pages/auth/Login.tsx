@@ -66,9 +66,28 @@ const Login = () => {
 
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-6 text-center">
-          <div className="mx-auto w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center">
-            <LogIn className="w-8 h-8 text-accent" />
+          {/* Logo Section */}
+          <div className="relative w-32 h-32 mx-auto mb-4">
+            {/* Replace 'your-logo.png' with your actual logo path after uploading */}
+            <img
+              src="/placeholder.svg"
+              alt="Logo"
+              className="w-full h-full object-contain opacity-90"
+              style={{
+                filter: 'blur(0.5px)',
+                boxShadow: '0 0 40px rgba(139, 92, 246, 0.15)'
+              }}
+            />
+            {/* Modern glow effect */}
+            <div 
+              className="absolute inset-0 rounded-full"
+              style={{
+                background: 'radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, rgba(139, 92, 246, 0) 70%)',
+                transform: 'scale(1.2)'
+              }}
+            />
           </div>
+
           <div className="space-y-2">
             <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
               {t("auth.welcome_back")}
