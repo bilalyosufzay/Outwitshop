@@ -45,18 +45,28 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signIn = async (email: string, password: string) => {
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { error, data } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      if (error) throw error;
-      
-      navigate("/");
-      toast.success("Welcome back!");
+      if (error) {
+        if (error.message.includes("Email not confirmed")) {
+          toast.error("Please verify your email before logging in. Check your inbox for the verification link.");
+        } else if (error.message.includes("Invalid login credentials")) {
+          toast.error("Invalid email or password. Please try again.");
+        } else {
+          toast.error(error.message);
+        }
+        throw error;
+      }
+
+      if (data?.user?.aud === 'authenticated') {
+        navigate("/");
+        toast.success("Welcome back!");
+      }
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Error signing in";
-      toast.error(message);
+      console.error("Login error:", error);
       throw error;
     }
   };
@@ -67,13 +77,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         email,
         password,
         options: {
-          captchaToken
+          captchaToken,
+          emailRedirectTo: `${window.location.origin}/auth/login`
         }
       });
 
       if (error) throw error;
       
-      toast.success("Check your email to confirm your account!");
+      toast.success("Please check your email to confirm your account!");
       navigate("/auth/login");
     } catch (error) {
       const message = error instanceof Error ? error.message : "Error signing up";
