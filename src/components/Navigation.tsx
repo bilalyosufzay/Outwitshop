@@ -1,6 +1,6 @@
 
 import { Link, useLocation } from "react-router-dom";
-import { Home, Search, ShoppingCart, User, Package } from "lucide-react";
+import { Home, Search, ShoppingCart, User, Package, Gift } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const Navigation = () => {
@@ -31,6 +31,17 @@ const Navigation = () => {
       >
         <Package className="h-5 w-5" />
         <span>Products</span>
+      </Link>
+
+      <Link
+        to="/lucky-draw"
+        className={cn(
+          "flex flex-col items-center text-xs gap-1",
+          isActive("/lucky-draw") ? "text-primary" : "text-muted-foreground"
+        )}
+      >
+        <Gift className="h-5 w-5" />
+        <span>Lucky Draw</span>
       </Link>
 
       <Link
