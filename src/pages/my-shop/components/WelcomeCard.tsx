@@ -11,6 +11,10 @@ interface WelcomeCardProps {
 export const WelcomeCard = ({ onCancel }: WelcomeCardProps) => {
   const navigate = useNavigate();
 
+  const handleCreateShop = () => {
+    navigate("/my-shop/create");
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-accent/10 to-background p-4">
       <Card className="w-full max-w-md text-center">
@@ -27,7 +31,7 @@ export const WelcomeCard = ({ onCancel }: WelcomeCardProps) => {
           <Button
             size="lg"
             className="w-full gap-2"
-            onClick={() => navigate("/my-shop/create")}
+            onClick={handleCreateShop}
           >
             <Store className="w-5 h-5" />
             Create Your Shop

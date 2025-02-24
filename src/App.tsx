@@ -7,6 +7,7 @@ import Profile from "./pages/Profile";
 import Products from "./pages/Products";
 import LuckyDraw from "./pages/LuckyDraw";
 import ShopDashboard from "./pages/my-shop/ShopDashboard";
+import CreateShop from "./pages/my-shop/CreateShop";
 import Login from "./pages/auth/Login";
 import Welcome from "./pages/Welcome";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -43,6 +44,11 @@ const App = () => {
           <Route path="/my-shop" element={
             <ProtectedRoute>
               <ShopDashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/my-shop/create" element={
+            <ProtectedRoute>
+              <CreateShop />
             </ProtectedRoute>
           } />
         </Routes>
