@@ -3,11 +3,21 @@ import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
+interface CreateShopData {
+  name: string;
+  description?: string;
+  contactEmail: string;
+  ownerName: string;
+  idCardNumber: string;
+  address: string;
+  phoneNumber: string;
+}
+
 export const useCreateShop = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useAuth();
 
-  const createShop = async () => {
+  const createShop = async (data: CreateShopData) => {
     if (!user) throw new Error("User not authenticated");
     
     setIsLoading(true);
@@ -23,25 +33,26 @@ export const useCreateShop = () => {
         return existingShop;
       }
 
-      // Create new shop
-      const { data, error } = await supabase
+      // Create new shop with provided data
+      const { data: newShop, error } = await supabase
         .from("shops")
         .insert({
           owner_id: user.id,
-          name: `Shop ${Math.random().toString(36).substring(7)}`, // Temporary name
-          slug: `shop-${Math.random().toString(36).substring(7)}`, // Temporary slug
-          owner_name: user.email?.split('@')[0] || 'Shop Owner',
-          status: 'draft',
-          contact_email: user.email || '',
-          phone_number: '',
-          address: '',
-          id_card_number: '',
+          name: data.name,
+          description: data.description,
+          slug: data.name.toLowerCase().replace(/\s+/g, '-'),
+          contact_email: data.contactEmail,
+          owner_name: data.ownerName,
+          id_card_number: data.idCardNumber,
+          address: data.address,
+          phone_number: data.phoneNumber,
+          status: 'pending',
         })
         .select()
         .single();
 
       if (error) throw error;
-      return data;
+      return newShop;
     } finally {
       setIsLoading(false);
     }
