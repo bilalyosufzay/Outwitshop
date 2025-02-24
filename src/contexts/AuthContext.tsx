@@ -27,16 +27,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       console.log("Session check result:", session ? "Session found" : "No session");
       setUser(session?.user ?? null);
       setLoading(false);
-      
-      if (session?.user) {
-        if (location.pathname === '/auth/login') {
-          navigate('/');
-        }
-      } else if (location.pathname !== '/auth/login' && 
-                 location.pathname !== '/auth/signup' && 
-                 location.pathname !== '/auth/forgot-password') {
-        navigate('/auth/login');
-      }
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
@@ -44,9 +34,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setUser(session?.user ?? null);
       setLoading(false);
 
-      if (event === 'SIGNED_IN') {
-        navigate('/');
-      } else if (event === 'SIGNED_OUT') {
+      // Only redirect if we're on a protected route and there's no session
+      if (!session && location.pathname.startsWith('/dashboard')) {
         navigate('/auth/login');
       }
     });
@@ -63,16 +52,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     
     switch (true) {
       case error.message.includes('Email not confirmed'):
-        toast.error('Please verify your email before logging in. Check your inbox for the verification link.');
+        toast.error('Please verify your email before logging in.');
         break;
       case error.message.includes('Invalid login credentials'):
-        toast.error('Email or password is incorrect. Please try again.');
+        toast.error('Email or password is incorrect.');
         break;
       case error.message.includes('Rate limit'):
-        toast.error('Too many attempts. Please try again in a few minutes.');
+        toast.error('Too many attempts. Please try again later.');
         break;
       case error.message.includes('User not found'):
-        toast.error('No account found with this email. Please sign up first.');
+        toast.error('No account found with this email.');
         break;
       default:
         toast.error(`Authentication error: ${error.message}`);
@@ -97,22 +86,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         console.log("Sign in successful:", data.user.email);
         toast.success('Welcome back!');
         navigate('/');
-      } else {
-        console.error("No user data returned after successful sign in");
-        toast.error('Unable to complete sign in. Please try again.');
       }
     } catch (error) {
       console.error('Unexpected login error:', error);
-      if (error instanceof Error) {
-        toast.error(error.message);
-      } else {
-        toast.error('An unexpected error occurred');
-      }
+      toast.error('An unexpected error occurred');
     }
   };
 
   const signUp = async (email: string, password: string, captchaToken: string) => {
-    console.log("Attempting to sign up with email:", email);
     try {
       const { error } = await supabase.auth.signUp({
         email,
@@ -131,21 +112,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return;
       }
 
-      console.log("Sign up successful, verification email sent");
       toast.success('Please check your email to confirm your account!');
       navigate('/auth/login');
     } catch (error) {
       console.error('Unexpected signup error:', error);
-      if (error instanceof Error) {
-        toast.error(error.message);
-      } else {
-        toast.error('An unexpected error occurred during signup');
-      }
+      toast.error('An unexpected error occurred during signup');
     }
   };
 
   const signOut = async () => {
-    console.log("Attempting to sign out");
     try {
       const { error } = await supabase.auth.signOut();
       if (error) {
@@ -154,16 +129,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return;
       }
       
-      console.log("Sign out successful");
       toast.success('Successfully signed out!');
       navigate('/auth/login');
     } catch (error) {
       console.error('Unexpected signout error:', error);
-      if (error instanceof Error) {
-        toast.error(error.message);
-      } else {
-        toast.error('An unexpected error occurred during sign out');
-      }
+      toast.error('An unexpected error occurred during sign out');
     }
   };
 
