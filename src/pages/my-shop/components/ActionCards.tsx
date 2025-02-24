@@ -1,61 +1,28 @@
 
-import { useNavigate } from "react-router-dom";
+import { Package, DollarSign, Store } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 
 export const ActionCards = () => {
-  const navigate = useNavigate();
-
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Products</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Button
-            onClick={() => navigate("/my-shop/products/add")}
-            className="w-full"
-          >
-            Add Product
+    <Card>
+      <CardContent className="p-4">
+        <h2 className="text-lg font-semibold mb-4">Quick Actions</h2>
+        <div className="space-y-2">
+          <Button variant="outline" className="w-full justify-start">
+            <Package className="h-4 w-4 mr-2" />
+            Manage Products
           </Button>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Orders</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Button
-            variant="secondary"
-            onClick={() => navigate("/my-shop/orders")}
-            className="w-full"
-          >
+          <Button variant="outline" className="w-full justify-start">
+            <DollarSign className="h-4 w-4 mr-2" />
             View Orders
           </Button>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Settings</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Button
-            variant="outline"
-            onClick={() => navigate("/my-shop/settings")}
-            className="w-full"
-          >
-            Manage Shop
+          <Button variant="outline" className="w-full justify-start">
+            <Store className="h-4 w-4 mr-2" />
+            Shop Settings
           </Button>
-        </CardContent>
-      </Card>
-    </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 };

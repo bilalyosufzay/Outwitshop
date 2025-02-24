@@ -1,56 +1,78 @@
 
-import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Store, ArrowRight, X } from "lucide-react";
+import { AlertCircle, Building2 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { toast } from "sonner";
 
 interface WelcomeCardProps {
-  onCancel: () => void;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
-export const WelcomeCard = ({ onCancel }: WelcomeCardProps) => {
-  const navigate = useNavigate();
-
-  const handleCreateShop = () => {
-    navigate("/my-shop/create");
-  };
-
+export const WelcomeCard = ({ open, onOpenChange }: WelcomeCardProps) => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-accent/10 to-background p-4">
-      <Card className="w-full max-w-md text-center">
-        <CardHeader className="space-y-4">
-          <div className="mx-auto w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center">
-            <Store className="w-8 h-8 text-accent" />
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[600px]">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <Building2 className="w-5 h-5" />
+            Welcome to Seller Center
+          </DialogTitle>
+          <DialogDescription>
+            Before creating your shop, please ensure you have the following information ready.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="space-y-6">
+          <div className="space-y-4">
+            <h3 className="font-semibold">Required Information</h3>
+            <ul className="grid gap-2 text-sm">
+              <li className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                Valid government-issued ID card
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                Business license (if applicable)
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                Contact email and phone number
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                Physical business address
+              </li>
+            </ul>
           </div>
-          <CardTitle className="text-3xl font-bold">Welcome to Seller Center!</CardTitle>
-          <p className="text-muted-foreground">
-            Start your journey as a seller by creating your own shop. Unlock the potential to reach thousands of customers!
-          </p>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <Button
-            size="lg"
-            className="w-full gap-2"
-            onClick={handleCreateShop}
-          >
-            <Store className="w-5 h-5" />
-            Create Your Shop
-            <ArrowRight className="w-5 h-5" />
-          </Button>
-          <Button
-            variant="outline"
-            size="lg"
-            onClick={onCancel}
-            className="w-full gap-2"
-          >
-            <X className="w-5 h-5" />
-            Cancel
-          </Button>
-          <p className="text-sm text-muted-foreground mt-4">
-            Need guidance? Check out our seller guide or contact support
-          </p>
-        </CardContent>
-      </Card>
-    </div>
+
+          <div className="bg-muted/50 p-4 rounded-lg flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 text-muted-foreground shrink-0 mt-0.5" />
+            <div className="text-sm text-muted-foreground">
+              <p className="font-medium">Verification Process</p>
+              <p>Your shop application will be reviewed within 1-2 business days. We'll verify your information to ensure a safe marketplace for all users.</p>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button 
+              onClick={() => {
+                onOpenChange(false);
+                toast.info("Please fill in all required information carefully");
+              }} 
+              className="w-full"
+            >
+              Continue to Shop Creation
+            </Button>
+          </DialogFooter>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };
