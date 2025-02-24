@@ -11,6 +11,7 @@ interface CreateShopData {
   idCardNumber: string;
   address: string;
   phoneNumber: string;
+  businessLicense?: string;
 }
 
 export const useCreateShop = () => {
@@ -46,6 +47,7 @@ export const useCreateShop = () => {
           id_card_number: data.idCardNumber,
           address: data.address,
           phone_number: data.phoneNumber,
+          business_license: data.businessLicense,
           status: 'pending',
         })
         .select()
