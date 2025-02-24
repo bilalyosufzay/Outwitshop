@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { Puzzle, Mail, ArrowLeft } from "lucide-react";
 
 // Use the correct site URL for the reset password flow
-const SITE_URL = "https://ad14e263-92fc-413c-a4ca-e1ae31f9b10f.lovableproject.com";
+const SITE_URL = "https://ad14e263-92fc-413c-a4ca-e1ae31f9b10f.lovableproject.com/welcome";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -25,7 +25,7 @@ const ForgotPassword = () => {
       
       // First, initiate the password reset with Supabase
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${SITE_URL}`, // Redirect to home page instead of reset-password
+        redirectTo: `${SITE_URL}`, // Redirect to welcome page
       });
 
       if (error) {
@@ -37,7 +37,7 @@ const ForgotPassword = () => {
       const { error: emailError } = await supabase.functions.invoke('send-password-reset', {
         body: {
           email,
-          resetUrl: `${SITE_URL}` // Update reset URL to point to home page
+          resetUrl: `${SITE_URL}` // Update reset URL to point to welcome page
         }
       });
 
