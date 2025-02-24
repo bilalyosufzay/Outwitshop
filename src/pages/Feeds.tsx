@@ -8,6 +8,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 
 const Feeds = () => {
+  const sampleShops = [
+    { id: 1, name: "Tech Haven" },
+    { id: 2, name: "Fashion Corner" },
+    { id: 3, name: "Home Essentials" }
+  ];
+
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
       <Header />
@@ -38,6 +44,9 @@ const Feeds = () => {
                       <div className="flex justify-between items-start">
                         <div>
                           <p className="font-medium">User {i + 1}</p>
+                          <p className="text-sm text-muted-foreground mt-1">
+                            Reviewed <span className="font-medium text-primary">{sampleShops[i % sampleShops.length].name}</span>
+                          </p>
                           <p className="text-sm text-muted-foreground">2 hours ago</p>
                         </div>
                         <div className="flex text-yellow-400 text-sm">
@@ -77,7 +86,7 @@ const Feeds = () => {
                     </div>
                     <div className="p-4">
                       <h3 className="font-medium">Product Showcase #{i + 1}</h3>
-                      <p className="text-sm text-muted-foreground">Seller {i + 1}</p>
+                      <p className="text-sm text-muted-foreground">{sampleShops[i % sampleShops.length].name}</p>
                       <Button variant="secondary" size="sm" className="mt-2 w-full">
                         Join Stream
                       </Button>
