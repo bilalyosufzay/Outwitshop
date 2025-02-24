@@ -1,12 +1,33 @@
-
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import ProductCard from "./ProductCard";
 import { FEATURED_PRODUCTS } from "@/data/products";
+import { useEffect, useState } from "react";
 
 export const FeaturedSection = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [currentProducts, setCurrentProducts] = useState(FEATURED_PRODUCTS);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentProducts((prevProducts) => {
+        const newProducts = [...prevProducts];
+        // Rotate product details while keeping images fixed
+        for (let i = 0; i < newProducts.length; i++) {
+          const nextIndex = (i + 1) % FEATURED_PRODUCTS.length;
+          newProducts[i] = {
+            ...FEATURED_PRODUCTS[nextIndex],
+            image: FEATURED_PRODUCTS[i].image, // Keep original image
+            images: FEATURED_PRODUCTS[i].images, // Keep original images array
+          };
+        }
+        return newProducts;
+      });
+    }, 3000); // Change every 3 seconds
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <section>
@@ -19,7 +40,7 @@ export const FeaturedSection = () => {
         </button>
       </div>
       <div className="grid grid-cols-2 gap-4">
-        {FEATURED_PRODUCTS.map((product) => (
+        {currentProducts.map((product) => (
           <ProductCard
             key={product.id}
             {...product}
