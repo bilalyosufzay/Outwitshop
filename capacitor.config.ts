@@ -6,11 +6,8 @@ const config: CapacitorConfig = {
   appName: 'outwitshop',
   webDir: 'dist',
   server: {
-    url: 'https://outwitshop.netlify.app', // Using Netlify URL until custom domain is ready
+    url: 'https://ad14e263-92fc-413c-a4ca-e1ae31f9b10f.lovableproject.com?forceHideBadge=true',
     cleartext: true
-  },
-  ios: {
-    contentInset: 'automatic'
   },
   android: {
     allowMixedContent: true
