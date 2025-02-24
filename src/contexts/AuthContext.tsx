@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useEffect, useState } from "react";
 import { User, AuthError } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
@@ -23,7 +22,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     console.log("Checking session...");
-    // Check active sessions and sets the user
     supabase.auth.getSession().then(({ data: { session } }) => {
       console.log("Session check result:", session ? "Session found" : "No session");
       setUser(session?.user ?? null);
@@ -33,7 +31,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
     });
 
-    // Listen for changes on auth state
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log("Auth state changed:", event, session ? "Session exists" : "No session");
       setUser(session?.user ?? null);
@@ -110,7 +107,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         email,
         password,
         options: {
-          captchaToken,
           emailRedirectTo: `${window.location.origin}/auth/login`,
           data: {
             email,
