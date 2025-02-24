@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -68,7 +67,6 @@ const Login = () => {
         <CardHeader className="space-y-6 text-center">
           {/* Logo Section */}
           <div className="relative w-32 h-32 mx-auto mb-4">
-            {/* Replace 'your-logo.png' with your actual logo path after uploading */}
             <img
               src="/placeholder.svg"
               alt="Logo"
@@ -76,6 +74,11 @@ const Login = () => {
               style={{
                 filter: 'blur(0.5px)',
                 boxShadow: '0 0 40px rgba(139, 92, 246, 0.15)'
+              }}
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.onerror = null; // Prevent infinite loop
+                target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTIgMkM2LjQ4IDIgMiA2LjQ4IDIgMTJzNC40OCAxMCAxMCAxMCAxMC00LjQ4IDEwLTEwUzE3LjUyIDIgMTIgMnptMCAxOGMtNC40MSAwLTgtMy41OS04LThzMy41OS04IDgtOCA4IDMuNTkgOCA4LTMuNTkgOC04IDh6Ii8+PC9zdmc+';
               }}
             />
             {/* Modern glow effect */}
