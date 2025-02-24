@@ -1,6 +1,6 @@
 
 import { Link, useLocation } from "react-router-dom";
-import { Home, Search, ShoppingCart, User, Package, Gift } from "lucide-react";
+import { Home, Search, ShoppingCart, User, MessageSquare, Gift } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const Navigation = () => {
@@ -23,14 +23,14 @@ const Navigation = () => {
       </Link>
 
       <Link
-        to="/products"
+        to="/feeds"
         className={cn(
           "flex flex-col items-center text-xs gap-1",
-          isActive("/products") ? "text-primary" : "text-muted-foreground"
+          isActive("/feeds") ? "text-primary" : "text-muted-foreground"
         )}
       >
-        <Package className="h-5 w-5" />
-        <span>Products</span>
+        <MessageSquare className="h-5 w-5" />
+        <span>Feeds</span>
       </Link>
 
       <Link
