@@ -8,6 +8,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Puzzle, Mail, ArrowLeft } from "lucide-react";
 
+const SITE_URL = "https://ad14e263-92fc-413c-a4ca-e1ae31f9b10f.lovableproject.com";
+
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
@@ -18,19 +20,20 @@ const ForgotPassword = () => {
     try {
       setLoading(true);
       
-      // Get the current domain and protocol
-      const baseUrl = window.location.href.split('/auth/')[0];
-      console.log("Current base URL:", baseUrl); // Debugging log
+      console.log("Sending reset password email with redirect to:", `${SITE_URL}/auth/reset-password`);
       
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${baseUrl}/auth/reset-password`,
+        redirectTo: `${SITE_URL}/auth/reset-password`,
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Reset password error:", error);
+        throw error;
+      }
       
       setSubmitted(true);
       toast.success("Password reset instructions have been sent to your email");
-      console.log("Password reset email sent successfully"); // Debugging log
+      console.log("Password reset email sent successfully");
     } catch (error) {
       console.error("Reset password error:", error);
       toast.error("Failed to send reset instructions. Please try again.");
