@@ -6,7 +6,7 @@ const config: CapacitorConfig = {
   appName: 'wishful-shopper',
   webDir: 'dist',
   server: {
-    url: 'https://ad14e263-92fc-413c-a4ca-e1ae31f9b10f.lovableproject.com?forceHideBadge=true',
+    url: 'https://wishful-shopper.com', // Changed to use your domain
     cleartext: true
   },
   ios: {
