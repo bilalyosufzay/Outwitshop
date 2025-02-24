@@ -1,50 +1,47 @@
 
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
-import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { CreateShopFormData } from "../types";
+import { useAuth } from "@/contexts/AuthContext";
 
 export const useCreateShop = () => {
-  const { user } = useAuth();
-  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const { user } = useAuth();
 
-  const createShop = async (data: CreateShopFormData) => {
-    if (!user) {
-      toast.error("You must be logged in to create a shop");
-      return;
-    }
-
+  const createShop = async () => {
+    if (!user) throw new Error("User not authenticated");
+    
     setIsLoading(true);
     try {
-      const { error } = await supabase
-        .from('shops')
+      // Check if shop already exists
+      const { data: existingShop } = await supabase
+        .from("shops")
+        .select("id")
+        .eq("owner_id", user.id)
+        .single();
+
+      if (existingShop) {
+        return existingShop;
+      }
+
+      // Create new shop
+      const { data, error } = await supabase
+        .from("shops")
         .insert({
           owner_id: user.id,
-          name: data.name,
-          description: data.description,
-          slug: data.slug.toLowerCase(),
-          contact_email: data.contactEmail,
-          status: 'pending',
-          owner_name: data.ownerName,
-          id_card_number: data.idCardNumber,
-          address: data.address,
-          phone_number: data.phoneNumber,
-          business_license: data.businessLicense,
-        });
+          name: `Shop ${Math.random().toString(36).substring(7)}`, // Temporary name
+          slug: `shop-${Math.random().toString(36).substring(7)}`, // Temporary slug
+          owner_name: user.email?.split('@')[0] || 'Shop Owner',
+          status: 'draft',
+          contact_email: user.email || '',
+          phone_number: '',
+          address: '',
+          id_card_number: '',
+        })
+        .select()
+        .single();
 
       if (error) throw error;
-
-      toast.success("Shop application submitted successfully! Awaiting verification.");
-      navigate("/my-shop/dashboard");
-    } catch (error: any) {
-      toast.error(
-        error.message === "duplicate key value violates unique constraint"
-          ? "This shop URL is already taken. Please choose another."
-          : "Failed to create shop. Please try again."
-      );
+      return data;
     } finally {
       setIsLoading(false);
     }

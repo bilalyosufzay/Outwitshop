@@ -1,86 +1,47 @@
 
 import { useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Form } from "@/components/ui/form";
-import { Separator } from "@/components/ui/separator";
-import { ShopInfoSection } from "./components/ShopInfoSection";
-import { SellerInfoSection } from "./components/SellerInfoSection";
-import { ContactInfoSection } from "./components/ContactInfoSection";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Store } from "lucide-react";
+import { toast } from "sonner";
 import { useCreateShop } from "./hooks/useCreateShop";
-import { CreateShopFormData } from "./types";
 
 const CreateShop = () => {
-  const { user } = useAuth();
   const navigate = useNavigate();
   const { createShop, isLoading } = useCreateShop();
 
-  const form = useForm<CreateShopFormData>({
-    defaultValues: {
-      name: "",
-      description: "",
-      slug: "",
-      contactEmail: user?.email || "",
-      ownerName: "",
-      idCardNumber: "",
-      address: "",
-      phoneNumber: "",
-      businessLicense: "",
-    },
-  });
-
-  const handleCancel = () => {
-    navigate("/");
+  const handleCreateShop = async () => {
+    try {
+      await createShop();
+      toast.success("Shop created successfully!");
+      navigate("/my-shop");
+    } catch (error) {
+      toast.error("Failed to create shop. Please try again.");
+    }
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-2xl">
-      <Card>
-        <CardHeader>
-          <CardTitle>Create Your Shop</CardTitle>
-          <CardDescription>
-            Start selling on Outwit Shop by creating your own store. Please provide accurate
-            information as per our seller agreement.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(createShop)} className="space-y-6">
-              <ShopInfoSection form={form} />
-              <Separator className="my-6" />
-              <SellerInfoSection form={form} />
-              <Separator className="my-6" />
-              <ContactInfoSection form={form} />
-
-              <div className="flex gap-4">
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  onClick={handleCancel}
-                  className="w-full"
-                >
-                  Cancel
-                </Button>
-                <Button 
-                  type="submit" 
-                  className="w-full" 
-                  disabled={isLoading}
-                >
-                  {isLoading ? "Submitting Application..." : "Submit Application"}
-                </Button>
-              </div>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
+    <div className="min-h-screen bg-background p-4">
+      <div className="container max-w-lg mx-auto py-8">
+        <Card className="border shadow-lg">
+          <CardHeader className="text-center">
+            <Store className="w-12 h-12 mx-auto text-primary mb-2" />
+            <CardTitle className="text-2xl">Create Your Shop</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4 text-center px-6">
+            <p className="text-muted-foreground">
+              Start your journey as a seller by creating your own shop.
+            </p>
+            <Button 
+              onClick={handleCreateShop} 
+              className="w-full"
+              disabled={isLoading}
+            >
+              {isLoading ? "Creating..." : "Create Shop"}
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };

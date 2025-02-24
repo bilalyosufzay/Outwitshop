@@ -1,12 +1,42 @@
 
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import { Button } from "@/components/ui/button";
 import { Store, Package, DollarSign, Users, ArrowLeft } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import CreateShop from "./CreateShop";
 
 const ShopDashboard = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const [hasShop, setHasShop] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const checkShop = async () => {
+      if (!user) return;
+
+      const { data } = await supabase
+        .from("shops")
+        .select("id")
+        .eq("owner_id", user.id)
+        .single();
+
+      setHasShop(!!data);
+    };
+
+    checkShop();
+  }, [user]);
+
+  if (hasShop === null) {
+    return <div>Loading...</div>;
+  }
+
+  if (!hasShop) {
+    return <CreateShop />;
+  }
 
   return (
     <div className="min-h-screen bg-background pb-20">
