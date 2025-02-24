@@ -15,33 +15,36 @@ import Dashboard from "@/pages/Dashboard";
 import LuckyDraw from "@/pages/LuckyDraw";
 import Feeds from "@/pages/Feeds";
 import { Toaster } from "@/components/ui/sonner";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/welcome" element={<Welcome />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/search" element={<Search />} />
-        <Route path="/notifications" element={<Notifications />} />
-        <Route 
-          path="/profile" 
-          element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          } 
-        />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/security" element={<Security />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/lucky-draw" element={<LuckyDraw />} />
-        <Route path="/feeds" element={<Feeds />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-      <Toaster />
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/welcome" element={<Welcome />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/notifications" element={<Notifications />} />
+          <Route 
+            path="/profile" 
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            } 
+          />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/security" element={<Security />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/lucky-draw" element={<LuckyDraw />} />
+          <Route path="/feeds" element={<Feeds />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+        <Toaster />
+      </AuthProvider>
     </Router>
   );
 }
