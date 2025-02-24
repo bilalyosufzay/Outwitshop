@@ -1,35 +1,29 @@
 
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
-import { toast } from "sonner";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PartyPopper } from "lucide-react";
 
 const Welcome = () => {
-  const navigate = useNavigate();
-  const { user } = useAuth();
-
-  useEffect(() => {
-    const checkUserAndRedirect = () => {
-      if (user) {
-        toast.success("Welcome back! You've been successfully signed in.");
-        navigate("/");
-      } else {
-        toast.error("Unable to verify your login. Please try again.");
-        navigate("/auth/login");
-      }
-    };
-
-    // Small delay to ensure auth state is properly initialized
-    const timer = setTimeout(checkUserAndRedirect, 1000);
-    return () => clearTimeout(timer);
-  }, [user, navigate]);
-
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-blue-50">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-        <p className="text-gray-600">Verifying your login...</p>
-      </div>
+    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+      <Card className="w-full max-w-md text-center">
+        <CardHeader>
+          <PartyPopper className="w-12 h-12 mx-auto mb-4 text-primary" />
+          <CardTitle className="text-2xl">Welcome!</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <p className="text-muted-foreground">
+            Your account has been successfully created.
+          </p>
+          <Button asChild className="w-full">
+            <Link to="/">Start Shopping</Link>
+          </Button>
+          <Button asChild variant="outline" className="w-full">
+            <Link to="/auth/login">Sign In</Link>
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   );
 };
