@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Puzzle, Mail, ArrowLeft } from "lucide-react";
 
+// Use the correct site URL for the reset password flow
 const SITE_URL = "https://ad14e263-92fc-413c-a4ca-e1ae31f9b10f.lovableproject.com";
 
 const ForgotPassword = () => {
