@@ -68,7 +68,7 @@ const Login = () => {
           {/* Logo Section */}
           <div className="relative w-32 h-32 mx-auto mb-4">
             <img
-              src="/placeholder.svg"
+              src="/lovable-uploads/228cc6f8-f3ad-4d7d-8581-0ea2d4c741ff.png"
               alt="Logo"
               className="w-full h-full object-contain opacity-90"
               style={{
