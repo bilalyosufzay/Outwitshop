@@ -232,37 +232,67 @@ export type Database = {
       }
       products: {
         Row: {
+          category: string | null
           created_at: string | null
           description: string | null
+          dimensions: Json | null
+          features: string[] | null
           id: string
+          images: string[] | null
           name: string
           price: number
+          shipping_info: Json | null
           shop_id: string
+          sku: string | null
+          specifications: Json[] | null
           status: string
           stock_quantity: number
+          subcategory: string | null
           updated_at: string | null
+          video_url: string | null
+          weight: number | null
         }
         Insert: {
+          category?: string | null
           created_at?: string | null
           description?: string | null
+          dimensions?: Json | null
+          features?: string[] | null
           id?: string
+          images?: string[] | null
           name: string
           price: number
+          shipping_info?: Json | null
           shop_id: string
+          sku?: string | null
+          specifications?: Json[] | null
           status?: string
           stock_quantity?: number
+          subcategory?: string | null
           updated_at?: string | null
+          video_url?: string | null
+          weight?: number | null
         }
         Update: {
+          category?: string | null
           created_at?: string | null
           description?: string | null
+          dimensions?: Json | null
+          features?: string[] | null
           id?: string
+          images?: string[] | null
           name?: string
           price?: number
+          shipping_info?: Json | null
           shop_id?: string
+          sku?: string | null
+          specifications?: Json[] | null
           status?: string
           stock_quantity?: number
+          subcategory?: string | null
           updated_at?: string | null
+          video_url?: string | null
+          weight?: number | null
         }
         Relationships: [
           {
