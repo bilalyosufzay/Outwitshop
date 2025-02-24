@@ -38,13 +38,16 @@ const handler = async (req: Request): Promise<Response> => {
             Hello,
           </p>
           <p style="color: #374151; font-size: 16px; line-height: 24px;">
-            We received a request to reset your password for your Outwit Shop account. Click the button below to reset it:
+            We received a request to reset your password for your Outwit Shop account. Click the button below to set your new password:
           </p>
           <div style="text-align: center; margin: 32px 0;">
             <a href="${resetUrl}" style="background-color: #6366f1; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
-              Reset Password
+              Set New Password
             </a>
           </div>
+          <p style="color: #374151; font-size: 16px; line-height: 24px;">
+            After clicking the button, you'll be signed in automatically. You can then update your password from your account settings.
+          </p>
           <p style="color: #374151; font-size: 16px; line-height: 24px;">
             If you didn't request this password reset, you can safely ignore this email.
           </p>
