@@ -3,22 +3,10 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import ProductCard from "./ProductCard";
 import { FEATURED_PRODUCTS } from "@/data/products";
-import { useState, useEffect } from "react";
 
 export const FeaturedSection = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [currentProductIndex, setCurrentProductIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentProductIndex((prevIndex) => 
-        prevIndex === FEATURED_PRODUCTS.length - 1 ? 0 : prevIndex + 1
-      );
-    }, 3000); // Change product every 3 seconds
-
-    return () => clearInterval(interval);
-  }, []);
 
   return (
     <section>
@@ -31,18 +19,13 @@ export const FeaturedSection = () => {
         </button>
       </div>
       <div className="grid grid-cols-2 gap-4">
-        {[0, 1].map((offset) => {
-          const productIndex = (currentProductIndex + offset) % FEATURED_PRODUCTS.length;
-          const product = FEATURED_PRODUCTS[productIndex];
-          return (
-            <ProductCard
-              key={product.id}
-              {...product}
-              onClick={() => navigate(`/product/${product.id}`)}
-              className="animate-fade-in"
-            />
-          );
-        })}
+        {FEATURED_PRODUCTS.map((product) => (
+          <ProductCard
+            key={product.id}
+            {...product}
+            onClick={() => navigate(`/product/${product.id}`)}
+          />
+        ))}
       </div>
     </section>
   );
