@@ -9,6 +9,7 @@ import Signup from "@/pages/auth/Signup";
 import ForgotPassword from "@/pages/auth/ForgotPassword";
 import Welcome from "@/pages/Welcome";
 import Dashboard from "@/pages/Dashboard";
+import Index from "@/pages/Index";
 
 function App() {
   return (
@@ -21,14 +22,14 @@ function App() {
         <Route path="/welcome" element={<Welcome />} />
 
         {/* Protected Routes */}
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/dashboard" element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        } />
+        
+        {/* Main Shop Route */}
+        <Route path="/" element={<Index />} />
 
         {/* 404 Route */}
         <Route path="*" element={<NotFound />} />
