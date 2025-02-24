@@ -10,6 +10,10 @@ import ForgotPassword from "@/pages/auth/ForgotPassword";
 import Welcome from "@/pages/Welcome";
 import Dashboard from "@/pages/Dashboard";
 import Index from "@/pages/Index";
+import Profile from "@/pages/Profile";
+import Search from "@/pages/Search";
+import Cart from "@/pages/Cart";
+import LuckyDraw from "@/pages/LuckyDraw";
 
 function App() {
   return (
@@ -20,8 +24,24 @@ function App() {
         <Route path="/auth/signup" element={<Signup />} />
         <Route path="/auth/forgot-password" element={<ForgotPassword />} />
         <Route path="/welcome" element={<Welcome />} />
-
+        <Route path="/search" element={<Search />} />
+        
         {/* Protected Routes */}
+        <Route path="/profile" element={
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        } />
+        <Route path="/cart" element={
+          <ProtectedRoute>
+            <Cart />
+          </ProtectedRoute>
+        } />
+        <Route path="/lucky-draw" element={
+          <ProtectedRoute>
+            <LuckyDraw />
+          </ProtectedRoute>
+        } />
         <Route path="/dashboard" element={
           <ProtectedRoute>
             <Dashboard />

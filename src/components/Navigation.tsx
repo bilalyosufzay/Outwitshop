@@ -3,28 +3,38 @@ import { Home, Search, Gift, ShoppingBag, User, Store } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Navigation = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
+  const { user } = useAuth();
 
   const navItems = [
     { icon: Home, label: t("navigation.home"), path: "/" },
     { icon: Search, label: t("navigation.search"), path: "/search" },
-    { icon: Gift, label: t("navigation.lucky_draw"), path: "/lucky-draw" },
-    { icon: ShoppingBag, label: t("navigation.cart"), path: "/cart" },
-    { icon: Store, label: t("navigation.my_shop"), path: "/my-shop" },
-    { icon: User, label: t("navigation.profile"), path: "/profile" },
+    { icon: Gift, label: t("navigation.lucky_draw"), path: "/lucky-draw", protected: true },
+    { icon: ShoppingBag, label: t("navigation.cart"), path: "/cart", protected: true },
+    { icon: Store, label: t("navigation.my_shop"), path: "/my-shop", protected: true },
+    { icon: User, label: t("navigation.profile"), path: "/profile", protected: true },
   ];
+
+  const handleNavigation = (path: string, isProtected: boolean) => {
+    if (isProtected && !user) {
+      navigate('/auth/login');
+      return;
+    }
+    navigate(path);
+  };
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 pb-safe-area">
       <div className="flex justify-around items-center h-16">
-        {navItems.map(({ icon: Icon, label, path }) => (
+        {navItems.map(({ icon: Icon, label, path, protected: isProtected }) => (
           <button
             key={path}
-            onClick={() => navigate(path)}
+            onClick={() => handleNavigation(path, isProtected || false)}
             className={cn(
               "flex flex-col items-center justify-center w-16 h-full transition-colors",
               location.pathname === path
