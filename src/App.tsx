@@ -15,6 +15,7 @@ import Dashboard from "@/pages/Dashboard";
 import Welcome from "@/pages/Welcome";
 import ShopDashboard from "@/pages/my-shop/ShopDashboard";
 import AddProductPage from "@/pages/my-shop/products/AddProductPage";
+import VerificationForm from "@/pages/my-shop/verification/VerificationForm";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { AuthProvider } from "./contexts/AuthContext";
 import "./App.css";
@@ -45,6 +46,14 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <ShopDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-shop/verification"
+            element={
+              <ProtectedRoute>
+                <VerificationForm />
               </ProtectedRoute>
             }
           />
