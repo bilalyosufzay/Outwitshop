@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom";
 import { ProfileSection } from "./ProfileSection";
 import {
@@ -41,7 +42,6 @@ export const BuyerContent = () => {
         }
 
         if (!data) {
-          // Initialize buyer level if it doesn't exist
           const { error: insertError } = await supabase
             .from('user_levels')
             .insert({
@@ -65,8 +65,11 @@ export const BuyerContent = () => {
     fetchBuyerProfile();
   }, [user]);
 
-  const handleNavigation = (path: string) => {
+  const handleNavigation = (path: string, message?: string) => {
     navigate(path);
+    if (message) {
+      toast.info(message);
+    }
   };
 
   return (
@@ -75,54 +78,48 @@ export const BuyerContent = () => {
         title="Auto-Reorder Essentials"
         description="Manage your recurring purchases"
         icon={RefreshCcw}
-        onClick={() => {
-          handleNavigation('/auto-reorder');
-          toast.info("Loading auto-reorder settings...");
-        }}
+        onClick={() => handleNavigation('/buyer/auto-reorder', 'Loading auto-reorder settings...')}
       />
       <ProfileSection
         title="Price Drop Alerts"
         description="Track prices and get notified"
         icon={Bell}
-        onClick={() => {
-          handleNavigation('/price-alerts');
-          toast.info("Loading price alerts...");
-        }}
+        onClick={() => handleNavigation('/buyer/price-alerts', 'Loading price alerts...')}
       />
       <ProfileSection
         title="Orders & Shopping"
         icon={ShoppingBag}
-        onClick={() => handleNavigation('/orders')}
+        onClick={() => handleNavigation('/buyer/orders')}
       />
       <ProfileSection
         title="Wishlist"
         icon={Heart}
-        onClick={() => handleNavigation('/wishlists')}
+        onClick={() => handleNavigation('/community/wishlists')}
       />
       <ProfileSection
         title="Recently Viewed"
         icon={History}
-        onClick={() => handleNavigation('/recently-viewed')}
+        onClick={() => handleNavigation('/buyer/recently-viewed')}
       />
       <ProfileSection
         title="Saved Addresses"
         icon={MapPin}
-        onClick={() => handleNavigation('/addresses')}
+        onClick={() => handleNavigation('/buyer/addresses')}
       />
       <ProfileSection
         title="Payment Methods"
         icon={CreditCard}
-        onClick={() => handleNavigation('/payment-methods')}
+        onClick={() => handleNavigation('/buyer/payment-methods')}
       />
       <ProfileSection
         title="Wallet & Transactions"
         icon={Wallet}
-        onClick={() => handleNavigation('/wallet')}
+        onClick={() => handleNavigation('/buyer/wallet')}
       />
       <ProfileSection
         title="Rewards & Points"
         icon={Award}
-        onClick={() => handleNavigation('/rewards')}
+        onClick={() => handleNavigation('/buyer/rewards')}
       />
       <ProfileSection
         title="Account Settings"

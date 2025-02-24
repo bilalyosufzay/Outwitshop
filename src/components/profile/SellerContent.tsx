@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom";
 import { ProfileSection } from "./ProfileSection";
 import { Store, Star, MessageSquare, Bot, Link, ChartBar, Package, Users, FileText } from "lucide-react";
@@ -28,7 +29,6 @@ export const SellerContent = () => {
         }
 
         if (!data) {
-          // Initialize seller level if it doesn't exist
           const { error: insertError } = await supabase
             .from('user_levels')
             .insert({
@@ -52,67 +52,59 @@ export const SellerContent = () => {
     fetchSellerProfile();
   }, [user]);
 
+  const handleNavigation = (path: string, message?: string) => {
+    navigate(path);
+    if (message) {
+      toast.info(message);
+    }
+  };
+
   return (
     <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
       <ProfileSection
         title="Manage Shop"
         icon={Store}
-        onClick={() => {
-          navigate('/my-shop');
-          toast.info("Loading shop dashboard...");
-        }}
+        onClick={() => handleNavigation('/my-shop')}
       />
       <ProfileSection
         title="Analytics"
         icon={ChartBar}
-        onClick={() => {
-          navigate('/shop/analytics');
-          toast.info("Loading analytics...");
-        }}
+        onClick={() => handleNavigation('/my-shop/analytics', 'Loading analytics...')}
       />
       <ProfileSection
         title="Orders Management"
         icon={Package}
-        onClick={() => {
-          navigate('/shop/orders');
-          toast.info("Loading orders...");
-        }}
+        onClick={() => handleNavigation('/my-shop/orders', 'Loading orders...')}
       />
       <ProfileSection
         title="Customer Reviews"
         icon={Star}
-        onClick={() => navigate('/shop/reviews')}
+        onClick={() => handleNavigation('/my-shop/reviews')}
       />
       <ProfileSection
         title="Customer Messages"
         icon={MessageSquare}
-        onClick={() => navigate('/shop/messages')}
+        onClick={() => handleNavigation('/my-shop/messages')}
       />
       <ProfileSection
         title="Customer Management"
         icon={Users}
-        onClick={() => {
-          navigate('/shop/customers');
-          toast.info("Loading customer management...");
-        }}
+        onClick={() => handleNavigation('/my-shop/customers', 'Loading customer management...')}
       />
       <ProfileSection
         title="AI Assistant"
         icon={Bot}
-        onClick={() => navigate('/shop/ai-assistant')}
+        onClick={() => handleNavigation('/my-shop/ai-assistant')}
       />
       <ProfileSection
         title="Social Integration"
         icon={Link}
-        onClick={() => navigate('/shop/social')}
+        onClick={() => handleNavigation('/my-shop/social')}
       />
       <ProfileSection
         title="Reports"
         icon={FileText}
-        onClick={() => {
-          navigate('/shop/reports');
-          toast.info("Loading reports...");
-        }}
+        onClick={() => handleNavigation('/my-shop/reports', 'Loading reports...')}
       />
     </div>
   );
