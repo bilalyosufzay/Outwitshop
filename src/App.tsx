@@ -7,20 +7,46 @@ import Profile from "@/pages/Profile";
 import Products from "@/pages/Products";
 import LuckyDraw from "@/pages/LuckyDraw";
 import ShopDashboard from "@/pages/my-shop/ShopDashboard";
+import Login from "@/pages/auth/Login";
+import Welcome from "@/pages/Welcome";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import { AuthProvider } from "@/contexts/AuthContext";
 import "./App.css";
 
 const App = () => {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/search" element={<Search />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/lucky-draw" element={<LuckyDraw />} />
-        <Route path="/my-shop" element={<ShopDashboard />} />
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/auth/login" element={<Login />} />
+          <Route path="/auth/welcome" element={<Welcome />} />
+          
+          {/* Protected Routes */}
+          <Route path="/cart" element={
+            <ProtectedRoute>
+              <Cart />
+            </ProtectedRoute>
+          } />
+          <Route path="/profile" element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          } />
+          <Route path="/lucky-draw" element={
+            <ProtectedRoute>
+              <LuckyDraw />
+            </ProtectedRoute>
+          } />
+          <Route path="/my-shop" element={
+            <ProtectedRoute>
+              <ShopDashboard />
+            </ProtectedRoute>
+          } />
+        </Routes>
+      </AuthProvider>
     </BrowserRouter>
   );
 };
