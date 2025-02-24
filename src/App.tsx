@@ -1,16 +1,16 @@
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "@/pages/Index";
-import Search from "@/pages/Search";
-import Cart from "@/pages/Cart";
-import Profile from "@/pages/Profile";
-import Products from "@/pages/Products";
-import LuckyDraw from "@/pages/LuckyDraw";
-import ShopDashboard from "@/pages/my-shop/ShopDashboard";
-import Login from "@/pages/auth/Login";
-import Welcome from "@/pages/Welcome";
-import ProtectedRoute from "@/components/ProtectedRoute";
-import { AuthProvider } from "@/contexts/AuthContext";
+import Index from "./pages/Index";
+import Search from "./pages/Search";
+import Cart from "./pages/Cart";
+import Profile from "./pages/Profile";
+import Products from "./pages/Products";
+import LuckyDraw from "./pages/LuckyDraw";
+import ShopDashboard from "./pages/my-shop/ShopDashboard";
+import Login from "./pages/auth/Login";
+import Welcome from "./pages/Welcome";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { AuthProvider } from "./contexts/AuthContext";
 import "./App.css";
 
 const App = () => {

@@ -1,10 +1,10 @@
 
 import { useState } from "react";
-import Navigation from "@/components/Navigation";
-import ProductCard from "@/components/ProductCard";
-import { Card } from "@/components/ui/card";
-import { TRENDING_PRODUCTS, FEATURED_PRODUCTS, SALE_PRODUCTS } from "@/data/products";
-import { Input } from "@/components/ui/input";
+import Navigation from "../components/Navigation";
+import ProductCard from "../components/ProductCard";
+import { Card } from "../components/ui/card";
+import { TRENDING_PRODUCTS, FEATURED_PRODUCTS, SALE_PRODUCTS } from "../data/products";
+import { Input } from "../components/ui/input";
 import { Search } from "lucide-react";
 
 const Products = () => {
