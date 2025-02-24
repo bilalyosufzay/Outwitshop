@@ -1,17 +1,18 @@
 
 import { useState } from "react";
 import Navigation from "@/components/Navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Gift, Timer, Star, AlertCircle, Trophy, History, Share2, Target } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { PrizeHistory } from "@/components/lucky-draw/PrizeHistory";
-import { Rules } from "@/components/lucky-draw/Rules";
 import { Missions } from "@/components/lucky-draw/Missions";
 import { EventBanner } from "@/components/lucky-draw/EventBanner";
 import { PrizeGrid } from "@/components/lucky-draw/PrizeGrid";
 import { useLuckyDraw } from "@/components/lucky-draw/hooks/useLuckyDraw";
 import { prizes, specialEvent } from "@/components/lucky-draw/constants/prizes";
+import { LuckyDrawHeader } from "@/components/lucky-draw/LuckyDrawHeader";
+import { DrawActions } from "@/components/lucky-draw/DrawActions";
+import { DrawInfo } from "@/components/lucky-draw/DrawInfo";
+import { DrawTimer } from "@/components/lucky-draw/DrawTimer";
 
 const LuckyDraw = () => {
   const { toast } = useToast();
@@ -116,7 +117,6 @@ const LuckyDraw = () => {
       setIsSpinning(false);
       setCanSpin(false);
       localStorage.setItem('lastSpinTime', Date.now().toString());
-      
     }, 2000);
   };
 
@@ -124,24 +124,12 @@ const LuckyDraw = () => {
     <div className="min-h-screen bg-background pb-20">
       <div className="container mx-auto px-4 py-8 space-y-4">
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <div className="flex items-center gap-4">
-              <CardTitle className="flex items-center gap-2">
-                <Gift className="h-5 w-5" />
-                Lucky Draw
-              </CardTitle>
-              <Rules showRules={showRules} setShowRules={setShowRules} />
-            </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setShowMissions(!showMissions)}
-              className="text-yellow-600"
-            >
-              <Target className="h-4 w-4 mr-2" />
-              Missions
-            </Button>
-          </CardHeader>
+          <LuckyDrawHeader
+            showRules={showRules}
+            setShowRules={setShowRules}
+            showMissions={showMissions}
+            setShowMissions={setShowMissions}
+          />
           <CardContent className="text-center space-y-6">
             <EventBanner
               title={specialEvent.title}
@@ -154,12 +142,7 @@ const LuckyDraw = () => {
               <Missions />
             ) : (
               <>
-                <div className="mb-6">
-                  <div className="flex items-center justify-center gap-2 mt-2 text-sm text-yellow-600">
-                    <Timer className="h-4 w-4" />
-                    Next draw available in: {formatTimeRemaining()}
-                  </div>
-                </div>
+                <DrawTimer timeRemaining={formatTimeRemaining()} />
 
                 <PrizeGrid
                   prizes={prizes}
@@ -167,55 +150,20 @@ const LuckyDraw = () => {
                   isSpinning={isSpinning}
                 />
 
-                <div className="space-y-4">
-                  <Button
-                    onClick={spinDraw}
-                    disabled={isSpinning || !canSpin}
-                    className="w-full max-w-xs text-lg font-medium"
-                  >
-                    <Gift className="h-5 w-5 mr-2" />
-                    {isSpinning ? "Drawing..." : "Draw a Card!"}
-                  </Button>
-
-                  {selectedPrize && (
-                    <Button
-                      variant="outline"
-                      onClick={shareWin}
-                      className="w-full max-w-xs"
-                    >
-                      <Share2 className="h-4 w-4 mr-2" />
-                      Share Your Win
-                    </Button>
-                  )}
-
-                  <Button
-                    variant="ghost"
-                    onClick={() => setShowHistory(!showHistory)}
-                    className="w-full max-w-xs"
-                  >
-                    <History className="h-4 w-4 mr-2" />
-                    Prize History
-                  </Button>
-                </div>
+                <DrawActions
+                  isSpinning={isSpinning}
+                  canSpin={canSpin}
+                  selectedPrize={selectedPrize}
+                  onSpin={spinDraw}
+                  onShare={shareWin}
+                  onToggleHistory={() => setShowHistory(!showHistory)}
+                />
 
                 {showHistory && prizeHistory.length > 0 && (
                   <PrizeHistory history={prizeHistory} />
                 )}
 
-                <div className="mt-6 text-sm text-muted-foreground space-y-2">
-                  <div className="flex items-center justify-center gap-1">
-                    <Star className="h-4 w-4 text-yellow-500" />
-                    <span>One free draw available every 24 hours</span>
-                  </div>
-                  <div className="flex items-center justify-center gap-1">
-                    <Trophy className="h-4 w-4 text-yellow-500" />
-                    <span>Keep your daily streak for bonus rewards!</span>
-                  </div>
-                  <div className="flex items-center justify-center gap-1">
-                    <AlertCircle className="h-4 w-4 text-blue-500" />
-                    <span>All prizes are automatically added to your account</span>
-                  </div>
-                </div>
+                <DrawInfo />
               </>
             )}
           </CardContent>
