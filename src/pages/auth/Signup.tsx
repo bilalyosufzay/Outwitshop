@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
-import { PuzzlePiece, Mail, Lock, User } from "lucide-react";
+import { Puzzle, Mail, Lock, User } from "lucide-react";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
@@ -47,7 +47,7 @@ const Signup = () => {
       <Card className="w-full max-w-md relative border-0 shadow-xl bg-white/80 backdrop-blur">
         <CardHeader className="space-y-4 text-center">
           <div className="mx-auto bg-primary/5 p-3 rounded-full">
-            <PuzzlePiece className="w-8 h-8 text-primary animate-pulse" />
+            <Puzzle className="w-8 h-8 text-primary animate-pulse" />
           </div>
           <CardTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
             Join Outwit Shop
