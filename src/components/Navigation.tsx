@@ -1,52 +1,70 @@
 
-import { Home, Search, Gift, ShoppingBag, User, Store } from "lucide-react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { Home, Search, ShoppingCart, User, Package } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useTranslation } from "react-i18next";
-import { useAuth } from "@/contexts/AuthContext";
 
 const Navigation = () => {
-  const navigate = useNavigate();
   const location = useLocation();
-  const { t } = useTranslation();
-  const { user } = useAuth();
+  const pathname = location.pathname;
 
-  const navItems = [
-    { icon: Home, label: t("navigation.home"), path: "/" },
-    { icon: Search, label: t("navigation.search"), path: "/search" },
-    { icon: Gift, label: t("navigation.lucky_draw"), path: "/lucky-draw", protected: true },
-    { icon: ShoppingBag, label: t("navigation.cart"), path: "/cart", protected: true },
-    { icon: Store, label: t("navigation.my_shop"), path: "/my-shop", protected: true },
-    { icon: User, label: t("navigation.profile"), path: "/profile", protected: true },
-  ];
-
-  const handleNavigation = (path: string, isProtected: boolean) => {
-    if (isProtected && !user) {
-      navigate('/auth/login');
-      return;
-    }
-    navigate(path);
-  };
+  const isActive = (path: string) => pathname === path;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 pb-safe-area">
-      <div className="flex justify-around items-center h-16">
-        {navItems.map(({ icon: Icon, label, path, protected: isProtected }) => (
-          <button
-            key={path}
-            onClick={() => handleNavigation(path, isProtected || false)}
-            className={cn(
-              "flex flex-col items-center justify-center w-16 h-full transition-colors",
-              location.pathname === path
-                ? "text-accent"
-                : "text-gray-400 hover:text-gray-600"
-            )}
-          >
-            <Icon className="w-6 h-6" />
-            <span className="text-xs mt-1">{label}</span>
-          </button>
-        ))}
-      </div>
+    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t h-16 flex items-center justify-around px-4">
+      <Link
+        to="/"
+        className={cn(
+          "flex flex-col items-center text-xs gap-1",
+          isActive("/") ? "text-primary" : "text-muted-foreground"
+        )}
+      >
+        <Home className="h-5 w-5" />
+        <span>Home</span>
+      </Link>
+
+      <Link
+        to="/products"
+        className={cn(
+          "flex flex-col items-center text-xs gap-1",
+          isActive("/products") ? "text-primary" : "text-muted-foreground"
+        )}
+      >
+        <Package className="h-5 w-5" />
+        <span>Products</span>
+      </Link>
+
+      <Link
+        to="/search"
+        className={cn(
+          "flex flex-col items-center text-xs gap-1",
+          isActive("/search") ? "text-primary" : "text-muted-foreground"
+        )}
+      >
+        <Search className="h-5 w-5" />
+        <span>Search</span>
+      </Link>
+
+      <Link
+        to="/cart"
+        className={cn(
+          "flex flex-col items-center text-xs gap-1",
+          isActive("/cart") ? "text-primary" : "text-muted-foreground"
+        )}
+      >
+        <ShoppingCart className="h-5 w-5" />
+        <span>Cart</span>
+      </Link>
+
+      <Link
+        to="/profile"
+        className={cn(
+          "flex flex-col items-center text-xs gap-1",
+          isActive("/profile") ? "text-primary" : "text-muted-foreground"
+        )}
+      >
+        <User className="h-5 w-5" />
+        <span>Profile</span>
+      </Link>
     </nav>
   );
 };
