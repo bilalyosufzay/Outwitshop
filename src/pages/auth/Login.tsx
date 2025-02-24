@@ -7,12 +7,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useAuth } from "@/contexts/AuthContext";
 import { LogIn, Mail, Lock } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const { signIn } = useAuth();
+  const { t } = useTranslation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,10 +30,10 @@ const Login = () => {
           </div>
           <div className="space-y-2">
             <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              Welcome Back
+              {t("auth.welcome_back")}
             </CardTitle>
             <p className="text-muted-foreground">
-              Sign in to your account to continue
+              {t("auth.please_sign_in")}
             </p>
           </div>
         </CardHeader>
@@ -42,7 +44,7 @@ const Login = () => {
                 <Mail className="w-5 h-5 absolute left-3 top-2.5 text-muted-foreground" />
                 <Input
                   type="email"
-                  placeholder="Email address"
+                  placeholder={t("auth.email_address")}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -55,7 +57,7 @@ const Login = () => {
                 <Lock className="w-5 h-5 absolute left-3 top-2.5 text-muted-foreground" />
                 <Input
                   type="password"
-                  placeholder="Password"
+                  placeholder={t("auth.password")}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -75,35 +77,35 @@ const Login = () => {
                   htmlFor="remember"
                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 >
-                  Remember me
+                  {t("auth.remember_me")}
                 </label>
               </div>
               <Link
                 to="/auth/forgot-password"
                 className="text-sm font-medium text-accent hover:text-accent/80"
               >
-                Forgot password?
+                {t("auth.forgot_password")}
               </Link>
             </div>
 
             <Button type="submit" size="lg" className="w-full gap-2 h-12">
               <LogIn className="w-5 h-5" />
-              Sign In
+              {t("auth.sign_in_button")}
             </Button>
           </form>
 
           <div className="text-center space-y-2">
             <p className="text-sm text-muted-foreground">
-              Don't have an account?{" "}
+              {t("auth.dont_have_account")}{" "}
               <Link to="/auth/signup" className="font-medium text-accent hover:text-accent/80">
-                Sign up
+                {t("auth.sign_up")}
               </Link>
             </p>
             <Link
               to="/"
               className="text-sm font-medium text-muted-foreground hover:text-foreground block"
             >
-              Back to Home
+              {t("navigation.home")}
             </Link>
           </div>
         </CardContent>
