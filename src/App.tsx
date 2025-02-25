@@ -18,6 +18,9 @@ import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Login from "@/pages/auth/Login";
 
+// Adding a console log to verify changes
+console.log("App component loaded");
+
 function App() {
   return (
     <Router>
