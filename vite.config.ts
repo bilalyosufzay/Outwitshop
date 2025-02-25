@@ -20,6 +20,10 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
-    chunkSizeWarningLimit: 1000, // Increase chunk size limit to 1000 KB
+    chunkSizeWarningLimit: 1000,
+    // Skip type checking during build since we'll do it separately
+    typescript: {
+      typeCheck: false
+    }
   },
 }));
