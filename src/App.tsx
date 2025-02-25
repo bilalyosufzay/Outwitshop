@@ -18,8 +18,9 @@ import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Login from "@/pages/auth/Login";
 
-// Adding a console log to verify changes
+// Adding logs to verify mobile setup
 console.log("App component loaded");
+console.log("Capacitor setup initialized");
 
 function App() {
   return (
