@@ -9,7 +9,7 @@ import "../i18n/config";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
+    <div className="min-h-screen bg-white text-gray-900 pb-20">
       <Header />
       <main className="container mx-auto px-4 py-6 space-y-8">
         <HeroSection />
