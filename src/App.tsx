@@ -17,12 +17,15 @@ import Feeds from "@/pages/Feeds";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Login from "@/pages/auth/Login";
-
-// Adding logs to verify mobile setup
-console.log("App component loaded");
-console.log("Capacitor setup initialized");
+import { useEffect } from "react";
 
 function App() {
+  useEffect(() => {
+    // Mobile setup initialization logging
+    console.log("App component loaded");
+    console.log("Capacitor setup initialized");
+  }, []);
+
   return (
     <Router>
       <AuthProvider>
