@@ -8,7 +8,8 @@ export default defineConfig(({ mode }) => ({
   base: '',  // This is important for mobile builds
   server: {
     host: true,
-    port: 8080
+    port: 8080,
+    allowedHosts: ['ad14e263-92fc-413c-a4ca-e1ae31f9b10f.lovableproject.com']
   },
   plugins: [
     react(),
