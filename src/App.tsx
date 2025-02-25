@@ -22,7 +22,7 @@ import { useEffect } from "react";
 function App() {
   useEffect(() => {
     // Mobile setup initialization logging
-    console.log("App component loaded");
+    console.log("Mobile app initialization started");
     console.log("Capacitor setup initialized");
   }, []);
 
