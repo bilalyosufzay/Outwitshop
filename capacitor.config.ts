@@ -6,9 +6,8 @@ const config: CapacitorConfig = {
   appName: 'outwitshop',
   webDir: 'dist',
   server: {
-    url: 'https://ad14e263-92fc-413c-a4ca-e1ae31f9b10f.lovableproject.com?forceHideBadge=true',
-    cleartext: true,
-    hostname: 'ad14e263-92fc-413c-a4ca-e1ae31f9b10f.lovableproject.com'
+    androidScheme: 'https',
+    cleartext: true
   },
   android: {
     allowMixedContent: true
