@@ -5,10 +5,11 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 
 export default defineConfig(({ mode }) => ({
-  base: '',  // This is important for mobile builds
+  base: '/',  // Explicitly set the base to root
   server: {
     host: true,
     port: 8080,
+    strictPort: true, // Ensure the port is strictly enforced
     allowedHosts: ['ad14e263-92fc-413c-a4ca-e1ae31f9b10f.lovableproject.com']
   },
   plugins: [
