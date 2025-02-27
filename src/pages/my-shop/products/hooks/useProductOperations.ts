@@ -1,71 +1,78 @@
 
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
 import { ProductFormValues } from "../schemas/productSchema";
+import { useNavigate } from "react-router-dom";
 
-export const useProductOperations = () => {
-  const { user } = useAuth();
+export const useProductOperations = (userId: string | undefined, shopId: string | null) => {
+  const [submitting, setSubmitting] = useState(false);
+  const [images, setImages] = useState<string[]>([]);
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
 
   const addProduct = async (values: ProductFormValues) => {
-    if (!user) return;
-    setIsLoading(true);
+    if (!userId || !shopId) {
+      toast.error("You must have a shop to add products");
+      return false;
+    }
 
     try {
-      const { data: shop } = await supabase
-        .from("shops")
-        .select("id")
-        .eq("owner_id", user.id)
+      setSubmitting(true);
+      
+      // Prepare all images array including the main image
+      const allImages = [values.image, ...images].filter(Boolean);
+      
+      const { data, error } = await supabase
+        .from('marketplace_products' as any)
+        .insert({
+          seller_id: userId,
+          shop_id: shopId,
+          name: values.name,
+          description: values.description,
+          category: values.category,
+          price: values.price,
+          original_price: values.originalPrice || null,
+          image: values.image,
+          images: allImages,
+          commission_rate: values.commissionRate,
+          featured: false,
+          trending: false,
+          on_sale: values.originalPrice ? true : false,
+          status: 'active',
+        })
+        .select()
         .single();
-
-      if (!shop) throw new Error("Shop not found");
-
-      // First, upload images if they're file objects
-      const uploadedImages = values.images;
-
-      const { error } = await supabase.from("products").insert({
-        name: values.name,
-        description: values.description,
-        price: values.price,
-        stock_quantity: values.stock_quantity,
-        shop_id: shop.id,
-        status: "active",
-        category: values.category,
-        subcategory: values.subcategory || null,
-        sku: values.sku || null,
-        weight: values.weight || null,
-        dimensions: values.dimensions || null,
-        features: values.features || [],
-        specifications: values.specifications || [],
-        images: uploadedImages,
-        video_url: values.video_url || null,
-        shipping_info: values.shipping_info || null,
-      });
-
+        
       if (error) throw error;
-
-      toast({
-        title: "Product added successfully",
-        description: "Your new product has been added to your shop.",
-      });
-
-      navigate("/my-shop/products");
+      
+      toast.success("Product added successfully");
+      navigate('/my-shop/products');
+      return true;
     } catch (error) {
-      toast({
-        title: "Error adding product",
-        description: "There was an error adding your product. Please try again.",
-        variant: "destructive",
-      });
       console.error("Error adding product:", error);
+      toast.error("Failed to add product");
+      return false;
     } finally {
-      setIsLoading(false);
+      setSubmitting(false);
     }
   };
 
-  return { addProduct, isLoading };
+  const handleAddImageUrl = () => {
+    const imageUrl = prompt("Enter image URL:");
+    if (imageUrl && imageUrl.trim()) {
+      setImages([...images, imageUrl.trim()]);
+    }
+  };
+
+  const handleRemoveImage = (index: number) => {
+    setImages(images.filter((_, i) => i !== index));
+  };
+
+  return {
+    submitting,
+    images,
+    addProduct,
+    handleAddImageUrl,
+    handleRemoveImage
+  };
 };
