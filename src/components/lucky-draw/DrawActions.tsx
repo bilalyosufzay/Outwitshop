@@ -1,55 +1,65 @@
 
 import { Button } from "@/components/ui/button";
-import { Gift, Share2, History } from "lucide-react";
+import { Gift, History, ListPlus, Award } from "lucide-react";
 import { Prize } from "./types";
 
 interface DrawActionsProps {
   isSpinning: boolean;
   canSpin: boolean;
   selectedPrize: Prize | null;
+  userEntries: number;
   onSpin: () => void;
-  onShare: () => void;
   onToggleHistory: () => void;
+  onViewCampaigns: () => void;
 }
 
 export const DrawActions = ({
   isSpinning,
   canSpin,
   selectedPrize,
+  userEntries,
   onSpin,
-  onShare,
   onToggleHistory,
+  onViewCampaigns,
 }: DrawActionsProps) => {
   return (
     <div className="space-y-4">
-      <Button
-        onClick={onSpin}
-        disabled={isSpinning || !canSpin}
-        className="w-full max-w-xs text-lg font-medium"
-      >
-        <Gift className="h-5 w-5 mr-2" />
-        {isSpinning ? "Drawing..." : "Draw a Card!"}
-      </Button>
+      <div className="flex flex-col items-center">
+        <div className="text-sm text-muted-foreground mb-2">
+          {userEntries > 0 
+            ? `You have ${userEntries} entries available` 
+            : "You have no entries, complete missions to earn some!"}
+        </div>
+        
+        <Button
+          onClick={onSpin}
+          disabled={isSpinning || !canSpin || userEntries <= 0}
+          className="w-full max-w-xs text-lg font-medium"
+        >
+          <Gift className="h-5 w-5 mr-2" />
+          {isSpinning ? "Drawing..." : "Try Your Luck!"}
+        </Button>
+      </div>
 
-      {selectedPrize && (
+      <div className="flex flex-wrap gap-2 justify-center">
         <Button
           variant="outline"
-          onClick={onShare}
-          className="w-full max-w-xs"
+          onClick={onViewCampaigns}
+          className="flex-1 max-w-[160px]"
         >
-          <Share2 className="h-4 w-4 mr-2" />
-          Share Your Win
+          <Award className="h-4 w-4 mr-2" />
+          View Campaigns
         </Button>
-      )}
-
-      <Button
-        variant="ghost"
-        onClick={onToggleHistory}
-        className="w-full max-w-xs"
-      >
-        <History className="h-4 w-4 mr-2" />
-        Prize History
-      </Button>
+        
+        <Button
+          variant="outline"
+          onClick={onToggleHistory}
+          className="flex-1 max-w-[160px]"
+        >
+          <History className="h-4 w-4 mr-2" />
+          Prize History
+        </Button>
+      </div>
     </div>
   );
 };
