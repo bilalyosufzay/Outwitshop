@@ -33,6 +33,74 @@ export type Database = {
         }
         Relationships: []
       }
+      marketplace_products: {
+        Row: {
+          category: string
+          commission_rate: number | null
+          created_at: string | null
+          description: string | null
+          featured: boolean | null
+          id: string
+          image: string
+          images: string[] | null
+          name: string
+          on_sale: boolean | null
+          original_price: number | null
+          price: number
+          seller_id: string
+          shop_id: string
+          status: string | null
+          trending: boolean | null
+          updated_at: string | null
+        }
+        Insert: {
+          category: string
+          commission_rate?: number | null
+          created_at?: string | null
+          description?: string | null
+          featured?: boolean | null
+          id?: string
+          image: string
+          images?: string[] | null
+          name: string
+          on_sale?: boolean | null
+          original_price?: number | null
+          price: number
+          seller_id: string
+          shop_id: string
+          status?: string | null
+          trending?: boolean | null
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string
+          commission_rate?: number | null
+          created_at?: string | null
+          description?: string | null
+          featured?: boolean | null
+          id?: string
+          image?: string
+          images?: string[] | null
+          name?: string
+          on_sale?: boolean | null
+          original_price?: number | null
+          price?: number
+          seller_id?: string
+          shop_id?: string
+          status?: string | null
+          trending?: boolean | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_shop"
+            columns: ["shop_id"]
+            isOneToOne: false
+            referencedRelation: "shops"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       messages: {
         Row: {
           content: string

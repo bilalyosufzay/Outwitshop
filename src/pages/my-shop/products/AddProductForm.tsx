@@ -25,7 +25,7 @@ import * as z from "zod";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import BackButton from "@/components/BackButton";
+import { BackButton } from "@/components/BackButton";
 import { CATEGORIES } from "@/data/categories";
 import { LoaderCircle } from "lucide-react";
 
@@ -107,7 +107,7 @@ const AddProductForm = () => {
       const allImages = [values.image, ...images].filter(Boolean);
       
       const { data, error } = await supabase
-        .from('marketplace_products')
+        .from('marketplace_products' as any)
         .insert({
           seller_id: user.id,
           shop_id: shopId,

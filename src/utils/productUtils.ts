@@ -4,8 +4,9 @@ import { Product } from "@/data/types/product";
 
 export const fetchMarketplaceProducts = async (): Promise<Product[]> => {
   try {
+    // Need to use any to work around Supabase typing issue
     const { data, error } = await supabase
-      .from('marketplace_products')
+      .from('marketplace_products' as any)
       .select('*')
       .eq('status', 'active');
 
@@ -15,7 +16,7 @@ export const fetchMarketplaceProducts = async (): Promise<Product[]> => {
     }
 
     // Transform the data to match our Product interface
-    return data.map(item => ({
+    return data.map((item: any) => ({
       id: item.id,
       name: item.name,
       price: item.price,
@@ -40,7 +41,7 @@ export const fetchMarketplaceProducts = async (): Promise<Product[]> => {
 export const fetchFeaturedProducts = async (): Promise<Product[]> => {
   try {
     const { data, error } = await supabase
-      .from('marketplace_products')
+      .from('marketplace_products' as any)
       .select('*')
       .eq('status', 'active')
       .eq('featured', true)
@@ -51,7 +52,7 @@ export const fetchFeaturedProducts = async (): Promise<Product[]> => {
       return [];
     }
 
-    return data.map(item => ({
+    return data.map((item: any) => ({
       id: item.id,
       name: item.name,
       price: item.price,
@@ -76,7 +77,7 @@ export const fetchFeaturedProducts = async (): Promise<Product[]> => {
 export const fetchTrendingProducts = async (): Promise<Product[]> => {
   try {
     const { data, error } = await supabase
-      .from('marketplace_products')
+      .from('marketplace_products' as any)
       .select('*')
       .eq('status', 'active')
       .eq('trending', true)
@@ -87,7 +88,7 @@ export const fetchTrendingProducts = async (): Promise<Product[]> => {
       return [];
     }
 
-    return data.map(item => ({
+    return data.map((item: any) => ({
       id: item.id,
       name: item.name,
       price: item.price,
@@ -112,7 +113,7 @@ export const fetchTrendingProducts = async (): Promise<Product[]> => {
 export const fetchSaleProducts = async (): Promise<Product[]> => {
   try {
     const { data, error } = await supabase
-      .from('marketplace_products')
+      .from('marketplace_products' as any)
       .select('*')
       .eq('status', 'active')
       .eq('on_sale', true)
@@ -124,7 +125,7 @@ export const fetchSaleProducts = async (): Promise<Product[]> => {
       return [];
     }
 
-    return data.map(item => ({
+    return data.map((item: any) => ({
       id: item.id,
       name: item.name,
       price: item.price,

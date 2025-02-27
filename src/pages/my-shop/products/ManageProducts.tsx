@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { PlusCircle, Edit, Trash2, Search } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
-import BackButton from "@/components/BackButton";
+import { BackButton } from "@/components/BackButton";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Product } from "@/data/types/product";
@@ -45,7 +45,7 @@ const ManageProducts = () => {
         const shopId = shopData.id;
         
         const { data, error } = await supabase
-          .from('marketplace_products')
+          .from('marketplace_products' as any)
           .select('*')
           .eq('shop_id', shopId)
           .eq('seller_id', user.id);
@@ -53,7 +53,7 @@ const ManageProducts = () => {
         if (error) throw error;
         
         // Transform to match Product interface
-        const transformedProducts = data.map(item => ({
+        const transformedProducts = data.map((item: any) => ({
           id: item.id,
           name: item.name,
           price: item.price,
@@ -100,7 +100,7 @@ const ManageProducts = () => {
     
     try {
       const { error } = await supabase
-        .from('marketplace_products')
+        .from('marketplace_products' as any)
         .delete()
         .eq('id', productId);
         
@@ -117,7 +117,7 @@ const ManageProducts = () => {
   const toggleFeatured = async (productId: string, featured: boolean) => {
     try {
       const { error } = await supabase
-        .from('marketplace_products')
+        .from('marketplace_products' as any)
         .update({ featured })
         .eq('id', productId);
         
@@ -137,7 +137,7 @@ const ManageProducts = () => {
   const toggleTrending = async (productId: string, trending: boolean) => {
     try {
       const { error } = await supabase
-        .from('marketplace_products')
+        .from('marketplace_products' as any)
         .update({ trending })
         .eq('id', productId);
         
@@ -164,7 +164,7 @@ const ManageProducts = () => {
       }
       
       const { error } = await supabase
-        .from('marketplace_products')
+        .from('marketplace_products' as any)
         .update({ on_sale: onSale })
         .eq('id', productId);
         
