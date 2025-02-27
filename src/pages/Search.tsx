@@ -3,34 +3,11 @@ import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import { Input } from "@/components/ui/input";
 import { Search as SearchIcon, Sparkles } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import ProductCard from "@/components/ProductCard";
 import { Product } from "@/data/products";
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
-
-interface SponsoredProductResult {
-  boost_level: number;
-  product_id: {
-    id: string;
-    name: string;
-    price: number;
-    description: string | null;
-    stock_quantity: number;
-    image: string;
-    images?: string[];
-  };
-}
-
-interface DatabaseProduct {
-  id: string;
-  name: string;
-  price: number;
-  description: string | null;
-  stock_quantity: number;
-  image: string;
-  images?: string[];
-}
+import { searchSponsoredProducts, searchMarketplaceProducts } from "@/utils/searchApi";
 
 interface ProductWithSponsorship extends Product {
   isSponsored?: boolean;
@@ -46,48 +23,28 @@ const Search = () => {
       if (!searchQuery) return [];
 
       // First, get sponsored products
-      const { data: sponsoredProducts } = await supabase
-        .from('sponsored_products')
-        .select(`
-          boost_level,
-          product_id (
-            id,
-            name,
-            price,
-            description,
-            stock_quantity,
-            image,
-            images
-          )
-        `)
-        .eq('status', 'active')
-        .textSearch('product_id.name', searchQuery) as { data: SponsoredProductResult[] | null };
+      const sponsoredProducts = await searchSponsoredProducts(searchQuery);
 
       // Then, get regular products
-      const { data: regularProducts } = await supabase
-        .from('products')
-        .select('id, name, price, description, stock_quantity, image, images')
-        .eq('status', 'active')
-        .textSearch('name', searchQuery)
-        .limit(20) as { data: DatabaseProduct[] | null };
+      const regularProducts = await searchMarketplaceProducts(searchQuery, 20);
 
       // Combine and format results
-      const sponsored = (sponsoredProducts || []).map((sp) => ({
-        id: sp.product_id.id,
-        name: sp.product_id.name,
-        price: sp.product_id.price,
-        category: 'sponsored',
-        image: sp.product_id.image,
-        images: sp.product_id.images,
+      const sponsored = sponsoredProducts.map(sp => ({
+        id: sp.id,
+        name: sp.name,
+        price: sp.price,
+        category: sp.category,
+        image: sp.image,
+        images: sp.images,
         isSponsored: true,
-        boostLevel: sp.boost_level
+        boostLevel: sp.boostLevel
       })) as ProductWithSponsorship[];
 
-      const regular = (regularProducts || []).map(p => ({
+      const regular = regularProducts.map(p => ({
         id: p.id,
         name: p.name,
         price: p.price,
-        category: 'general',
+        category: p.category,
         image: p.image,
         images: p.images,
         isSponsored: false
