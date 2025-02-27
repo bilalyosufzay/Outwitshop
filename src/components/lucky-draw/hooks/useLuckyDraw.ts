@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, ReactNode } from "react";
 import { DrawCampaign, DrawEntry, Mission, Prize, PrizeHistoryItem } from "../types";
 import { useToast } from "@/hooks/use-toast";
 
@@ -64,7 +64,7 @@ export const useLuckyDraw = () => {
             id: 101,
             name: "Grand Prize",
             color: "#FFB7C5",
-            icon: <></>,
+            icon: null,
             rarity: 'legendary',
             points: 1000,
             quantity: 1,
@@ -74,7 +74,7 @@ export const useLuckyDraw = () => {
             id: 102,
             name: "Second Prize",
             color: "#90EE90",
-            icon: <></>,
+            icon: null,
             rarity: 'epic',
             points: 500,
             quantity: 3,
@@ -84,7 +84,7 @@ export const useLuckyDraw = () => {
             id: 103,
             name: "Third Prize",
             color: "#ADD8E6",
-            icon: <></>,
+            icon: null,
             rarity: 'rare',
             points: 200,
             quantity: 10,
@@ -262,19 +262,7 @@ export const useLuckyDraw = () => {
       
       toast({
         title: `Congratulations! 🎉`,
-        description: (
-          <div className="space-y-2">
-            <p>You won: {randomPrize.name}</p>
-            {randomPrize.description && (
-              <p className="text-sm text-muted-foreground">{randomPrize.description}</p>
-            )}
-            {randomPrize.rarity && (
-              <p className="text-sm font-medium text-purple-500">
-                {randomPrize.rarity.toUpperCase()} PRIZE!
-              </p>
-            )}
-          </div>
-        ),
+        description: `You won: ${randomPrize.name}${randomPrize.description ? `\n${randomPrize.description}` : ''}${randomPrize.rarity ? `\n${randomPrize.rarity.toUpperCase()} PRIZE!` : ''}`,
         duration: 5000,
       });
       
