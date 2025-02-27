@@ -18,6 +18,8 @@ import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Login from "@/pages/auth/Login";
 import { useEffect } from "react";
+import ManageProducts from "@/pages/my-shop/products/ManageProducts";
+import AddProductForm from "@/pages/my-shop/products/AddProductForm";
 
 function App() {
   useEffect(() => {
@@ -50,6 +52,25 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/lucky-draw" element={<LuckyDraw />} />
           <Route path="/feeds" element={<Feeds />} />
+          
+          {/* Shop and Product Management Routes */}
+          <Route 
+            path="/my-shop/products" 
+            element={
+              <ProtectedRoute>
+                <ManageProducts />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/my-shop/products/add" 
+            element={
+              <ProtectedRoute>
+                <AddProductForm />
+              </ProtectedRoute>
+            } 
+          />
+          
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Toaster />

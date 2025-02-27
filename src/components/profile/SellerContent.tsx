@@ -67,6 +67,11 @@ export const SellerContent = () => {
         onClick={() => handleNavigation('/my-shop')}
       />
       <ProfileSection
+        title="Manage Products"
+        icon={Package}
+        onClick={() => handleNavigation('/my-shop/products', 'Loading your products...')}
+      />
+      <ProfileSection
         title="Analytics"
         icon={ChartBar}
         onClick={() => handleNavigation('/my-shop/analytics', 'Loading analytics...')}
