@@ -61,7 +61,6 @@ type LuckyDrawWinner = {
   claim_code?: string;
   claimed_at?: string;
   expires_at?: string;
-  lucky_draw_prizes?: LuckyDrawPrize;
 }
 
 type LuckyDrawCompletedMission = {
@@ -355,72 +354,78 @@ export const useLuckyDraw = () => {
       const user = await getCurrentUser();
       if (!user) return;
 
-      const { data, error } = await supabase
+      // First, fetch the user's winner records
+      const { data: winnerData, error: winnerError } = await supabase
         .from('lucky_draw_winners' as any)
-        .select(`
-          id,
-          date,
-          claimed,
-          claim_code,
-          expires_at,
-          prize_id
-        `)
+        .select('*')
         .eq('user_id', user.id)
         .order('date', { ascending: false });
 
-      if (error) {
-        console.error("Error fetching prize history:", error);
+      if (winnerError) {
+        console.error("Error fetching prize winners:", winnerError);
         return;
       }
 
-      if (data && data.length > 0) {
-        // Fetch prize details for each winner
-        const prizeIds = data.map(winner => winner.prize_id);
-        
-        const { data: prizesData, error: prizesError } = await supabase
-          .from('lucky_draw_prizes' as any)
-          .select('*')
-          .in('id', prizeIds);
-          
-        if (prizesError || !prizesData) {
-          console.error("Error fetching prize details:", prizesError);
-          return;
-        }
-        
-        // Create a map of prize details for quick lookup
-        const prizesMap = new Map();
-        prizesData.forEach((prize: any) => {
-          prizesMap.set(prize.id, prize);
-        });
-        
-        // Map the winners with their prize details
-        const mappedHistory: PrizeHistoryItem[] = data.map(winner => {
-          const prizeDetails = prizesMap.get(winner.prize_id);
-          if (!prizeDetails) return null;
-          
-          return {
-            id: winner.id,
-            prize: {
-              id: Number(prizeDetails.id), // Convert string ID to number for Prize interface
-              name: prizeDetails.name,
-              color: prizeDetails.color,
-              icon: null,
-              description: prizeDetails.description,
-              rarity: prizeDetails.rarity,
-              points: prizeDetails.points,
-              image: prizeDetails.image,
-              quantity: prizeDetails.quantity,
-              claimed: prizeDetails.claimed
-            },
-            date: new Date(winner.date),
-            claimed: winner.claimed,
-            claimCode: winner.claim_code,
-            expiresAt: winner.expires_at ? new Date(winner.expires_at) : undefined
-          };
-        }).filter(item => item !== null) as PrizeHistoryItem[];
-
-        setPrizeHistory(mappedHistory);
+      if (!winnerData || winnerData.length === 0) {
+        // No prizes won yet
+        setPrizeHistory([]);
+        return;
       }
+
+      // Extract prize IDs to fetch their details
+      const prizeIds = winnerData.map((winner: any) => winner.prize_id);
+
+      // Fetch prize details
+      const { data: prizesData, error: prizesError } = await supabase
+        .from('lucky_draw_prizes' as any)
+        .select('*')
+        .in('id', prizeIds);
+
+      if (prizesError) {
+        console.error("Error fetching prize details:", prizesError);
+        return;
+      }
+
+      if (!prizesData) {
+        console.error("No prize data found");
+        return;
+      }
+
+      // Create a lookup map for prizes by ID
+      const prizesById = new Map();
+      for (const prize of prizesData) {
+        prizesById.set(prize.id, prize);
+      }
+
+      // Combine winner and prize data
+      const mappedPrizeHistory: PrizeHistoryItem[] = [];
+      
+      for (const winner of winnerData) {
+        const prize = prizesById.get(winner.prize_id);
+        if (!prize) continue; // Skip if we can't find the prize details
+        
+        mappedPrizeHistory.push({
+          id: winner.id,
+          prize: {
+            id: Number(prize.id), // Convert string ID to number for Prize interface
+            name: prize.name,
+            color: prize.color,
+            icon: null,
+            description: prize.description,
+            rarity: prize.rarity,
+            points: prize.points,
+            quantity: prize.quantity,
+            claimed: prize.claimed,
+            image: prize.image
+          },
+          date: new Date(winner.date),
+          claimed: winner.claimed,
+          claimCode: winner.claim_code,
+          expiresAt: winner.expires_at ? new Date(winner.expires_at) : undefined
+        });
+      }
+
+      setPrizeHistory(mappedPrizeHistory);
     } catch (err) {
       console.error("Error in fetchPrizeHistory:", err);
     }
@@ -708,7 +713,7 @@ export const useLuckyDraw = () => {
           claim_code: `PRIZE-${Math.floor(100000 + Math.random() * 900000)}`,
           expires_at: expireDate.toISOString()
         })
-        .select('id, date, claimed, claim_code, expires_at')
+        .select()
         .single();
 
       if (winnerError) {

@@ -33,6 +33,279 @@ export type Database = {
         }
         Relationships: []
       }
+      lucky_draw_campaigns: {
+        Row: {
+          config: Json | null
+          created_at: string | null
+          description: string | null
+          end_date: string
+          entry_methods: Json | null
+          id: string
+          name: string
+          start_date: string | null
+          status: string
+          updated_at: string | null
+        }
+        Insert: {
+          config?: Json | null
+          created_at?: string | null
+          description?: string | null
+          end_date: string
+          entry_methods?: Json | null
+          id?: string
+          name: string
+          start_date?: string | null
+          status?: string
+          updated_at?: string | null
+        }
+        Update: {
+          config?: Json | null
+          created_at?: string | null
+          description?: string | null
+          end_date?: string
+          entry_methods?: Json | null
+          id?: string
+          name?: string
+          start_date?: string | null
+          status?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      lucky_draw_completed_missions: {
+        Row: {
+          completed_at: string | null
+          entries_awarded: number
+          id: string
+          mission_id: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          entries_awarded?: number
+          id?: string
+          mission_id: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          entries_awarded?: number
+          id?: string
+          mission_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lucky_draw_completed_missions_mission_id_fkey"
+            columns: ["mission_id"]
+            isOneToOne: false
+            referencedRelation: "lucky_draw_missions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lucky_draw_entries: {
+        Row: {
+          campaign_id: string
+          created_at: string | null
+          date: string | null
+          description: string | null
+          id: string
+          is_used: boolean | null
+          method: string
+          quantity: number
+          reference_id: string | null
+          user_id: string
+        }
+        Insert: {
+          campaign_id: string
+          created_at?: string | null
+          date?: string | null
+          description?: string | null
+          id?: string
+          is_used?: boolean | null
+          method: string
+          quantity?: number
+          reference_id?: string | null
+          user_id: string
+        }
+        Update: {
+          campaign_id?: string
+          created_at?: string | null
+          date?: string | null
+          description?: string | null
+          id?: string
+          is_used?: boolean | null
+          method?: string
+          quantity?: number
+          reference_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lucky_draw_entries_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "lucky_draw_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lucky_draw_missions: {
+        Row: {
+          campaign_id: string | null
+          created_at: string | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          reward: number
+          title: string
+          type: string
+        }
+        Insert: {
+          campaign_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          reward?: number
+          title: string
+          type: string
+        }
+        Update: {
+          campaign_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          reward?: number
+          title?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lucky_draw_missions_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "lucky_draw_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lucky_draw_prizes: {
+        Row: {
+          campaign_id: string
+          claimed: number | null
+          color: string
+          created_at: string | null
+          description: string | null
+          id: string
+          image: string | null
+          name: string
+          points: number | null
+          quantity: number
+          rarity: string | null
+        }
+        Insert: {
+          campaign_id: string
+          claimed?: number | null
+          color?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          image?: string | null
+          name: string
+          points?: number | null
+          quantity?: number
+          rarity?: string | null
+        }
+        Update: {
+          campaign_id?: string
+          claimed?: number | null
+          color?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          image?: string | null
+          name?: string
+          points?: number | null
+          quantity?: number
+          rarity?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lucky_draw_prizes_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "lucky_draw_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lucky_draw_winners: {
+        Row: {
+          campaign_id: string
+          claim_code: string | null
+          claimed: boolean | null
+          claimed_at: string | null
+          date: string | null
+          entry_id: string
+          expires_at: string | null
+          id: string
+          is_published: boolean | null
+          prize_id: string
+          user_id: string
+        }
+        Insert: {
+          campaign_id: string
+          claim_code?: string | null
+          claimed?: boolean | null
+          claimed_at?: string | null
+          date?: string | null
+          entry_id: string
+          expires_at?: string | null
+          id?: string
+          is_published?: boolean | null
+          prize_id: string
+          user_id: string
+        }
+        Update: {
+          campaign_id?: string
+          claim_code?: string | null
+          claimed?: boolean | null
+          claimed_at?: string | null
+          date?: string | null
+          entry_id?: string
+          expires_at?: string | null
+          id?: string
+          is_published?: boolean | null
+          prize_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lucky_draw_winners_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "lucky_draw_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lucky_draw_winners_entry_id_fkey"
+            columns: ["entry_id"]
+            isOneToOne: false
+            referencedRelation: "lucky_draw_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lucky_draw_winners_prize_id_fkey"
+            columns: ["prize_id"]
+            isOneToOne: false
+            referencedRelation: "lucky_draw_prizes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       marketplace_products: {
         Row: {
           category: string
@@ -600,6 +873,33 @@ export type Database = {
           },
         ]
       }
+      system_logs: {
+        Row: {
+          action: string
+          created_at: string | null
+          details: Json | null
+          id: string
+          related_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          related_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          related_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       user_levels: {
         Row: {
           average_rating: number | null
@@ -677,7 +977,36 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_claim_code: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      log_system_action: {
+        Args: {
+          action_name: string
+          action_details: Json
+          action_related_id?: string
+        }
+        Returns: undefined
+      }
+      maintain_lucky_draw_system: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      revoke_unclaimed_prizes: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      select_winners_for_campaign: {
+        Args: {
+          campaign_uuid: string
+        }
+        Returns: undefined
+      }
+      update_campaign_statuses: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
     }
     Enums: {
       buyer_level_name:
