@@ -16,20 +16,22 @@ export const FeaturedSection = () => {
   const { toast } = useToast();
 
   useEffect(() => {
+    console.log("FeaturedSection mounted");
+    
     const loadFeaturedProducts = async () => {
       try {
         setLoading(true);
         const marketplaceProducts = await fetchFeaturedProducts();
         
         if (marketplaceProducts.length > 0) {
+          console.log("Fetched featured products:", marketplaceProducts.length);
           setCurrentProducts(marketplaceProducts);
         } else {
-          // Fallback to demo products
+          console.log("Using demo featured products");
           setCurrentProducts(FEATURED_PRODUCTS);
         }
       } catch (error) {
         console.error("Failed to load featured products:", error);
-        // Fallback to demo products
         setCurrentProducts(FEATURED_PRODUCTS);
       } finally {
         setLoading(false);
@@ -46,10 +48,11 @@ export const FeaturedSection = () => {
       setCurrentProducts((prevProducts) => {
         const newProducts = [...prevProducts];
         // Rotate all product details
-        for (let i = 0; i < newProducts.length; i++) {
-          const nextIndex = (i + 1) % newProducts.length;
-          newProducts[i] = { ...newProducts[nextIndex] };
+        const firstProduct = { ...newProducts[0] };
+        for (let i = 0; i < newProducts.length - 1; i++) {
+          newProducts[i] = { ...newProducts[i + 1] };
         }
+        newProducts[newProducts.length - 1] = firstProduct;
         return newProducts;
       });
     }, 3000); // Change every 3 seconds
@@ -70,7 +73,7 @@ export const FeaturedSection = () => {
         </div>
         <div className="grid grid-cols-2 gap-4">
           {[1, 2].map((skeleton) => (
-            <div key={skeleton} className="animate-pulse">
+            <div key={`skeleton-${skeleton}`} className="animate-pulse">
               <div className="aspect-square bg-gray-200 rounded-xl mb-4"></div>
               <div className="h-4 bg-gray-200 rounded mb-2 w-1/3"></div>
               <div className="h-5 bg-gray-200 rounded mb-2 w-2/3"></div>
@@ -96,9 +99,9 @@ export const FeaturedSection = () => {
         </button>
       </div>
       <div className="grid grid-cols-2 gap-4">
-        {currentProducts.map((product) => (
+        {currentProducts.map((product, index) => (
           <ProductCard
-            key={product.id}
+            key={`featured-${product.id}-${index}`}
             {...product}
             onClick={() => navigate(`/product/${product.id}`)}
           />

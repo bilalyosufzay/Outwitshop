@@ -12,8 +12,12 @@ const SUMMER_IMAGES = [
 export const HeroSection = () => {
   const { t } = useTranslation();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [error, setError] = useState(false);
+  
   useEffect(() => {
+    console.log("HeroSection mounted");
+    
     const interval = setInterval(() => {
       setCurrentImageIndex((prevIndex) => 
         prevIndex === SUMMER_IMAGES.length - 1 ? 0 : prevIndex + 1
@@ -24,12 +28,34 @@ export const HeroSection = () => {
   }, []);
 
   return (
-    <section className="relative h-48 rounded-2xl overflow-hidden animate-fade-in">
-      <img
-        src={SUMMER_IMAGES[currentImageIndex]}
-        alt="Summer Collection"
-        className="w-full h-full object-cover transition-opacity duration-500"
-      />
+    <section className="relative h-48 rounded-2xl overflow-hidden animate-fade-in border border-gray-200">
+      {error ? (
+        <div className="w-full h-full flex items-center justify-center bg-gray-100">
+          <p>Failed to load image</p>
+        </div>
+      ) : (
+        <>
+          <img
+            src={SUMMER_IMAGES[currentImageIndex]}
+            alt="Summer Collection"
+            className="w-full h-full object-cover transition-opacity duration-500"
+            onLoad={() => {
+              console.log("Hero image loaded");
+              setImageLoaded(true);
+            }}
+            onError={() => {
+              console.log("Hero image failed to load");
+              setError(true);
+            }}
+          />
+          {!imageLoaded && (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+              <p>Loading summer collection...</p>
+            </div>
+          )}
+        </>
+      )}
+      
       <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent flex items-center">
         <div className="p-6 text-white">
           <p className="text-sm font-medium mb-2">{t('new_arrival')}</p>
