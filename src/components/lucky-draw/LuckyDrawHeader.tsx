@@ -25,10 +25,10 @@ export const LuckyDrawHeader = ({
   activeCampaign
 }: LuckyDrawHeaderProps) => {
   return (
-    <CardHeader className="flex flex-col space-y-2">
+    <CardHeader className="flex flex-col space-y-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-t-lg p-6">
       <div className="flex items-center justify-between">
-        <CardTitle className="flex items-center gap-2">
-          <Gift className="h-5 w-5" />
+        <CardTitle className="flex items-center gap-2 text-2xl">
+          <Gift className="h-6 w-6" />
           Lucky Draw
         </CardTitle>
         
@@ -40,7 +40,7 @@ export const LuckyDrawHeader = ({
               setShowMissions(!showMissions);
               setShowCampaigns(false);
             }}
-            className={showMissions ? "text-yellow-600" : ""}
+            className={`text-white/90 hover:text-white hover:bg-white/10 ${showMissions ? "bg-white/20" : ""}`}
           >
             <Target className="h-4 w-4 mr-2" />
             Missions
@@ -53,7 +53,7 @@ export const LuckyDrawHeader = ({
               setShowCampaigns(!showCampaigns);
               setShowMissions(false);
             }}
-            className={showCampaigns ? "text-purple-600" : ""}
+            className={`text-white/90 hover:text-white hover:bg-white/10 ${showCampaigns ? "bg-white/20" : ""}`}
           >
             <Calendar className="h-4 w-4 mr-2" />
             Campaigns
@@ -63,6 +63,7 @@ export const LuckyDrawHeader = ({
             variant="ghost"
             size="sm"
             onClick={() => setShowRules(!showRules)}
+            className="text-white/90 hover:text-white hover:bg-white/10"
           >
             <Info className="h-4 w-4" />
           </Button>
@@ -70,12 +71,12 @@ export const LuckyDrawHeader = ({
       </div>
       
       {activeCampaign && (
-        <div className="flex items-center justify-between text-sm">
-          <div className="flex items-center text-muted-foreground">
-            <Award className="h-4 w-4 mr-2 text-yellow-500" />
+        <div className="flex items-center justify-between text-sm text-white/80">
+          <div className="flex items-center">
+            <Award className="h-4 w-4 mr-2 text-yellow-300" />
             <span className="font-medium">{activeCampaign.name}</span>
           </div>
-          <div className="text-muted-foreground">
+          <div>
             Ends: {activeCampaign.endDate.toLocaleDateString()}
           </div>
         </div>

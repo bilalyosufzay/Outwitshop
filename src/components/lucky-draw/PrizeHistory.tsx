@@ -1,17 +1,25 @@
 
 import { Button } from "@/components/ui/button";
-import { Calendar, Check, Clock } from "lucide-react";
+import { Calendar, Check, Clock, ExternalLink } from "lucide-react";
 import { PrizeHistoryItem } from "./types";
 
 interface PrizeHistoryProps {
   history: PrizeHistoryItem[];
   onClaim: (id: string) => void;
+  onViewAll: () => void;
 }
 
-export const PrizeHistory = ({ history, onClaim }: PrizeHistoryProps) => {
+export const PrizeHistory = ({ history, onClaim, onViewAll }: PrizeHistoryProps) => {
   return (
-    <div className="mt-8 border rounded-lg p-4">
-      <h3 className="text-lg font-semibold mb-4">Your Prizes</h3>
+    <div className="mt-1 border rounded-lg p-6 bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-lg font-semibold">Your Prizes</h3>
+        <Button variant="ghost" size="sm" onClick={onViewAll}>
+          View All
+          <ExternalLink className="ml-1 h-3 w-3" />
+        </Button>
+      </div>
+      
       {history.length === 0 ? (
         <div className="text-center py-8 text-muted-foreground">
           <p>You haven't won any prizes yet.</p>
@@ -19,10 +27,10 @@ export const PrizeHistory = ({ history, onClaim }: PrizeHistoryProps) => {
         </div>
       ) : (
         <div className="space-y-3">
-          {history.map((item) => (
+          {history.slice(0, 3).map((item) => (
             <div
               key={item.id}
-              className="border rounded-lg p-3 bg-muted/30"
+              className="border rounded-lg p-3 bg-white dark:bg-slate-800 transition-all duration-300 hover:shadow-md"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -72,6 +80,15 @@ export const PrizeHistory = ({ history, onClaim }: PrizeHistoryProps) => {
               )}
             </div>
           ))}
+          {history.length > 3 && (
+            <Button 
+              variant="ghost" 
+              className="w-full text-muted-foreground"
+              onClick={onViewAll}
+            >
+              View {history.length - 3} more prizes
+            </Button>
+          )}
         </div>
       )}
     </div>

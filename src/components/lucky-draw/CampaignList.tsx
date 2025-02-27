@@ -2,8 +2,9 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Award, Calendar, Clock, Gift, Trophy, User } from "lucide-react";
+import { Award, Calendar, Clock, Gift, Trophy, User, Filter } from "lucide-react";
 import { DrawCampaign, Prize } from "./types";
+import { useState } from "react";
 
 interface CampaignListProps {
   campaigns: DrawCampaign[];
@@ -12,6 +13,9 @@ interface CampaignListProps {
 }
 
 export const CampaignList = ({ campaigns, onSelect, activeCampaign }: CampaignListProps) => {
+  const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'upcoming'>('all');
+  const [sortBy, setSortBy] = useState<'newest' | 'popular' | 'ending'>('newest');
+  
   const getTimeLeft = (endDate: Date) => {
     const now = new Date();
     const diff = endDate.getTime() - now.getTime();
@@ -38,13 +42,52 @@ export const CampaignList = ({ campaigns, onSelect, activeCampaign }: CampaignLi
       .slice(0, limit);
   };
 
+  // Filter campaigns
+  const filteredCampaigns = campaigns.filter(campaign => {
+    if (filterStatus === 'all') return true;
+    return campaign.status === filterStatus;
+  });
+
+  // Sort campaigns
+  const sortedCampaigns = [...filteredCampaigns].sort((a, b) => {
+    if (sortBy === 'newest') {
+      return new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
+    } else if (sortBy === 'popular') {
+      return b.totalEntries - a.totalEntries;
+    } else if (sortBy === 'ending') {
+      return new Date(a.endDate).getTime() - new Date(b.endDate).getTime();
+    }
+    return 0;
+  });
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold">Active Campaigns</h3>
+        
+        <div className="flex gap-2">
+          <Button 
+            variant="outline" 
+            size="sm"
+            className="flex items-center gap-1"
+          >
+            <Filter className="h-3 w-3" />
+            <span className="text-xs">Filter</span>
+          </Button>
+          
+          <select 
+            className="text-xs px-2 py-1 rounded-md border bg-background"
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as any)}
+          >
+            <option value="newest">Newest</option>
+            <option value="popular">Most Popular</option>
+            <option value="ending">Ending Soon</option>
+          </select>
+        </div>
       </div>
       
-      {campaigns.length === 0 ? (
+      {sortedCampaigns.length === 0 ? (
         <div className="text-center py-8 text-muted-foreground">
           <Trophy className="h-8 w-8 mx-auto mb-2 opacity-50" />
           <p>No active campaigns at the moment.</p>
@@ -52,17 +95,17 @@ export const CampaignList = ({ campaigns, onSelect, activeCampaign }: CampaignLi
         </div>
       ) : (
         <div className="space-y-4">
-          {campaigns.map((campaign) => (
+          {sortedCampaigns.map((campaign) => (
             <div 
               key={campaign.id} 
-              className={`border rounded-lg p-4 transition-all ${
+              className={`border rounded-xl p-4 transition-all duration-300 ${
                 activeCampaign?.id === campaign.id 
-                  ? 'border-2 border-primary shadow-md' 
-                  : 'hover:border-primary/50'
+                  ? 'border-2 border-primary shadow-md bg-primary/5' 
+                  : 'hover:border-primary/50 hover:bg-accent/5'
               }`}
             >
               <div className="flex flex-col sm:flex-row gap-4 justify-between">
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <div className="flex items-center gap-2">
                     <h4 className="font-semibold">{campaign.name}</h4>
                     <Badge 
@@ -125,6 +168,7 @@ export const CampaignList = ({ campaigns, onSelect, activeCampaign }: CampaignLi
                   <Button
                     onClick={() => onSelect(campaign)}
                     variant={activeCampaign?.id === campaign.id ? "default" : "outline"}
+                    className={activeCampaign?.id === campaign.id ? "bg-gradient-to-r from-purple-500 to-pink-500 border-none" : ""}
                   >
                     {activeCampaign?.id === campaign.id ? (
                       <span>Selected</span>

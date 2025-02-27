@@ -1,5 +1,6 @@
 
 import { ReactNode } from "react";
+import { motion } from "framer-motion";
 
 interface PrizeCardProps {
   id: number;
@@ -23,16 +24,42 @@ export const PrizeCard = ({
   claimed,
   description
 }: PrizeCardProps) => {
+  const cardVariants = {
+    hover: { 
+      scale: 1.05,
+      boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+      transition: { duration: 0.3 }
+    },
+    initial: { 
+      scale: 1,
+      boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)",
+      transition: { duration: 0.3 }
+    }
+  };
+
+  const getRarityGlow = () => {
+    if (rarity === 'legendary') return `0 0 15px 5px ${color}`;
+    if (rarity === 'epic') return `0 0 10px 2px ${color}`;
+    if (rarity === 'rare') return `0 0 5px 1px ${color}`;
+    return 'none';
+  };
+
   return (
-    <div
-      className={`aspect-[3/4] rounded-xl shadow-lg flex flex-col items-center justify-center p-4 relative transition-all duration-300 hover:scale-105 ${
+    <motion.div
+      className={`aspect-[3/4] rounded-xl shadow-lg flex flex-col items-center justify-center p-4 relative transition-all duration-300 ${
         isSelected ? 'animate-bounce-once' : ''
       } ${
-        rarity === 'legendary' ? 'ring-4 ring-yellow-400' :
-        rarity === 'epic' ? 'ring-3 ring-purple-400' :
-        rarity === 'rare' ? 'ring-2 ring-blue-400' : ''
+        rarity === 'legendary' ? 'ring-4 ring-yellow-400 dark:ring-yellow-600' :
+        rarity === 'epic' ? 'ring-3 ring-purple-400 dark:ring-purple-600' :
+        rarity === 'rare' ? 'ring-2 ring-blue-400 dark:ring-blue-600' : ''
       }`}
-      style={{ backgroundColor: color }}
+      style={{ 
+        backgroundColor: color,
+        boxShadow: getRarityGlow()
+      }}
+      variants={cardVariants}
+      initial="initial"
+      whileHover="hover"
     >
       {(quantity && claimed !== undefined) && (
         <div className="absolute top-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded-full">
@@ -64,6 +91,6 @@ export const PrizeCard = ({
           {rarity.toUpperCase()}
         </div>
       )}
-    </div>
+    </motion.div>
   );
 };

@@ -2,6 +2,7 @@
 import { Gift } from "lucide-react";
 import { Prize } from "./types";
 import { PrizeCard } from "./PrizeCard";
+import { motion } from "framer-motion";
 
 interface PrizeGridProps {
   prizes: Prize[];
@@ -28,9 +29,20 @@ export const PrizeGrid = ({ prizes, selectedPrize, isSpinning }: PrizeGridProps)
         </div>
       ) : (
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="animate-spin text-primary">
-            <Gift className="h-12 w-12" />
-          </div>
+          <motion.div 
+            animate={{ 
+              rotate: 360,
+              scale: [1, 1.2, 1]
+            }} 
+            transition={{ 
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            className="text-primary"
+          >
+            <Gift className="h-16 w-16" />
+          </motion.div>
         </div>
       )}
     </div>

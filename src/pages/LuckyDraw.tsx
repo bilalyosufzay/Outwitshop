@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
@@ -14,6 +14,13 @@ import { DrawActions } from "@/components/lucky-draw/DrawActions";
 import { DrawInfo } from "@/components/lucky-draw/DrawInfo";
 import { DrawTimer } from "@/components/lucky-draw/DrawTimer";
 import { CampaignList } from "@/components/lucky-draw/CampaignList";
+import { LuckyDrawFeatured } from "@/components/lucky-draw/LuckyDrawFeatured";
+import { LuckyDrawEnding } from "@/components/lucky-draw/LuckyDrawEnding";
+import { Confetti } from "@/components/lucky-draw/Confetti";
+import { Button } from "@/components/ui/button";
+import { FloatingActionButton } from "@/components/lucky-draw/FloatingActionButton";
+import { ArrowUp } from "lucide-react";
+import { WinnersList } from "@/components/lucky-draw/WinnersList";
 
 const LuckyDraw = () => {
   const { toast } = useToast();
@@ -22,6 +29,9 @@ const LuckyDraw = () => {
   const [showHistory, setShowHistory] = useState(false);
   const [showMissions, setShowMissions] = useState(false);
   const [showCampaigns, setShowCampaigns] = useState(false);
+  const [showWinners, setShowWinners] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   const {
     isSpinning,
@@ -42,8 +52,18 @@ const LuckyDraw = () => {
     completeMission,
     totalEntries,
     claimPrize,
-    enterCampaign
+    enterCampaign,
+    isLoading
   } = useLuckyDraw();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const formatTimeRemaining = () => {
     if (!nextSpinTime) return "";
@@ -66,12 +86,35 @@ const LuckyDraw = () => {
     setShowCampaigns(!showCampaigns);
     setShowMissions(false);
     setShowHistory(false);
+    setShowWinners(false);
+  };
+
+  const handleEnterDraw = async (campaignId: string) => {
+    if (totalEntries <= 0) {
+      toast({
+        title: "No Entries Available",
+        description: "Complete missions to earn entries first!",
+        variant: "destructive",
+        duration: 3000,
+      });
+      return;
+    }
+    
+    await enterCampaign(campaignId);
+    setShowConfetti(true);
+    setTimeout(() => setShowConfetti(false), 3000);
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    <div className="min-h-screen bg-background pb-20">
-      <div className="container mx-auto px-4 py-8 space-y-4">
-        <Card>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 pb-20">
+      {showConfetti && <Confetti />}
+      
+      <div className="container mx-auto px-4 py-8 space-y-6">
+        <Card className="border-0 bg-white/80 backdrop-blur-sm dark:bg-slate-900/80 shadow-lg overflow-hidden">
           <LuckyDrawHeader
             showRules={showRules}
             setShowRules={setShowRules}
@@ -81,7 +124,7 @@ const LuckyDraw = () => {
             setShowCampaigns={setShowCampaigns}
             activeCampaign={activeCampaign}
           />
-          <CardContent className="text-center space-y-6">
+          <CardContent className="text-center space-y-6 p-6">
             {showMissions ? (
               <Missions 
                 missions={availableMissions} 
@@ -94,6 +137,17 @@ const LuckyDraw = () => {
                 onSelect={setActiveCampaign}
                 activeCampaign={activeCampaign}
               />
+            ) : showWinners ? (
+              <WinnersList
+                history={prizeHistory}
+                onBack={() => setShowWinners(false)}
+              />
+            ) : showHistory ? (
+              <PrizeHistory 
+                history={prizeHistory}
+                onClaim={claimPrize}
+                onViewAll={() => setShowWinners(true)}
+              />
             ) : (
               <>
                 {activeCampaign && (
@@ -101,7 +155,7 @@ const LuckyDraw = () => {
                     campaign={activeCampaign}
                     userEntries={totalEntries}
                     timeRemaining={formatEventTimeRemaining(activeCampaign.endDate)}
-                    onEnter={enterCampaign}
+                    onEnter={handleEnterDraw}
                   />
                 )}
 
@@ -121,27 +175,58 @@ const LuckyDraw = () => {
                   canSpin={canSpin}
                   selectedPrize={selectedPrize}
                   userEntries={totalEntries}
-                  onSpin={() => activeCampaign && enterCampaign(activeCampaign.id)}
+                  onSpin={() => activeCampaign && handleEnterDraw(activeCampaign.id)}
                   onToggleHistory={() => {
                     setShowHistory(!showHistory);
                     setShowCampaigns(false);
+                    setShowWinners(false);
                   }}
                   onViewCampaigns={handleViewCampaigns}
                 />
-
-                {showHistory && (
-                  <PrizeHistory 
-                    history={prizeHistory}
-                    onClaim={claimPrize}
-                  />
-                )}
 
                 <DrawInfo />
               </>
             )}
           </CardContent>
         </Card>
+
+        {!showMissions && !showCampaigns && !showWinners && !showHistory && (
+          <>
+            <LuckyDrawFeatured 
+              campaigns={activeCampaigns.filter(c => c.prizes.some(p => p.rarity === 'legendary'))} 
+              onSelect={setActiveCampaign}
+            />
+            
+            <LuckyDrawEnding 
+              campaigns={activeCampaigns.filter(c => {
+                const daysLeft = Math.floor((c.endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+                return daysLeft <= 3;
+              })}
+              onSelect={setActiveCampaign}
+            />
+          </>
+        )}
       </div>
+
+      {showScrollTop && (
+        <Button 
+          className="fixed bottom-20 right-4 p-2 rounded-full shadow-lg animate-fade-in"
+          variant="secondary"
+          size="icon"
+          onClick={scrollToTop}
+        >
+          <ArrowUp className="h-5 w-5" />
+        </Button>
+      )}
+
+      <FloatingActionButton 
+        text="Join Now" 
+        onClick={() => {
+          handleViewCampaigns();
+          setShowCampaigns(true);
+        }}
+      />
+      
       <Navigation />
     </div>
   );
