@@ -4,6 +4,74 @@ import { DrawCampaign, DrawEntry, Mission, Prize, PrizeHistoryItem } from "../ty
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
+// Define database schema types for our new tables
+type LuckyDrawCampaign = {
+  id: string;
+  name: string;
+  description: string;
+  start_date: string;
+  end_date: string;
+  status: 'upcoming' | 'active' | 'ended';
+  entry_methods: string[] | any; // Can be string[] or JSON
+  lucky_draw_prizes?: LuckyDrawPrize[];
+}
+
+type LuckyDrawPrize = {
+  id: string;
+  name: string;
+  description?: string;
+  color: string;
+  rarity?: 'common' | 'rare' | 'epic' | 'legendary';
+  points?: number;
+  quantity: number;
+  claimed?: number;
+  image?: string;
+}
+
+type LuckyDrawEntry = {
+  id: string;
+  user_id: string;
+  campaign_id: string;
+  method: 'purchase' | 'engagement' | 'direct' | 'vip';
+  quantity: number;
+  date: string;
+  description?: string;
+  reference_id?: string;
+  is_used: boolean;
+}
+
+type LuckyDrawMission = {
+  id: string;
+  type: 'review' | 'share' | 'referral' | 'purchase' | 'daily';
+  title: string;
+  description?: string;
+  reward: number;
+  is_active: boolean;
+  campaign_id?: string;
+}
+
+type LuckyDrawWinner = {
+  id: string;
+  user_id: string;
+  campaign_id: string;
+  prize_id: string;
+  entry_id: string;
+  date: string;
+  claimed: boolean;
+  claim_code?: string;
+  claimed_at?: string;
+  expires_at?: string;
+  lucky_draw_prizes?: LuckyDrawPrize;
+}
+
+type LuckyDrawCompletedMission = {
+  id: string;
+  user_id: string;
+  mission_id: string;
+  completed_at: string;
+  entries_awarded: number;
+}
+
 export const useLuckyDraw = () => {
   const { toast } = useToast();
   const [isSpinning, setIsSpinning] = useState(false);
@@ -51,10 +119,16 @@ export const useLuckyDraw = () => {
     }
   }, [userEntries]);
 
+  const getCurrentUser = async () => {
+    const { data } = await supabase.auth.getUser();
+    return data?.user;
+  };
+
   const fetchActiveCampaigns = async () => {
     try {
+      // Use type assertion for table name
       const { data, error } = await supabase
-        .from('lucky_draw_campaigns')
+        .from('lucky_draw_campaigns' as any)
         .select(`
           id,
           name,
@@ -75,8 +149,7 @@ export const useLuckyDraw = () => {
             image
           )
         `)
-        .eq('status', 'active')
-        .order('start_date', { ascending: false });
+        .eq('status', 'active');
 
       if (error) {
         console.error("Error fetching campaigns:", error);
@@ -85,14 +158,17 @@ export const useLuckyDraw = () => {
       }
 
       if (data && data.length > 0) {
-        const mappedCampaigns: DrawCampaign[] = data.map(campaign => ({
+        // Cast data to our defined type
+        const typedData = data as unknown as LuckyDrawCampaign[];
+        
+        const mappedCampaigns: DrawCampaign[] = typedData.map(campaign => ({
           id: campaign.id,
           name: campaign.name,
           description: campaign.description,
           startDate: new Date(campaign.start_date),
           endDate: new Date(campaign.end_date),
           status: campaign.status,
-          prizes: campaign.lucky_draw_prizes.map(prize => ({
+          prizes: campaign.lucky_draw_prizes?.map(prize => ({
             id: prize.id,
             name: prize.name,
             description: prize.description,
@@ -103,8 +179,12 @@ export const useLuckyDraw = () => {
             quantity: prize.quantity,
             claimed: prize.claimed,
             image: prize.image
-          })),
-          entryMethods: campaign.entry_methods,
+          })) || [],
+          entryMethods: Array.isArray(campaign.entry_methods) 
+            ? campaign.entry_methods 
+            : (typeof campaign.entry_methods === 'string' 
+                ? JSON.parse(campaign.entry_methods) 
+                : []),
           totalEntries: 0, // We'll populate this from another query
           userEntries: 0 // We'll populate this from another query
         }));
@@ -129,9 +209,9 @@ export const useLuckyDraw = () => {
   const fetchCampaignStatistics = async (campaignId: string) => {
     try {
       // Get total entries for this campaign
-      const { data: totalData, error: totalError } = await supabase
-        .from('lucky_draw_entries')
-        .select('id', { count: 'exact' })
+      const { count: totalCount, error: totalError } = await supabase
+        .from('lucky_draw_entries' as any)
+        .select('id', { count: 'exact', head: true })
         .eq('campaign_id', campaignId);
 
       if (totalError) {
@@ -140,11 +220,14 @@ export const useLuckyDraw = () => {
       }
 
       // Get user entries for this campaign
-      const { data: userData, error: userError } = await supabase
-        .from('lucky_draw_entries')
-        .select('id', { count: 'exact' })
+      const user = await getCurrentUser();
+      if (!user) return;
+
+      const { count: userCount, error: userError } = await supabase
+        .from('lucky_draw_entries' as any)
+        .select('id', { count: 'exact', head: true })
         .eq('campaign_id', campaignId)
-        .eq('user_id', supabase.auth.getUser()?.data?.user?.id || '');
+        .eq('user_id', user.id);
 
       if (userError) {
         console.error("Error fetching user stats:", userError);
@@ -157,8 +240,8 @@ export const useLuckyDraw = () => {
           campaign.id === campaignId 
             ? { 
                 ...campaign, 
-                totalEntries: totalData?.length || 0,
-                userEntries: userData?.length || 0
+                totalEntries: totalCount || 0,
+                userEntries: userCount || 0
               } 
             : campaign
         )
@@ -169,8 +252,8 @@ export const useLuckyDraw = () => {
         setActiveCampaign(prev => 
           prev ? { 
             ...prev, 
-            totalEntries: totalData?.length || 0,
-            userEntries: userData?.length || 0
+            totalEntries: totalCount || 0,
+            userEntries: userCount || 0
           } : null
         );
       }
@@ -181,13 +264,13 @@ export const useLuckyDraw = () => {
 
   const fetchUserEntries = async () => {
     try {
-      const userId = supabase.auth.getUser()?.data?.user?.id;
-      if (!userId) return;
+      const user = await getCurrentUser();
+      if (!user) return;
 
       const { data, error } = await supabase
-        .from('lucky_draw_entries')
+        .from('lucky_draw_entries' as any)
         .select('*')
-        .eq('user_id', userId)
+        .eq('user_id', user.id)
         .order('date', { ascending: false });
 
       if (error) {
@@ -196,12 +279,15 @@ export const useLuckyDraw = () => {
       }
 
       if (data) {
-        const mappedEntries: DrawEntry[] = data.map(entry => ({
+        // Cast data to our defined type
+        const typedData = data as unknown as LuckyDrawEntry[];
+        
+        const mappedEntries: DrawEntry[] = typedData.map(entry => ({
           id: entry.id,
           method: entry.method,
           quantity: entry.quantity,
           date: new Date(entry.date),
-          description: entry.description
+          description: entry.description || ''
         }));
 
         setUserEntries(mappedEntries);
@@ -214,7 +300,7 @@ export const useLuckyDraw = () => {
   const fetchAvailableMissions = async () => {
     try {
       const { data, error } = await supabase
-        .from('lucky_draw_missions')
+        .from('lucky_draw_missions' as any)
         .select('*')
         .eq('is_active', true);
 
@@ -225,11 +311,13 @@ export const useLuckyDraw = () => {
 
       if (data) {
         // Get completed missions for the current user
-        const userId = supabase.auth.getUser()?.data?.user?.id;
+        const user = await getCurrentUser();
+        if (!user) return;
+        
         const { data: completedData, error: completedError } = await supabase
-          .from('lucky_draw_completed_missions')
+          .from('lucky_draw_completed_missions' as any)
           .select('mission_id')
-          .eq('user_id', userId || '');
+          .eq('user_id', user.id);
 
         if (completedError) {
           console.error("Error fetching completed missions:", completedError);
@@ -237,14 +325,17 @@ export const useLuckyDraw = () => {
 
         // Create a set of completed mission IDs
         const completedMissionIds = new Set(
-          (completedData || []).map(item => item.mission_id)
+          (completedData || []).map((item: any) => item.mission_id)
         );
 
-        const mappedMissions: Mission[] = data.map(mission => ({
+        // Cast data to our defined type
+        const typedData = data as unknown as LuckyDrawMission[];
+
+        const mappedMissions: Mission[] = typedData.map(mission => ({
           id: mission.id,
           type: mission.type,
           title: mission.title,
-          description: mission.description,
+          description: mission.description || '',
           reward: mission.reward,
           completed: completedMissionIds.has(mission.id),
           // These would need to be added to the schema if we want to track progress
@@ -261,11 +352,11 @@ export const useLuckyDraw = () => {
 
   const fetchPrizeHistory = async () => {
     try {
-      const userId = supabase.auth.getUser()?.data?.user?.id;
-      if (!userId) return;
+      const user = await getCurrentUser();
+      if (!user) return;
 
       const { data, error } = await supabase
-        .from('lucky_draw_winners')
+        .from('lucky_draw_winners' as any)
         .select(`
           id,
           date,
@@ -282,7 +373,7 @@ export const useLuckyDraw = () => {
             image
           )
         `)
-        .eq('user_id', userId)
+        .eq('user_id', user.id)
         .order('date', { ascending: false });
 
       if (error) {
@@ -291,7 +382,10 @@ export const useLuckyDraw = () => {
       }
 
       if (data) {
-        const mappedHistory: PrizeHistoryItem[] = data.map(item => ({
+        // Cast data to our defined type
+        const typedData = data as unknown as (LuckyDrawWinner & { lucky_draw_prizes: LuckyDrawPrize })[];
+        
+        const mappedHistory: PrizeHistoryItem[] = typedData.map(item => ({
           id: item.id,
           prize: {
             id: item.lucky_draw_prizes.id,
@@ -335,8 +429,8 @@ export const useLuckyDraw = () => {
 
   const addEntry = async (method: 'purchase' | 'engagement' | 'direct' | 'vip', quantity: number, description: string) => {
     try {
-      const userId = supabase.auth.getUser()?.data?.user?.id;
-      if (!userId || !activeCampaign) {
+      const user = await getCurrentUser();
+      if (!user || !activeCampaign) {
         toast({
           title: "Error",
           description: "You must be logged in and have an active campaign to add entries",
@@ -347,17 +441,17 @@ export const useLuckyDraw = () => {
       }
 
       const newEntry = {
-        user_id: userId,
+        user_id: user.id,
         campaign_id: activeCampaign.id,
         method,
         quantity,
         description,
-        date: new Date(),
+        date: new Date().toISOString(),
         is_used: false
       };
 
       const { data, error } = await supabase
-        .from('lucky_draw_entries')
+        .from('lucky_draw_entries' as any)
         .insert(newEntry)
         .select()
         .single();
@@ -374,12 +468,15 @@ export const useLuckyDraw = () => {
       }
 
       if (data) {
+        // Cast data to our defined type
+        const typedData = data as unknown as LuckyDrawEntry;
+        
         const mappedEntry: DrawEntry = {
-          id: data.id,
-          method: data.method,
-          quantity: data.quantity,
-          date: new Date(data.date),
-          description: data.description
+          id: typedData.id,
+          method: typedData.method,
+          quantity: typedData.quantity,
+          date: new Date(typedData.date),
+          description: typedData.description || ''
         };
 
         setUserEntries(prev => [mappedEntry, ...prev]);
@@ -406,8 +503,8 @@ export const useLuckyDraw = () => {
 
   const completeMission = async (missionId: string) => {
     try {
-      const userId = supabase.auth.getUser()?.data?.user?.id;
-      if (!userId || !activeCampaign) {
+      const user = await getCurrentUser();
+      if (!user || !activeCampaign) {
         toast({
           title: "Error",
           description: "You must be logged in and have an active campaign to complete missions",
@@ -422,11 +519,12 @@ export const useLuckyDraw = () => {
 
       // Mark the mission as completed
       const { error: missionError } = await supabase
-        .from('lucky_draw_completed_missions')
+        .from('lucky_draw_completed_missions' as any)
         .insert({
-          user_id: userId,
+          user_id: user.id,
           mission_id: missionId,
-          entries_awarded: mission.reward
+          entries_awarded: mission.reward,
+          completed_at: new Date().toISOString()
         });
 
       if (missionError) {
@@ -465,8 +563,11 @@ export const useLuckyDraw = () => {
   const claimPrize = async (prizeId: string) => {
     try {
       const { error } = await supabase
-        .from('lucky_draw_winners')
-        .update({ claimed: true, claimed_at: new Date() })
+        .from('lucky_draw_winners' as any)
+        .update({ 
+          claimed: true, 
+          claimed_at: new Date().toISOString() 
+        })
         .eq('id', prizeId);
 
       if (error) {
@@ -516,8 +617,8 @@ export const useLuckyDraw = () => {
       setIsSpinning(true);
 
       // Get available entries for this user and campaign
-      const userId = supabase.auth.getUser()?.data?.user?.id;
-      if (!userId) {
+      const user = await getCurrentUser();
+      if (!user) {
         toast({
           title: "Error",
           description: "You must be logged in to enter the lucky draw",
@@ -529,9 +630,9 @@ export const useLuckyDraw = () => {
       }
 
       const { data: entries, error: entriesError } = await supabase
-        .from('lucky_draw_entries')
+        .from('lucky_draw_entries' as any)
         .select('id')
-        .eq('user_id', userId)
+        .eq('user_id', user.id)
         .eq('campaign_id', campaignId)
         .eq('is_used', false)
         .limit(1);
@@ -552,7 +653,7 @@ export const useLuckyDraw = () => {
 
       // Get a random prize from the campaign
       const { data: campaignPrizes, error: prizesError } = await supabase
-        .from('lucky_draw_prizes')
+        .from('lucky_draw_prizes' as any)
         .select('*')
         .eq('campaign_id', campaignId)
         .lt('claimed', 'quantity'); // Only select prizes with available quantity
@@ -569,24 +670,27 @@ export const useLuckyDraw = () => {
         return;
       }
 
+      // Cast data to our defined type
+      const typedPrizes = campaignPrizes as unknown as LuckyDrawPrize[];
+
       // Select a random prize
-      const randomPrize = campaignPrizes[Math.floor(Math.random() * campaignPrizes.length)];
+      const randomPrize = typedPrizes[Math.floor(Math.random() * typedPrizes.length)];
       
       // Insert a winner record
       const expireDate = new Date();
       expireDate.setDate(expireDate.getDate() + 7); // Default 7 days to claim
 
       const { data: winner, error: winnerError } = await supabase
-        .from('lucky_draw_winners')
+        .from('lucky_draw_winners' as any)
         .insert({
-          user_id: userId,
+          user_id: user.id,
           campaign_id: campaignId,
           prize_id: randomPrize.id,
           entry_id: entryId,
-          date: new Date(),
+          date: new Date().toISOString(),
           claimed: false,
           claim_code: `PRIZE-${Math.floor(100000 + Math.random() * 900000)}`,
-          expires_at: expireDate
+          expires_at: expireDate.toISOString()
         })
         .select(`
           id,
@@ -618,17 +722,20 @@ export const useLuckyDraw = () => {
         return;
       }
 
+      // Cast winner to our defined type
+      const typedWinner = winner as unknown as (LuckyDrawWinner & { lucky_draw_prizes: LuckyDrawPrize });
+
       // Mark the entry as used
       await supabase
-        .from('lucky_draw_entries')
+        .from('lucky_draw_entries' as any)
         .update({ is_used: true })
         .eq('id', entryId);
 
       // Increment the claimed count for this prize
       await supabase
-        .from('lucky_draw_prizes')
+        .from('lucky_draw_prizes' as any)
         .update({ 
-          claimed: randomPrize.claimed ? randomPrize.claimed + 1 : 1 
+          claimed: (randomPrize.claimed || 0) + 1 
         })
         .eq('id', randomPrize.id);
 
@@ -650,12 +757,21 @@ export const useLuckyDraw = () => {
 
       // Add to prize history
       const newPrize: PrizeHistoryItem = {
-        id: winner.id,
-        prize: mappedPrize,
-        date: new Date(winner.date),
-        claimed: winner.claimed,
-        claimCode: winner.claim_code,
-        expiresAt: winner.expires_at ? new Date(winner.expires_at) : undefined
+        id: typedWinner.id,
+        prize: {
+          id: typedWinner.lucky_draw_prizes.id,
+          name: typedWinner.lucky_draw_prizes.name,
+          color: typedWinner.lucky_draw_prizes.color,
+          icon: null,
+          description: typedWinner.lucky_draw_prizes.description,
+          rarity: typedWinner.lucky_draw_prizes.rarity,
+          points: typedWinner.lucky_draw_prizes.points,
+          image: typedWinner.lucky_draw_prizes.image
+        },
+        date: new Date(typedWinner.date),
+        claimed: typedWinner.claimed,
+        claimCode: typedWinner.claim_code,
+        expiresAt: typedWinner.expires_at ? new Date(typedWinner.expires_at) : undefined
       };
 
       setPrizeHistory(prev => [newPrize, ...prev]);
