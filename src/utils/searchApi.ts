@@ -18,15 +18,36 @@ export interface SponsoredProductSearchResult {
  */
 export async function searchSponsoredProducts(query: string): Promise<SponsoredProductSearchResult[]> {
   try {
+    // Use a raw SQL query instead of RPC which is causing TypeScript errors
     const { data, error } = await supabase
-      .rpc('search_sponsored_products', { search_query: query });
+      .from('sponsored_products')
+      .select(`
+        id, 
+        boost_level,
+        products:product_id (
+          id, 
+          name, 
+          price, 
+          category, 
+          images, 
+          image
+        )
+      `)
+      .eq('status', 'active')
+      .ilike('products.name', `%${query}%`)
+      .order('boost_level', { ascending: false });
     
     if (error) {
       console.error("Error searching sponsored products:", error);
       return [];
     }
 
-    // Transform the result to a more usable format
+    // Transform the result to a more usable format (handle empty data case)
+    if (!data || !Array.isArray(data)) {
+      console.log("No sponsored products found or invalid data format");
+      return [];
+    }
+
     return data.map((item: any) => ({
       id: item.products.id,
       name: item.products.name,
