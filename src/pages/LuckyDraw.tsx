@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import { Card, CardContent } from "@/components/ui/card";
@@ -709,4 +710,654 @@ const LuckyDraw = () => {
                           <Badge className="bg-black/50 text-white backdrop-blur-sm">
                             {campaign.category}
                           </Badge>
-                          <Badge className="bg-red-500/80 text-white backdrop-blur
+                          <Badge className="bg-red-500/80 text-white backdrop-blur-sm flex items-center gap-1">
+                            <Clock className="h-3 w-3" />
+                            {formatTimeRemaining(campaign.endDate)}
+                          </Badge>
+                        </div>
+                        
+                        <div>
+                          <h3 className="text-lg font-bold text-white drop-shadow-md">{campaign.name}</h3>
+                          <div className="flex items-center mt-1 text-white/90 text-sm">
+                            <Trophy className="h-4 w-4 mr-1" />
+                            <span>Top prize: {campaign.prizes[0]?.name}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <CardContent className="p-4">
+                      <div className="flex justify-between items-center mb-2">
+                        <div className="text-sm text-muted-foreground">
+                          {campaign.prizes.length} prizes • {campaign.totalEntries.toLocaleString()} entries
+                        </div>
+                        <div className="flex space-x-1">
+                          {campaign.entryMethods.includes('purchase') && (
+                            <div className="p-1 rounded-full bg-muted" title="Enter via Purchase">
+                              <ShoppingCart className="h-4 w-4 text-muted-foreground" />
+                            </div>
+                          )}
+                          {campaign.entryMethods.includes('engagement') && (
+                            <div className="p-1 rounded-full bg-muted" title="Enter via Engagement">
+                              <MessageSquare className="h-4 w-4 text-muted-foreground" />
+                            </div>
+                          )}
+                          {campaign.entryMethods.includes('direct') && (
+                            <div className="p-1 rounded-full bg-muted" title="Direct Entry">
+                              <Gift className="h-4 w-4 text-muted-foreground" />
+                            </div>
+                          )}
+                          {campaign.entryMethods.includes('vip') && (
+                            <div className="p-1 rounded-full bg-muted" title="VIP Bonus">
+                              <Star className="h-4 w-4 text-muted-foreground" />
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      
+                      <div className="mt-2">
+                        <div className="flex justify-between text-xs">
+                          <span>Your entries: {campaign.userEntries}</span>
+                          <span>Total: {campaign.totalEntries.toLocaleString()}</span>
+                        </div>
+                        <Progress 
+                          value={(campaign.totalEntries - campaign.remainingEntries) / campaign.totalEntries * 100} 
+                          className="h-2 mt-1"
+                        />
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </section>
+            
+            {upcomingCampaigns.length > 0 && (
+              <section className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-xl font-bold flex items-center gap-2">
+                    <Calendar className="h-5 w-5 text-blue-500" />
+                    Coming Soon
+                  </h2>
+                </div>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {upcomingCampaigns.map(campaign => (
+                    <Card 
+                      key={campaign.id}
+                      className="overflow-hidden transition-all duration-300 hover:shadow-md"
+                    >
+                      <div className="h-40 bg-gradient-to-r from-blue-500 to-teal-500 flex items-center justify-center">
+                        {campaign.prizes[0]?.image ? (
+                          <img 
+                            src={campaign.prizes[0].image} 
+                            alt={campaign.prizes[0].name}
+                            className="max-h-full object-contain p-4" 
+                          />
+                        ) : (
+                          <Gift className="h-16 w-16 text-white/80" />
+                        )}
+                      </div>
+                      
+                      <CardContent className="p-4">
+                        <div className="flex justify-between items-center">
+                          <h3 className="font-bold">{campaign.name}</h3>
+                          <Badge className="bg-blue-100 text-blue-800">
+                            Upcoming
+                          </Badge>
+                        </div>
+                        
+                        <p className="text-sm text-muted-foreground mt-2 line-clamp-2">
+                          {campaign.description}
+                        </p>
+                        
+                        <div className="flex items-center justify-between mt-3 text-sm">
+                          <div className="flex items-center">
+                            <Calendar className="h-4 w-4 mr-1 text-blue-500" />
+                            <span>Starts {campaign.startDate.toLocaleDateString()}</span>
+                          </div>
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => {
+                              // In a real app, this might save a reminder
+                              toast({
+                                title: "Reminder Set",
+                                description: `We'll notify you when ${campaign.name} begins`,
+                                duration: 3000,
+                              });
+                            }}
+                          >
+                            Remind Me
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </section>
+            )}
+          </TabsContent>
+          
+          <TabsContent value="campaign" className="space-y-8">
+            {selectedCampaign ? (
+              <>
+                <div className="relative rounded-xl overflow-hidden">
+                  <div 
+                    className="h-64 sm:h-80 bg-cover bg-center"
+                    style={{
+                      backgroundImage: selectedCampaign.prizes[0]?.image 
+                        ? `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(${selectedCampaign.prizes[0].image})`
+                        : `linear-gradient(to right, ${selectedCampaign.prizes[0]?.color || '#8B5CF6'}, ${selectedCampaign.prizes[1]?.color || '#3B82F6'})`
+                    }}
+                  >
+                    <div className="absolute top-4 left-4">
+                      <Button 
+                        variant="ghost" 
+                        className="text-white bg-black/30 backdrop-blur-sm hover:bg-black/50"
+                        onClick={() => setCurrentTab("browse")}
+                      >
+                        <ChevronLeft className="h-4 w-4 mr-1" />
+                        Back
+                      </Button>
+                    </div>
+                    
+                    <div className="absolute top-4 right-4">
+                      <Button
+                        variant="ghost"
+                        className="text-white bg-black/30 backdrop-blur-sm hover:bg-black/50"
+                        onClick={() => shareCampaign(selectedCampaign)}
+                      >
+                        <Share2 className="h-4 w-4 mr-1" />
+                        Share
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/70 to-transparent p-6 text-white">
+                    <Badge className={`mb-2 ${selectedCampaign.status === 'active' ? 'bg-green-500' : selectedCampaign.status === 'upcoming' ? 'bg-blue-500' : 'bg-gray-500'}`}>
+                      {selectedCampaign.status === 'active' ? 'ACTIVE' : 
+                       selectedCampaign.status === 'upcoming' ? 'UPCOMING' : 'ENDED'}
+                    </Badge>
+                    
+                    <h1 className="text-2xl sm:text-3xl font-bold">{selectedCampaign.name}</h1>
+                    
+                    <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mt-2 text-white/80">
+                      <div className="flex items-center">
+                        <Tag className="h-4 w-4 mr-1" />
+                        <span>{selectedCampaign.category}</span>
+                      </div>
+                      
+                      <div className="flex items-center">
+                        <Trophy className="h-4 w-4 mr-1" />
+                        <span>{selectedCampaign.prizes.length} prizes</span>
+                      </div>
+                      
+                      <div className="flex items-center">
+                        <Clock className="h-4 w-4 mr-1" />
+                        <span>{formatTimeRemaining(selectedCampaign.endDate)}</span>
+                      </div>
+                      
+                      <div className="flex items-center">
+                        <Users className="h-4 w-4 mr-1" />
+                        <span>{selectedCampaign.totalEntries.toLocaleString()} entries</span>
+                      </div>
+                      
+                      {selectedCampaign.sponsor && (
+                        <div className="flex items-center">
+                          <span className="mr-1">by</span>
+                          {selectedCampaign.sponsor.logo ? (
+                            <img 
+                              src={selectedCampaign.sponsor.logo} 
+                              alt={selectedCampaign.sponsor.name}
+                              className="h-5 ml-1" 
+                            />
+                          ) : (
+                            <span>{selectedCampaign.sponsor.name}</span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                  <div className="lg:col-span-2 space-y-6">
+                    <Card>
+                      <CardContent className="p-6">
+                        <h2 className="text-xl font-bold mb-4">About This Giveaway</h2>
+                        <p className="text-muted-foreground">
+                          {selectedCampaign.description}
+                        </p>
+                        
+                        <div className="mt-6 space-y-2">
+                          <div className="flex justify-between text-sm">
+                            <span>Entries Remaining</span>
+                            <span className="font-medium">{selectedCampaign.remainingEntries.toLocaleString()} / {selectedCampaign.totalEntries.toLocaleString()}</span>
+                          </div>
+                          <Progress 
+                            value={(selectedCampaign.totalEntries - selectedCampaign.remainingEntries) / selectedCampaign.totalEntries * 100} 
+                            className="h-3"
+                          />
+                          <p className="text-xs text-muted-foreground text-right">
+                            {Math.round((selectedCampaign.totalEntries - selectedCampaign.remainingEntries) / selectedCampaign.totalEntries * 100)}% claimed
+                          </p>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card>
+                      <CardContent className="p-6">
+                        <h2 className="text-xl font-bold mb-4">Prize Breakdown</h2>
+                        <div className="space-y-4">
+                          {selectedCampaign.prizes.map(prize => (
+                            <div 
+                              key={prize.id} 
+                              className="flex items-center gap-4 p-3 rounded-lg transition-colors"
+                              style={{ backgroundColor: `${prize.color}10` }}
+                            >
+                              <div
+                                className="h-16 w-16 rounded-md flex items-center justify-center"
+                                style={{ backgroundColor: prize.color }}
+                              >
+                                {prize.image ? (
+                                  <img src={prize.image} alt={prize.name} className="h-12 w-12 object-contain" />
+                                ) : (
+                                  <Award className="h-8 w-8 text-white" />
+                                )}
+                              </div>
+                              
+                              <div className="flex-1">
+                                <div className="flex items-center">
+                                  <h3 className="font-bold">{prize.name}</h3>
+                                  <Badge 
+                                    className="ml-2"
+                                    style={{
+                                      backgroundColor: prize.rarity === 'legendary' ? '#FBBF24' :
+                                                      prize.rarity === 'epic' ? '#8B5CF6' :
+                                                      prize.rarity === 'rare' ? '#3B82F6' : '#6B7280',
+                                      color: prize.rarity === 'legendary' ? '#7C2D12' : 'white'
+                                    }}
+                                  >
+                                    {prize.rarity.toUpperCase()}
+                                  </Badge>
+                                </div>
+                                
+                                {prize.description && (
+                                  <p className="text-sm text-muted-foreground mt-1">{prize.description}</p>
+                                )}
+                              </div>
+                              
+                              <div className="text-right">
+                                <div className="font-medium">{prize.quantity - prize.claimed} left</div>
+                                <div className="text-xs text-muted-foreground mt-1">
+                                  {prize.claimed} claimed
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                    
+                    {selectedCampaign.status === 'ended' && selectedCampaign.winners && selectedCampaign.winners.length > 0 && (
+                      <Card>
+                        <CardContent className="p-6">
+                          <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+                            <Trophy className="h-5 w-5 text-yellow-500" />
+                            Winners
+                          </h2>
+                          
+                          <div className="space-y-4">
+                            {selectedCampaign.winners.map(winner => (
+                              <div key={winner.id} className="flex items-center gap-4 p-4 border rounded-lg">
+                                <div className="h-12 w-12 rounded-full overflow-hidden bg-muted flex items-center justify-center">
+                                  {winner.avatarUrl ? (
+                                    <img src={winner.avatarUrl} alt={winner.username} className="h-full w-full object-cover" />
+                                  ) : (
+                                    <User className="h-6 w-6 text-muted-foreground" />
+                                  )}
+                                </div>
+                                
+                                <div className="flex-1">
+                                  <div className="font-bold">{winner.username}</div>
+                                  <div className="text-sm text-muted-foreground">
+                                    Won {winner.prize.name}
+                                  </div>
+                                </div>
+                                
+                                <div className="text-right">
+                                  <div className="text-sm">
+                                    {winner.winDate.toLocaleDateString()}
+                                  </div>
+                                  <div className={`text-xs ${winner.claimed ? 'text-green-600' : 'text-orange-600'}`}>
+                                    {winner.claimed ? 'Claimed' : 'Unclaimed'}
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    )}
+                  </div>
+                  
+                  <div className="space-y-6">
+                    <Card>
+                      <CardContent className="p-6">
+                        <h2 className="text-lg font-bold mb-4">Entry Methods</h2>
+                        
+                        <div className="space-y-4">
+                          {selectedCampaign.status === 'active' ? (
+                            <>
+                              {selectedCampaign.entryMethods.includes('purchase') && (
+                                <Button 
+                                  className="w-full flex items-center justify-start gap-2 bg-primary/10 hover:bg-primary/20 text-primary"
+                                  variant="outline"
+                                  onClick={() => enterCampaign(selectedCampaign, 'purchase')}
+                                >
+                                  <ShoppingCart className="h-5 w-5" />
+                                  <div className="flex-1 text-left">
+                                    <div className="font-medium">Enter via Purchase</div>
+                                    <div className="text-xs text-muted-foreground">Get 5 entries with any purchase</div>
+                                  </div>
+                                  <Zap className="h-4 w-4 text-yellow-500" />
+                                </Button>
+                              )}
+                              
+                              {selectedCampaign.entryMethods.includes('engagement') && (
+                                <Button 
+                                  className="w-full flex items-center justify-start gap-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-600 dark:text-blue-400"
+                                  variant="outline"
+                                  onClick={() => enterCampaign(selectedCampaign, 'engagement')}
+                                >
+                                  <MessageSquare className="h-5 w-5" />
+                                  <div className="flex-1 text-left">
+                                    <div className="font-medium">Enter via Engagement</div>
+                                    <div className="text-xs text-muted-foreground">Share or leave a review</div>
+                                  </div>
+                                  <span className="text-xs font-bold">+1</span>
+                                </Button>
+                              )}
+                              
+                              {selectedCampaign.entryMethods.includes('direct') && (
+                                <Button 
+                                  className="w-full flex items-center justify-start gap-2 bg-green-500/10 hover:bg-green-500/20 text-green-600 dark:text-green-400"
+                                  variant="outline"
+                                  onClick={() => enterCampaign(selectedCampaign, 'direct')}
+                                >
+                                  <Gift className="h-5 w-5" />
+                                  <div className="flex-1 text-left">
+                                    <div className="font-medium">Free Entry</div>
+                                    <div className="text-xs text-muted-foreground">One free entry per day</div>
+                                  </div>
+                                  <span className="text-xs font-bold">+1</span>
+                                </Button>
+                              )}
+                              
+                              {selectedCampaign.entryMethods.includes('vip') && (
+                                <Button 
+                                  className="w-full flex items-center justify-start gap-2 bg-purple-500/10 hover:bg-purple-500/20 text-purple-600 dark:text-purple-400"
+                                  variant="outline"
+                                  onClick={() => enterCampaign(selectedCampaign, 'vip')}
+                                >
+                                  <Star className="h-5 w-5" />
+                                  <div className="flex-1 text-left">
+                                    <div className="font-medium">VIP Bonus</div>
+                                    <div className="text-xs text-muted-foreground">Exclusive for VIP members</div>
+                                  </div>
+                                  <span className="text-xs font-bold">+3</span>
+                                </Button>
+                              )}
+                            </>
+                          ) : selectedCampaign.status === 'upcoming' ? (
+                            <div className="text-center py-6">
+                              <Calendar className="h-12 w-12 mx-auto text-blue-500 mb-2" />
+                              <h3 className="text-lg font-medium">Coming Soon</h3>
+                              <p className="text-muted-foreground mt-1">
+                                This campaign starts on {selectedCampaign.startDate.toLocaleDateString()}.
+                              </p>
+                              <Button 
+                                className="mt-4" 
+                                variant="outline"
+                                onClick={() => {
+                                  toast({
+                                    title: "Reminder Set",
+                                    description: `We'll notify you when ${selectedCampaign.name} begins`,
+                                    duration: 3000,
+                                  });
+                                }}
+                              >
+                                Remind Me
+                              </Button>
+                            </div>
+                          ) : (
+                            <div className="text-center py-6">
+                              <Clock className="h-12 w-12 mx-auto text-muted-foreground mb-2" />
+                              <h3 className="text-lg font-medium">Campaign Ended</h3>
+                              <p className="text-muted-foreground mt-1">
+                                This campaign ended on {selectedCampaign.endDate.toLocaleDateString()}.
+                              </p>
+                              {selectedCampaign.winners && selectedCampaign.winners.length > 0 ? (
+                                <Button 
+                                  className="mt-4"
+                                  onClick={() => setShowWinners(true)}
+                                >
+                                  View Winners
+                                </Button>
+                              ) : (
+                                <p className="text-sm mt-4">
+                                  Winners will be announced soon.
+                                </p>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card>
+                      <CardContent className="p-6">
+                        <h2 className="text-lg font-bold mb-4">Your Entries</h2>
+                        
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-muted-foreground">Total Entries</span>
+                          <span className="text-2xl font-bold">{selectedCampaign.userEntries}</span>
+                        </div>
+                        
+                        <Progress 
+                          value={selectedCampaign.userEntries / 10 * 100} 
+                          className="h-2 mb-1"
+                        />
+                        
+                        <p className="text-xs text-muted-foreground text-right mb-4">
+                          Recommended: 10+ entries
+                        </p>
+                        
+                        {selectedCampaign.status === 'active' && (
+                          <div className="space-y-2">
+                            <Button 
+                              className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+                              onClick={() => enterCampaign(selectedCampaign, 'direct')}
+                            >
+                              <Gift className="mr-2 h-4 w-4" />
+                              Enter Now
+                            </Button>
+                            
+                            <Button 
+                              className="w-full" 
+                              variant="outline"
+                              onClick={() => shareCampaign(selectedCampaign)}
+                            >
+                              <Share2 className="mr-2 h-4 w-4" />
+                              Share to Earn Entries
+                            </Button>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                    
+                    <Card>
+                      <CardContent className="p-6">
+                        <h2 className="text-lg font-bold mb-4">Campaign Details</h2>
+                        
+                        <div className="space-y-4 text-sm">
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Start Date</span>
+                            <span>{selectedCampaign.startDate.toLocaleDateString()}</span>
+                          </div>
+                          
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">End Date</span>
+                            <span>{selectedCampaign.endDate.toLocaleDateString()}</span>
+                          </div>
+                          
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Total Prizes</span>
+                            <span>{selectedCampaign.prizes.reduce((total, prize) => total + prize.quantity, 0)}</span>
+                          </div>
+                          
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Total Entries</span>
+                            <span>{selectedCampaign.totalEntries.toLocaleString()}</span>
+                          </div>
+                          
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Entry Methods</span>
+                            <span>{selectedCampaign.entryMethods.length}</span>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="text-center py-16">
+                <Gift className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
+                <h2 className="text-2xl font-bold mb-2">No Campaign Selected</h2>
+                <p className="text-muted-foreground">
+                  Please select a lucky draw campaign to view details.
+                </p>
+                <Button 
+                  className="mt-4"
+                  onClick={() => setCurrentTab("browse")}
+                >
+                  Browse Campaigns
+                </Button>
+              </div>
+            )}
+          </TabsContent>
+          
+          <TabsContent value="winners" className="space-y-8">
+            <h2 className="text-xl font-bold flex items-center gap-2">
+              <Trophy className="h-5 w-5 text-yellow-500" />
+              Recent Winners
+            </h2>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {endedCampaigns.flatMap(campaign => 
+                campaign.winners?.map(winner => (
+                  <Card key={winner.id} className="overflow-hidden">
+                    <div className="h-3" style={{ backgroundColor: winner.prize.color }} />
+                    <CardContent className="p-4 pt-3">
+                      <div className="flex items-start gap-3">
+                        <div className="h-10 w-10 rounded-full overflow-hidden bg-muted flex items-center justify-center">
+                          {winner.avatarUrl ? (
+                            <img src={winner.avatarUrl} alt={winner.username} className="h-full w-full object-cover" />
+                          ) : (
+                            <User className="h-5 w-5 text-muted-foreground" />
+                          )}
+                        </div>
+                        
+                        <div>
+                          <div className="font-bold">{winner.username}</div>
+                          <div className="text-xs text-muted-foreground">
+                            Won on {winner.winDate.toLocaleDateString()}
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center gap-3 mt-3 p-3 rounded-lg" style={{ backgroundColor: `${winner.prize.color}15` }}>
+                        <div className="h-14 w-14 rounded-md flex items-center justify-center" style={{ backgroundColor: winner.prize.color }}>
+                          {winner.prize.image ? (
+                            <img src={winner.prize.image} alt={winner.prize.name} className="h-10 w-10 object-contain" />
+                          ) : (
+                            <Award className="h-8 w-8 text-white" />
+                          )}
+                        </div>
+                        
+                        <div>
+                          <div className="font-bold">{winner.prize.name}</div>
+                          <div className="text-xs mt-1 flex items-center">
+                            <Tag className="h-3 w-3 mr-1" />
+                            <span>{campaign.name}</span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {winner.claimed ? (
+                        <div className="mt-3 text-sm text-green-600 flex items-center justify-center">
+                          <Check className="h-4 w-4 mr-1" />
+                          Prize Claimed
+                        </div>
+                      ) : (
+                        winner.claimDeadline && (
+                          winner.claimDeadline.getTime() > new Date().getTime() ? (
+                            <>
+                              <div className="mt-3 text-xs text-center text-orange-600">
+                                Claim by {winner.claimDeadline.toLocaleDateString()}
+                              </div>
+                              <Button 
+                                className="w-full mt-2"
+                                onClick={() => claimPrize(winner.id)}
+                              >
+                                Claim Prize
+                              </Button>
+                            </>
+                          ) : (
+                            <div className="mt-3 text-sm text-red-600 text-center">
+                              Claim period expired
+                            </div>
+                          )
+                        )
+                      )}
+                    </CardContent>
+                  </Card>
+                ))
+              )}
+              
+              {endedCampaigns.flatMap(campaign => campaign.winners || []).length === 0 && (
+                <div className="col-span-full text-center py-12">
+                  <Trophy className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
+                  <h3 className="text-lg font-medium mb-2">No Winners Yet</h3>
+                  <p className="text-muted-foreground max-w-md mx-auto">
+                    Enter our lucky draws to see your name on the winners list!
+                  </p>
+                </div>
+              )}
+            </div>
+          </TabsContent>
+        </Tabs>
+      </div>
+      
+      <div className="fixed bottom-20 right-4 z-10">
+        <Button 
+          className="shadow-lg bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 rounded-full px-6 animate-bounce"
+          onClick={() => {
+            if (activeCampaigns.length > 0) {
+              setSelectedCampaign(activeCampaigns[0]);
+              setCurrentTab("campaign");
+            }
+          }}
+        >
+          <Gift className="mr-2 h-5 w-5" />
+          Join Now
+        </Button>
+      </div>
+      
+      <Navigation />
+    </div>
+  );
+};
+
+export default LuckyDraw;
