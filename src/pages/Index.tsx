@@ -6,8 +6,21 @@ import { FlashSaleSection } from "@/components/FlashSaleSection";
 import { FeaturedSection } from "@/components/FeaturedSection";
 import Navigation from "@/components/Navigation";
 import "../i18n/config";
+import { useEffect } from "react";
 
 const Index = () => {
+  useEffect(() => {
+    // Log to help with debugging
+    console.log("Index page loaded");
+    console.log("Components to render:", { 
+      Header: !!Header, 
+      HeroSection: !!HeroSection, 
+      TrendingSection: !!TrendingSection,
+      FlashSaleSection: !!FlashSaleSection,
+      FeaturedSection: !!FeaturedSection
+    });
+  }, []);
+
   return (
     <div className="min-h-screen bg-white text-gray-900 pb-20">
       <Header />
