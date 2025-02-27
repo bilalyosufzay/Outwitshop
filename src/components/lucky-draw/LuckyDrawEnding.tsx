@@ -1,6 +1,6 @@
 
 import { Card, CardContent } from "@/components/ui/card";
-import { Clock, Alarm, Gift } from "lucide-react";
+import { Clock, AlarmClock, Gift } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DrawCampaign } from "./types";
 
@@ -30,7 +30,7 @@ export const LuckyDrawEnding = ({ campaigns, onSelect }: LuckyDrawEndingProps) =
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2 text-xl font-bold">
-        <Alarm className="h-6 w-6 text-red-500" />
+        <AlarmClock className="h-6 w-6 text-red-500" />
         <h2>Ending Soon</h2>
       </div>
 
