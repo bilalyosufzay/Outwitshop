@@ -363,15 +363,7 @@ export const useLuckyDraw = () => {
           claimed,
           claim_code,
           expires_at,
-          lucky_draw_prizes (
-            id,
-            name,
-            description,
-            color,
-            rarity,
-            points,
-            image
-          )
+          prize_id
         `)
         .eq('user_id', user.id)
         .order('date', { ascending: false });
@@ -381,27 +373,51 @@ export const useLuckyDraw = () => {
         return;
       }
 
-      if (data) {
-        // Cast data to our defined type
-        const typedData = data as unknown as (LuckyDrawWinner & { lucky_draw_prizes: LuckyDrawPrize })[];
+      if (data && data.length > 0) {
+        // Fetch prize details for each winner
+        const prizeIds = data.map(winner => winner.prize_id);
         
-        const mappedHistory: PrizeHistoryItem[] = typedData.map(item => ({
-          id: item.id,
-          prize: {
-            id: Number(item.lucky_draw_prizes.id), // Convert string ID to number for Prize interface
-            name: item.lucky_draw_prizes.name,
-            color: item.lucky_draw_prizes.color,
-            icon: null,
-            description: item.lucky_draw_prizes.description,
-            rarity: item.lucky_draw_prizes.rarity,
-            points: item.lucky_draw_prizes.points,
-            image: item.lucky_draw_prizes.image
-          },
-          date: new Date(item.date),
-          claimed: item.claimed,
-          claimCode: item.claim_code,
-          expiresAt: item.expires_at ? new Date(item.expires_at) : undefined
-        }));
+        const { data: prizesData, error: prizesError } = await supabase
+          .from('lucky_draw_prizes' as any)
+          .select('*')
+          .in('id', prizeIds);
+          
+        if (prizesError || !prizesData) {
+          console.error("Error fetching prize details:", prizesError);
+          return;
+        }
+        
+        // Create a map of prize details for quick lookup
+        const prizesMap = new Map();
+        prizesData.forEach((prize: any) => {
+          prizesMap.set(prize.id, prize);
+        });
+        
+        // Map the winners with their prize details
+        const mappedHistory: PrizeHistoryItem[] = data.map(winner => {
+          const prizeDetails = prizesMap.get(winner.prize_id);
+          if (!prizeDetails) return null;
+          
+          return {
+            id: winner.id,
+            prize: {
+              id: Number(prizeDetails.id), // Convert string ID to number for Prize interface
+              name: prizeDetails.name,
+              color: prizeDetails.color,
+              icon: null,
+              description: prizeDetails.description,
+              rarity: prizeDetails.rarity,
+              points: prizeDetails.points,
+              image: prizeDetails.image,
+              quantity: prizeDetails.quantity,
+              claimed: prizeDetails.claimed
+            },
+            date: new Date(winner.date),
+            claimed: winner.claimed,
+            claimCode: winner.claim_code,
+            expiresAt: winner.expires_at ? new Date(winner.expires_at) : undefined
+          };
+        }).filter(item => item !== null) as PrizeHistoryItem[];
 
         setPrizeHistory(mappedHistory);
       }
@@ -692,22 +708,7 @@ export const useLuckyDraw = () => {
           claim_code: `PRIZE-${Math.floor(100000 + Math.random() * 900000)}`,
           expires_at: expireDate.toISOString()
         })
-        .select(`
-          id,
-          date,
-          claimed,
-          claim_code,
-          expires_at,
-          lucky_draw_prizes (
-            id,
-            name,
-            description,
-            color,
-            rarity,
-            points,
-            image
-          )
-        `)
+        .select('id, date, claimed, claim_code, expires_at')
         .single();
 
       if (winnerError) {
@@ -721,9 +722,6 @@ export const useLuckyDraw = () => {
         setIsSpinning(false);
         return;
       }
-
-      // Cast winner to our defined type
-      const typedWinner = winner as unknown as (LuckyDrawWinner & { lucky_draw_prizes: LuckyDrawPrize });
 
       // Mark the entry as used
       await supabase
@@ -757,21 +755,12 @@ export const useLuckyDraw = () => {
 
       // Add to prize history
       const newPrize: PrizeHistoryItem = {
-        id: typedWinner.id,
-        prize: {
-          id: Number(typedWinner.lucky_draw_prizes.id), // Convert string ID to number for Prize interface
-          name: typedWinner.lucky_draw_prizes.name,
-          color: typedWinner.lucky_draw_prizes.color,
-          icon: null,
-          description: typedWinner.lucky_draw_prizes.description,
-          rarity: typedWinner.lucky_draw_prizes.rarity,
-          points: typedWinner.lucky_draw_prizes.points,
-          image: typedWinner.lucky_draw_prizes.image
-        },
-        date: new Date(typedWinner.date),
-        claimed: typedWinner.claimed,
-        claimCode: typedWinner.claim_code,
-        expiresAt: typedWinner.expires_at ? new Date(typedWinner.expires_at) : undefined
+        id: winner.id,
+        prize: mappedPrize,
+        date: new Date(winner.date),
+        claimed: winner.claimed,
+        claimCode: winner.claim_code,
+        expiresAt: winner.expires_at ? new Date(winner.expires_at) : undefined
       };
 
       setPrizeHistory(prev => [newPrize, ...prev]);
