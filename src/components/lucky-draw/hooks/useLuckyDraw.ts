@@ -169,7 +169,7 @@ export const useLuckyDraw = () => {
           endDate: new Date(campaign.end_date),
           status: campaign.status,
           prizes: campaign.lucky_draw_prizes?.map(prize => ({
-            id: prize.id,
+            id: Number(prize.id), // Convert string ID to number for Prize interface
             name: prize.name,
             description: prize.description,
             color: prize.color,
@@ -388,7 +388,7 @@ export const useLuckyDraw = () => {
         const mappedHistory: PrizeHistoryItem[] = typedData.map(item => ({
           id: item.id,
           prize: {
-            id: item.lucky_draw_prizes.id,
+            id: Number(item.lucky_draw_prizes.id), // Convert string ID to number for Prize interface
             name: item.lucky_draw_prizes.name,
             color: item.lucky_draw_prizes.color,
             icon: null,
@@ -741,7 +741,7 @@ export const useLuckyDraw = () => {
 
       // Convert prize data for the UI
       const mappedPrize: Prize = {
-        id: randomPrize.id,
+        id: Number(randomPrize.id), // Convert string ID to number for Prize interface
         name: randomPrize.name,
         color: randomPrize.color,
         icon: null,
@@ -759,7 +759,7 @@ export const useLuckyDraw = () => {
       const newPrize: PrizeHistoryItem = {
         id: typedWinner.id,
         prize: {
-          id: typedWinner.lucky_draw_prizes.id,
+          id: Number(typedWinner.lucky_draw_prizes.id), // Convert string ID to number for Prize interface
           name: typedWinner.lucky_draw_prizes.name,
           color: typedWinner.lucky_draw_prizes.color,
           icon: null,
