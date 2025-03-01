@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -129,7 +130,7 @@ const Login = () => {
               </div>
             </div>
 
-            <div className="flex items-center justify-between">
+            <div className="flex items-center">
               <div className="flex items-center space-x-2">
                 <Checkbox 
                   id="remember"
@@ -143,12 +144,6 @@ const Login = () => {
                   {t("auth.remember_me")}
                 </label>
               </div>
-              <Link
-                to="/auth/forgot-password"
-                className="text-sm font-medium text-accent hover:text-accent/80"
-              >
-                {t("auth.forgot_password")}
-              </Link>
             </div>
 
             <Button type="submit" size="lg" className="w-full gap-2 h-12">
@@ -157,13 +152,7 @@ const Login = () => {
             </Button>
           </form>
 
-          <div className="text-center space-y-2">
-            <p className="text-sm text-muted-foreground">
-              {t("auth.dont_have_account")}{" "}
-              <Link to="/auth/signup" className="font-medium text-accent hover:text-accent/80">
-                {t("auth.sign_up")}
-              </Link>
-            </p>
+          <div className="text-center">
             <Link
               to="/"
               className="text-sm font-medium text-muted-foreground hover:text-foreground block"
