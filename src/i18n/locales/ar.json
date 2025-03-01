@@ -33,6 +33,14 @@
   "auth": {
     "login": "تسجيل الدخول",
     "signup": "انشاء حساب",
+    "please_sign_in": "يرجى تسجيل الدخول إلى حسابك",
+    "email_address": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "remember_me": "تذكرني",
+    "forgot_password": "نسيت كلمة المرور؟",
+    "sign_in_button": "تسجيل الدخول",
+    "dont_have_account": "ليس لديك حساب؟",
+    "sign_up": "إنشاء حساب",
     "profile": {
       "sign_out": "تسجيل الخروج",
       "my_account": "حسابي",
@@ -52,6 +60,9 @@
       "follower_count": "المتابعين",
       "following_count": "المتابَعين"
     }
+  },
+  "navigation": {
+    "home": "العودة إلى الصفحة الرئيسية"
   },
   "notifications": {
     "enabled_success": "تم تفعيل الإشعارات!",

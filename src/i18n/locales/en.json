@@ -33,6 +33,14 @@
   "auth": {
     "login": "Login",
     "signup": "Sign Up",
+    "please_sign_in": "Please sign in to your account",
+    "email_address": "Email address",
+    "password": "Password",
+    "remember_me": "Remember me",
+    "forgot_password": "Forgot password?",
+    "sign_in_button": "Sign in",
+    "dont_have_account": "Don't have an account?",
+    "sign_up": "Sign up",
     "profile": {
       "sign_out": "Sign Out",
       "my_account": "My Account",
@@ -52,6 +60,9 @@
       "follower_count": "Followers",
       "following_count": "Following"
     }
+  },
+  "navigation": {
+    "home": "Back to Home"
   },
   "notifications": {
     "enabled_success": "Notifications enabled!",
