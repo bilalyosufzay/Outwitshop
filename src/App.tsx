@@ -17,6 +17,9 @@ import Feeds from "@/pages/Feeds";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Login from "@/pages/auth/Login";
+import Signup from "@/pages/auth/Signup";
+import ForgotPassword from "@/pages/auth/ForgotPassword";
+import ResetPassword from "@/pages/auth/ResetPassword";
 import { useEffect } from "react";
 import ManageProducts from "@/pages/my-shop/products/ManageProducts";
 import AddProductForm from "@/pages/my-shop/products/AddProductForm";
@@ -39,6 +42,9 @@ function App() {
           <Route path="/search" element={<Search />} />
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/auth/login" element={<Login />} />
+          <Route path="/auth/signup" element={<Signup />} />
+          <Route path="/auth/forgot-password" element={<ForgotPassword />} />
+          <Route path="/auth/reset-password" element={<ResetPassword />} />
           <Route 
             path="/profile" 
             element={
