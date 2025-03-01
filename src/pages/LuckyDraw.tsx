@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import { Card, CardContent } from "@/components/ui/card";
@@ -714,4 +715,139 @@ const LuckyDraw = () => {
                       className="h-48 bg-cover bg-center"
                       style={{
                         backgroundImage: campaign.prizes[0]?.image 
-                          ? `linear-gradient(rgba(
+                          ? `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(${campaign.prizes[0].image})`
+                          : `linear-gradient(to right, ${campaign.prizes[0]?.color || '#8B5CF6'}, ${campaign.prizes[1]?.color || '#EC4899'})`
+                      }}
+                    >
+                      <div className="h-full w-full p-4 flex flex-col justify-end text-white">
+                        <h3 className="text-lg font-bold">{campaign.name}</h3>
+                        <div className="flex items-center mt-1">
+                          <div className="flex items-center mr-2">
+                            <Clock className="h-3 w-3 mr-1" />
+                            <span className="text-xs">{formatTimeRemaining(campaign.endDate)}</span>
+                          </div>
+                          <div className="flex items-center">
+                            <Users className="h-3 w-3 mr-1" />
+                            <span className="text-xs">{campaign.totalEntries.toLocaleString()} entries</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </section>
+          </TabsContent>
+          
+          <TabsContent value="campaign">
+            {selectedCampaign ? (
+              <div className="space-y-6">
+                {/* Campaign details and actions would go here */}
+                <Button
+                  variant="outline"
+                  className="mb-4" 
+                  onClick={() => setCurrentTab("browse")}
+                >
+                  <ChevronLeft className="mr-1 h-4 w-4" />
+                  Back to all campaigns
+                </Button>
+                
+                <h2 className="text-2xl font-bold">{selectedCampaign.name}</h2>
+                <p className="text-muted-foreground">{selectedCampaign.description}</p>
+                
+                {/* Additional campaign details would be shown here */}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <h3 className="text-xl font-semibold mb-2">No Campaign Selected</h3>
+                <p className="text-muted-foreground mb-4">Please select a campaign from the browse tab to view details.</p>
+                <Button onClick={() => setCurrentTab("browse")}>
+                  Browse Campaigns
+                </Button>
+              </div>
+            )}
+          </TabsContent>
+          
+          <TabsContent value="winners">
+            <div className="space-y-6">
+              <h2 className="text-2xl font-bold">Recent Winners</h2>
+              
+              {endedCampaigns.filter(c => c.winners && c.winners.length > 0).length > 0 ? (
+                endedCampaigns
+                  .filter(c => c.winners && c.winners.length > 0)
+                  .map(campaign => (
+                    <Card key={campaign.id} className="overflow-hidden">
+                      <CardContent className="p-6">
+                        <h3 className="text-xl font-bold mb-4">{campaign.name}</h3>
+                        
+                        <div className="space-y-4">
+                          {campaign.winners?.map(winner => (
+                            <div key={winner.id} className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800 rounded-lg">
+                              <div className="flex items-center gap-3">
+                                <div className="relative">
+                                  <div className="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center overflow-hidden">
+                                    {winner.avatarUrl ? (
+                                      <img src={winner.avatarUrl} alt={winner.username} className="w-full h-full object-cover" />
+                                    ) : (
+                                      <User className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                                    )}
+                                  </div>
+                                  <div className="absolute -bottom-1 -right-1 bg-yellow-400 rounded-full p-0.5">
+                                    <Award className="h-3 w-3 text-yellow-800" />
+                                  </div>
+                                </div>
+                                
+                                <div>
+                                  <p className="font-medium">{winner.username}</p>
+                                  <p className="text-xs text-muted-foreground">
+                                    Won: {winner.prize.name}
+                                  </p>
+                                </div>
+                              </div>
+                              
+                              <div className="flex items-center">
+                                <Badge className={`mr-2 ${winner.claimed ? 'bg-green-500' : 'bg-amber-500'}`}>
+                                  {winner.claimed ? (
+                                    <span className="flex items-center gap-1">
+                                      <Check className="h-3 w-3" /> Claimed
+                                    </span>
+                                  ) : 'Unclaimed'}
+                                </Badge>
+                                
+                                <Button 
+                                  size="sm" 
+                                  variant="outline"
+                                  className="text-xs"
+                                  onClick={() => claimPrize(winner.id)}
+                                  disabled={winner.claimed}
+                                >
+                                  {winner.claimed ? 'Claimed' : 'Claim Prize'}
+                                </Button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))
+              ) : (
+                <div className="text-center py-12 bg-slate-50 dark:bg-slate-800 rounded-lg">
+                  <Trophy className="h-12 w-12 mx-auto text-yellow-500 mb-4" />
+                  <h3 className="text-xl font-semibold mb-2">No Winners Yet</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Winners will be displayed here once lucky draws have ended and prizes have been awarded.
+                  </p>
+                  <Button onClick={() => setCurrentTab("browse")}>
+                    Enter Campaigns
+                  </Button>
+                </div>
+              )}
+            </div>
+          </TabsContent>
+        </Tabs>
+      </div>
+    </div>
+  );
+};
+
+export default LuckyDraw;
