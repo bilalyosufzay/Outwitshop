@@ -9,7 +9,6 @@ import { toast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Gift, Trophy, Calendar, Clock, Tag, Share2, Heart, ArrowRight, ChevronLeft, ChevronRight, Filter, Star, Zap, ShoppingCart, MessageSquare, Users, Award, User, Check, Home, Link as LinkIcon } from "lucide-react";
 import WelcomeDialog from "@/components/lucky-draw/WelcomeDialog";
-import { BackButton } from "@/components/BackButton";
 import { Link } from "react-router-dom";
 
 interface Prize {
@@ -472,7 +471,7 @@ const LuckyDraw = () => {
       
       <div className="container mx-auto px-4 py-8 pb-20">
         <div className="flex justify-between items-center mb-4">
-          <BackButton />
+          <div className="flex-1"></div>
           <div className="flex gap-2">
             <Button 
               variant="outline" 
