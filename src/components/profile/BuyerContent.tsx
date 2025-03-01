@@ -19,10 +19,12 @@ import { useEffect } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTranslation } from "react-i18next";
 
 export const BuyerContent = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchBuyerProfile = async () => {
@@ -75,64 +77,64 @@ export const BuyerContent = () => {
   return (
     <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
       <ProfileSection
-        title="Auto-Reorder Essentials"
-        description="Manage your recurring purchases"
+        title={t('profile.buyer.auto_reorder')}
+        description={t('profile.buyer.auto_reorder_desc')}
         icon={RefreshCcw}
         onClick={() => handleNavigation('/buyer/auto-reorder', 'Loading auto-reorder settings...')}
       />
       <ProfileSection
-        title="Price Drop Alerts"
-        description="Track prices and get notified"
+        title={t('profile.buyer.price_alerts')}
+        description={t('profile.buyer.price_alerts_desc')}
         icon={Bell}
         onClick={() => handleNavigation('/buyer/price-alerts', 'Loading price alerts...')}
       />
       <ProfileSection
-        title="Orders & Shopping"
+        title={t('profile.buyer.orders')}
         icon={ShoppingBag}
         onClick={() => handleNavigation('/buyer/orders')}
       />
       <ProfileSection
-        title="Wishlist"
+        title={t('profile.buyer.wishlist')}
         icon={Heart}
         onClick={() => handleNavigation('/community/wishlists')}
       />
       <ProfileSection
-        title="Recently Viewed"
+        title={t('profile.buyer.recently_viewed')}
         icon={History}
         onClick={() => handleNavigation('/buyer/recently-viewed')}
       />
       <ProfileSection
-        title="Saved Addresses"
+        title={t('profile.buyer.addresses')}
         icon={MapPin}
         onClick={() => handleNavigation('/buyer/addresses')}
       />
       <ProfileSection
-        title="Payment Methods"
+        title={t('profile.buyer.payment_methods')}
         icon={CreditCard}
         onClick={() => handleNavigation('/buyer/payment-methods')}
       />
       <ProfileSection
-        title="Wallet & Transactions"
+        title={t('profile.buyer.wallet')}
         icon={Wallet}
         onClick={() => handleNavigation('/buyer/wallet')}
       />
       <ProfileSection
-        title="Rewards & Points"
+        title={t('profile.buyer.rewards')}
         icon={Award}
         onClick={() => handleNavigation('/buyer/rewards')}
       />
       <ProfileSection
-        title="Account Settings"
+        title={t('profile.buyer.account_settings')}
         icon={Settings}
         onClick={() => handleNavigation('/settings')}
       />
       <ProfileSection
-        title="Security"
+        title={t('profile.buyer.security')}
         icon={Shield}
         onClick={() => handleNavigation('/security')}
       />
       <ProfileSection
-        title="Help Center"
+        title={t('profile.buyer.help_center')}
         icon={HelpCircle}
         onClick={() => handleNavigation('/help')}
       />

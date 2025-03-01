@@ -1,3 +1,4 @@
+
 {
   "header": {
     "notifications": "Notifications",
@@ -38,7 +39,18 @@
       "settings": "Settings",
       "wishlist": "Wishlist",
       "orders": "Orders",
-      "language": "Language"
+      "language": "Language",
+      "edit_profile": "Edit Profile",
+      "account_status": "Account Status",
+      "loyalty_level": "Loyalty Level",
+      "seller_level": "Seller Level",
+      "buyer_level": "Buyer Level",
+      "preferences": "Preferences",
+      "quick_actions": "Quick Actions",
+      "security": "Security",
+      "social_links": "Social Links",
+      "follower_count": "Followers",
+      "following_count": "Following"
     }
   },
   "notifications": {
@@ -53,5 +65,35 @@
     "enable_notifications": "Enable Notifications",
     "stay_updated": "Get updates on orders, promotions, and more.",
     "enable_now": "Enable Now"
+  },
+  "profile": {
+    "buyer": {
+      "auto_reorder": "Auto-Reorder Essentials",
+      "auto_reorder_desc": "Manage your recurring purchases",
+      "price_alerts": "Price Drop Alerts",
+      "price_alerts_desc": "Track prices and get notified",
+      "orders": "Orders & Shopping",
+      "wishlist": "Wishlist",
+      "recently_viewed": "Recently Viewed",
+      "addresses": "Saved Addresses",
+      "payment_methods": "Payment Methods",
+      "wallet": "Wallet & Transactions",
+      "rewards": "Rewards & Points",
+      "account_settings": "Account Settings",
+      "security": "Security",
+      "help_center": "Help Center"
+    },
+    "seller": {
+      "manage_shop": "Manage Shop",
+      "manage_products": "Manage Products",
+      "analytics": "Analytics",
+      "orders": "Orders Management",
+      "reviews": "Customer Reviews",
+      "messages": "Customer Messages",
+      "customers": "Customer Management",
+      "ai_assistant": "AI Assistant",
+      "social": "Social Integration",
+      "reports": "Reports"
+    }
   }
 }

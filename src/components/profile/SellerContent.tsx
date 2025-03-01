@@ -6,10 +6,12 @@ import { useEffect } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTranslation } from "react-i18next";
 
 export const SellerContent = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchSellerProfile = async () => {
@@ -62,52 +64,52 @@ export const SellerContent = () => {
   return (
     <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
       <ProfileSection
-        title="Manage Shop"
+        title={t('profile.seller.manage_shop')}
         icon={Store}
         onClick={() => handleNavigation('/my-shop')}
       />
       <ProfileSection
-        title="Manage Products"
+        title={t('profile.seller.manage_products')}
         icon={Package}
         onClick={() => handleNavigation('/my-shop/products', 'Loading your products...')}
       />
       <ProfileSection
-        title="Analytics"
+        title={t('profile.seller.analytics')}
         icon={ChartBar}
         onClick={() => handleNavigation('/my-shop/analytics', 'Loading analytics...')}
       />
       <ProfileSection
-        title="Orders Management"
+        title={t('profile.seller.orders')}
         icon={Package}
         onClick={() => handleNavigation('/my-shop/orders', 'Loading orders...')}
       />
       <ProfileSection
-        title="Customer Reviews"
+        title={t('profile.seller.reviews')}
         icon={Star}
         onClick={() => handleNavigation('/my-shop/reviews')}
       />
       <ProfileSection
-        title="Customer Messages"
+        title={t('profile.seller.messages')}
         icon={MessageSquare}
         onClick={() => handleNavigation('/my-shop/messages')}
       />
       <ProfileSection
-        title="Customer Management"
+        title={t('profile.seller.customers')}
         icon={Users}
         onClick={() => handleNavigation('/my-shop/customers', 'Loading customer management...')}
       />
       <ProfileSection
-        title="AI Assistant"
+        title={t('profile.seller.ai_assistant')}
         icon={Bot}
         onClick={() => handleNavigation('/my-shop/ai-assistant')}
       />
       <ProfileSection
-        title="Social Integration"
+        title={t('profile.seller.social')}
         icon={Link}
         onClick={() => handleNavigation('/my-shop/social')}
       />
       <ProfileSection
-        title="Reports"
+        title={t('profile.seller.reports')}
         icon={FileText}
         onClick={() => handleNavigation('/my-shop/reports', 'Loading reports...')}
       />

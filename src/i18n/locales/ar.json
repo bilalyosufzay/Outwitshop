@@ -39,7 +39,18 @@
       "settings": "الإعدادات",
       "wishlist": "المفضلة",
       "orders": "الطلبات",
-      "language": "اللغة"
+      "language": "اللغة",
+      "edit_profile": "تعديل الملف الشخصي",
+      "account_status": "حالة الحساب",
+      "loyalty_level": "مستوى الولاء",
+      "seller_level": "مستوى البائع",
+      "buyer_level": "مستوى المشتري",
+      "preferences": "التفضيلات",
+      "quick_actions": "إجراءات سريعة",
+      "security": "الأمان",
+      "social_links": "روابط التواصل الاجتماعي",
+      "follower_count": "المتابعين",
+      "following_count": "المتابَعين"
     }
   },
   "notifications": {
@@ -54,5 +65,35 @@
     "enable_notifications": "تفعيل الإشعارات",
     "stay_updated": "احصل على تحديثات بشأن الطلبات والعروض والمزيد.",
     "enable_now": "تفعيل الآن"
+  },
+  "profile": {
+    "buyer": {
+      "auto_reorder": "إعادة طلب المستلزمات تلقائيًا",
+      "auto_reorder_desc": "إدارة مشترياتك المتكررة",
+      "price_alerts": "تنبيهات انخفاض السعر",
+      "price_alerts_desc": "تتبع الأسعار والحصول على إشعارات",
+      "orders": "الطلبات والتسوق",
+      "wishlist": "قائمة الرغبات",
+      "recently_viewed": "شوهدت مؤخرًا",
+      "addresses": "العناوين المحفوظة",
+      "payment_methods": "طرق الدفع",
+      "wallet": "المحفظة والمعاملات",
+      "rewards": "المكافآت والنقاط",
+      "account_settings": "إعدادات الحساب",
+      "security": "الأمان",
+      "help_center": "مركز المساعدة"
+    },
+    "seller": {
+      "manage_shop": "إدارة المتجر",
+      "manage_products": "إدارة المنتجات",
+      "analytics": "التحليلات",
+      "orders": "إدارة الطلبات",
+      "reviews": "تقييمات العملاء",
+      "messages": "رسائل العملاء",
+      "customers": "إدارة العملاء",
+      "ai_assistant": "المساعد الذكي",
+      "social": "تكامل التواصل الاجتماعي",
+      "reports": "التقارير"
+    }
   }
 }
