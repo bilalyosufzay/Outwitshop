@@ -473,14 +473,6 @@ const LuckyDraw = () => {
         <div className="flex justify-between items-center mb-4">
           <div className="flex-1"></div>
           <div className="flex gap-2">
-            <Button 
-              variant="outline" 
-              className="flex items-center gap-2" 
-              onClick={shareReferralLink}
-            >
-              <Share2 className="h-4 w-4" />
-              Share Referral
-            </Button>
             <Link to="/">
               <Button variant="outline" size="icon" className="rounded-full" title="Go to Home">
                 <Home className="h-5 w-5" />
