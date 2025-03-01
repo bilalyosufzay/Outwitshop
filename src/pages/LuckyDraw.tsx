@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import { Card, CardContent } from "@/components/ui/card";
@@ -473,11 +474,7 @@ const LuckyDraw = () => {
         <div className="flex justify-between items-center mb-4">
           <div className="flex-1"></div>
           <div className="flex gap-2">
-            <Link to="/">
-              <Button variant="outline" size="icon" className="rounded-full" title="Go to Home">
-                <Home className="h-5 w-5" />
-              </Button>
-            </Link>
+            {/* Home button removed from here */}
           </div>
         </div>
 
@@ -927,6 +924,18 @@ const LuckyDraw = () => {
           <Share2 className="h-5 w-5" />
           <span className="hidden sm:inline">Share Referral</span>
         </Button>
+
+        {/* New floating home button */}
+        <Link to="/">
+          <Button 
+            variant="outline" 
+            size="icon" 
+            className="fixed left-1/2 -translate-x-1/2 bottom-20 bg-white dark:bg-slate-800 rounded-full shadow-lg h-12 w-12 flex items-center justify-center"
+            title="Go to Home"
+          >
+            <Home className="h-5 w-5" />
+          </Button>
+        </Link>
       </div>
     </div>
   );
