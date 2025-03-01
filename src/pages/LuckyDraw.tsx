@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import { Card, CardContent } from "@/components/ui/card";
@@ -8,8 +7,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Gift, Trophy, Calendar, Clock, Tag, Share2, Heart, ArrowRight, ChevronLeft, ChevronRight, Filter, Star, Zap, ShoppingCart, MessageSquare, Users, Award, User, Check } from "lucide-react";
+import { Gift, Trophy, Calendar, Clock, Tag, Share2, Heart, ArrowRight, ChevronLeft, ChevronRight, Filter, Star, Zap, ShoppingCart, MessageSquare, Users, Award, User, Check, Home } from "lucide-react";
 import WelcomeDialog from "@/components/lucky-draw/WelcomeDialog";
+import { BackButton } from "@/components/BackButton";
+import { Link } from "react-router-dom";
 
 interface Prize {
   id: string;
@@ -291,7 +292,6 @@ const LuckyDraw = () => {
     setUpcomingCampaigns(campaigns.filter(c => c.status === "upcoming"));
     setEndedCampaigns(campaigns.filter(c => c.status === "ended"));
     
-    // Check if this is the first visit to the Lucky Draw page
     const hasVisitedLuckyDraw = localStorage.getItem('hasVisitedLuckyDraw');
     if (!hasVisitedLuckyDraw) {
       setShowWelcomeDialog(true);
@@ -442,6 +442,15 @@ const LuckyDraw = () => {
       />
       
       <div className="container mx-auto px-4 py-8 pb-20">
+        <div className="flex justify-between items-center mb-4">
+          <BackButton />
+          <Link to="/">
+            <Button variant="outline" size="icon" className="rounded-full" title="Go to Home">
+              <Home className="h-5 w-5" />
+            </Button>
+          </Link>
+        </div>
+
         <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold flex items-center gap-2">
@@ -742,7 +751,6 @@ const LuckyDraw = () => {
           <TabsContent value="campaign">
             {selectedCampaign ? (
               <div className="space-y-6">
-                {/* Campaign details and actions would go here */}
                 <Button
                   variant="outline"
                   className="mb-4" 
@@ -754,8 +762,6 @@ const LuckyDraw = () => {
                 
                 <h2 className="text-2xl font-bold">{selectedCampaign.name}</h2>
                 <p className="text-muted-foreground">{selectedCampaign.description}</p>
-                
-                {/* Additional campaign details would be shown here */}
               </div>
             ) : (
               <div className="text-center py-12">
