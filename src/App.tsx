@@ -23,6 +23,7 @@ import ResetPassword from "@/pages/auth/ResetPassword";
 import { useEffect } from "react";
 import ManageProducts from "@/pages/my-shop/products/ManageProducts";
 import AddProductForm from "@/pages/my-shop/products/AddProductForm";
+import ExternalProducts from "@/pages/ExternalProducts";
 
 function App() {
   useEffect(() => {
@@ -38,6 +39,7 @@ function App() {
           <Route path="/" element={<Index />} />
           <Route path="/welcome" element={<Welcome />} />
           <Route path="/products" element={<Products />} />
+          <Route path="/external-products" element={<ExternalProducts />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/search" element={<Search />} />
           <Route path="/notifications" element={<Notifications />} />

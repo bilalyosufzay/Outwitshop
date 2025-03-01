@@ -1,6 +1,5 @@
-
 import { Link, useLocation } from "react-router-dom";
-import { Home, Search, ShoppingCart, User, MessageSquare, Gift } from "lucide-react";
+import { Home, Search, ShoppingCart, User, MessageSquare, Gift, ShoppingBag, Heart, Globe } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const Navigation = () => {
@@ -75,6 +74,17 @@ const Navigation = () => {
       >
         <User className="h-5 w-5" />
         <span>Profile</span>
+      </Link>
+
+      <Link
+        to="/external-products"
+        className={cn(
+          "flex flex-col items-center text-xs gap-1",
+          isActive("/external-products") ? "text-primary" : "text-muted-foreground"
+        )}
+      >
+        <Globe className="h-5 w-5" />
+        <span>Global</span>
       </Link>
     </nav>
   );

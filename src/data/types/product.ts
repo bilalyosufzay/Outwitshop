@@ -15,4 +15,12 @@ export interface Product {
   trending?: boolean;
   onSale?: boolean;
   commissionRate?: number;
+  // New fields for external products
+  externalSource?: 'aliexpress' | 'shein' | 'otto' | null;
+  externalId?: string;
+  externalUrl?: string;
+  affiliate?: {
+    url: string;
+    commissionRate: number;
+  };
 }
