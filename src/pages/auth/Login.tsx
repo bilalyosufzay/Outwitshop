@@ -8,6 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useAuth } from "@/contexts/AuthContext";
 import { LogIn, Mail, Lock, Languages } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { BackButton } from "@/components/BackButton";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -43,6 +44,8 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-accent/10 to-background p-4 relative">
+      <BackButton />
+      
       <div className="absolute top-4 left-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
