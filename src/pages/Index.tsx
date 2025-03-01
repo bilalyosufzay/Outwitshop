@@ -7,9 +7,11 @@ import { FeaturedSection } from "@/components/FeaturedSection";
 import Navigation from "@/components/Navigation";
 import "../i18n/config";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const Index = () => {
   const [loadStage, setLoadStage] = useState(0);
+  const { i18n } = useTranslation();
   
   useEffect(() => {
     console.log("Index page loaded - Starting component rendering");
@@ -22,6 +24,17 @@ const Index = () => {
     
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    // Set RTL direction for Arabic and Persian languages
+    if (i18n.language === 'ar' || i18n.language === 'fa') {
+      document.documentElement.dir = 'rtl';
+      document.documentElement.lang = i18n.language;
+    } else {
+      document.documentElement.dir = 'ltr';
+      document.documentElement.lang = i18n.language;
+    }
+  }, [i18n.language]);
 
   return (
     <div className="min-h-screen bg-white text-gray-900 pb-20">

@@ -1,0 +1,45 @@
+
+{
+  "header": {
+    "notifications": "الإشعارات",
+    "menu": "القائمة"
+  },
+  "new_arrival": "وصل حديثاً",
+  "summer_collection": "مجموعة الصيف",
+  "shop_now": "تسوق الآن",
+  "trending": {
+    "title": "الرائج",
+    "hot": "شائع"
+  },
+  "flash_sale": {
+    "title": "تخفيضات سريعة",
+    "limited_time": "وقت محدود",
+    "ends_in": "ينتهي في"
+  },
+  "featured": {
+    "title": "منتجات مميزة",
+    "view_all": "عرض الكل"
+  },
+  "categories": {
+    "clothing": "ملابس",
+    "electronics": "إلكترونيات",
+    "home": "المنزل",
+    "beauty": "الجمال",
+    "sports": "رياضة",
+    "toys": "ألعاب",
+    "jewelry": "مجوهرات",
+    "automotive": "سيارات"
+  },
+  "auth": {
+    "login": "تسجيل الدخول",
+    "signup": "انشاء حساب",
+    "profile": {
+      "sign_out": "تسجيل الخروج",
+      "my_account": "حسابي",
+      "settings": "الإعدادات",
+      "wishlist": "المفضلة",
+      "orders": "الطلبات",
+      "language": "اللغة"
+    }
+  }
+}

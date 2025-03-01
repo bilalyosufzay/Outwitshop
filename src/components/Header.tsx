@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { CATEGORIES } from "@/data/categories";
+import { LanguageSelector } from "./LanguageSelector";
 
 export const Header = () => {
   const { t } = useTranslation();
@@ -30,6 +31,7 @@ export const Header = () => {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <LanguageSelector />
           <button className="p-2 rounded-full hover:bg-gray-100">
             <span className="sr-only">{t('header.notifications')}</span>
             <div className="relative">
@@ -77,4 +79,3 @@ export const Header = () => {
     </header>
   );
 };
-
