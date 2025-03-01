@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Product } from "@/data/types/product";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ExternalLink, Heart, Info } from "lucide-react";
+import { ExternalLink, Heart, Info, ShoppingCart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getLocalizedPrice } from "@/utils/localization";
 import { trackAffiliateClick } from "@/services/externalProductsService";
@@ -22,14 +22,21 @@ interface ExternalProductCardProps {
 
 const ExternalProductCard = ({ product, className }: ExternalProductCardProps) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isImageLoading, setIsImageLoading] = useState(true);
+  const [hasImageError, setHasImageError] = useState(false);
   
   // Function to handle click on affiliate link
   const handleClick = async () => {
     if (product.externalSource && product.externalId) {
-      trackAffiliateClick(product.externalId, product.externalSource);
-      toast.success("Opening external product page", {
-        description: "You'll be redirected to complete your purchase"
-      });
+      try {
+        await trackAffiliateClick(product.externalId, product.externalSource);
+        toast.success("Opening external product page", {
+          description: "You'll be redirected to complete your purchase"
+        });
+      } catch (error) {
+        console.error("Error tracking affiliate click:", error);
+        // Still allow the navigation to happen even if tracking fails
+      }
     }
   };
 
@@ -68,15 +75,31 @@ const ExternalProductCard = ({ product, className }: ExternalProductCardProps) =
     >
       {/* Image Section */}
       <div className="relative aspect-square overflow-hidden">
-        <img
-          src={images[currentImageIndex]}
-          alt={product.name}
-          className="object-cover w-full h-full transition-transform group-hover:scale-105"
-          onError={(e) => {
-            const target = e.target as HTMLImageElement;
-            target.src = "/placeholder.svg";
-          }}
-        />
+        {isImageLoading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-100 animate-pulse">
+            <ShoppingCart className="h-6 w-6 text-gray-400" />
+          </div>
+        )}
+        
+        {hasImageError ? (
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+            <span className="text-sm text-gray-500">Image unavailable</span>
+          </div>
+        ) : (
+          <img
+            src={images[currentImageIndex]}
+            alt={product.name}
+            className={cn(
+              "object-cover w-full h-full transition-transform group-hover:scale-105",
+              isImageLoading ? "opacity-0" : "opacity-100"
+            )}
+            onLoad={() => setIsImageLoading(false)}
+            onError={() => {
+              setIsImageLoading(false);
+              setHasImageError(true);
+            }}
+          />
+        )}
         
         {/* Source Badge */}
         <Badge 

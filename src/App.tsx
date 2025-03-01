@@ -81,7 +81,7 @@ function App() {
           
           <Route path="*" element={<NotFound />} />
         </Routes>
-        <Toaster />
+        <Toaster position="top-center" />
       </AuthProvider>
     </Router>
   );

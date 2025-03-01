@@ -15,7 +15,7 @@ export interface Product {
   trending?: boolean;
   onSale?: boolean;
   commissionRate?: number;
-  // New fields for external products
+  // External products fields
   externalSource?: 'aliexpress' | 'shein' | 'otto' | null;
   externalId?: string;
   externalUrl?: string;

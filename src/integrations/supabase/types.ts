@@ -33,6 +33,36 @@ export type Database = {
         }
         Relationships: []
       }
+      external_products: {
+        Row: {
+          affiliate_link: string
+          created_at: string | null
+          id: string
+          image: string
+          name: string
+          price: number
+          source: string
+        }
+        Insert: {
+          affiliate_link: string
+          created_at?: string | null
+          id?: string
+          image: string
+          name: string
+          price: number
+          source: string
+        }
+        Update: {
+          affiliate_link?: string
+          created_at?: string | null
+          id?: string
+          image?: string
+          name?: string
+          price?: number
+          source?: string
+        }
+        Relationships: []
+      }
       lucky_draw_campaigns: {
         Row: {
           config: Json | null
@@ -573,6 +603,7 @@ export type Database = {
       }
       products: {
         Row: {
+          affiliate_link: string | null
           category: string | null
           created_at: string | null
           description: string | null
@@ -585,6 +616,7 @@ export type Database = {
           shipping_info: Json | null
           shop_id: string
           sku: string | null
+          source: string | null
           specifications: Json[] | null
           status: string
           stock_quantity: number
@@ -594,6 +626,7 @@ export type Database = {
           weight: number | null
         }
         Insert: {
+          affiliate_link?: string | null
           category?: string | null
           created_at?: string | null
           description?: string | null
@@ -606,6 +639,7 @@ export type Database = {
           shipping_info?: Json | null
           shop_id: string
           sku?: string | null
+          source?: string | null
           specifications?: Json[] | null
           status?: string
           stock_quantity?: number
@@ -615,6 +649,7 @@ export type Database = {
           weight?: number | null
         }
         Update: {
+          affiliate_link?: string | null
           category?: string | null
           created_at?: string | null
           description?: string | null
@@ -627,6 +662,7 @@ export type Database = {
           shipping_info?: Json | null
           shop_id?: string
           sku?: string | null
+          source?: string | null
           specifications?: Json[] | null
           status?: string
           stock_quantity?: number

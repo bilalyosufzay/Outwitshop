@@ -50,29 +50,35 @@ export const searchExternalProducts = async (
       return [];
     }
 
+    if (!data || !Array.isArray(data)) {
+      console.error("Invalid response format from external products API");
+      return [];
+    }
+
     // Format the response to match our Product interface
     return data.map((item: any) => {
-      const source = item.source.toLowerCase();
+      const source = item.source?.toLowerCase() || 'unknown';
       const baseUrl = item.url || '';
+      const externalId = item.externalId || `${source}-${Date.now()}`;
       
       // Make product available only in Germany if it's from Otto
       const countryAvailability = source === 'otto' ? ['DE'] : undefined;
 
       return {
-        id: `${source}-${item.externalId}`,
-        name: item.title,
-        price: item.price,
-        originalPrice: item.originalPrice,
+        id: `${source}-${externalId}`,
+        name: item.title || 'Unknown Product',
+        price: Number(item.price) || 0,
+        originalPrice: item.originalPrice ? Number(item.originalPrice) : undefined,
         category: item.category || 'External Product',
-        image: item.image,
-        images: item.images || [item.image],
+        image: item.image || '/placeholder.svg',
+        images: item.images || [item.image || '/placeholder.svg'],
         description: item.description,
         externalSource: source,
-        externalId: item.externalId,
+        externalId: externalId,
         externalUrl: baseUrl,
         countryAvailability,
         affiliate: {
-          url: generateAffiliateUrl(baseUrl, source, item.externalId),
+          url: generateAffiliateUrl(baseUrl, source, externalId),
           commissionRate: 1.0 // 1% commission
         },
         commissionRate: 1.0 // 1% commission
@@ -110,30 +116,36 @@ export const getTrendingExternalProducts = async (
       return [];
     }
 
+    if (!data || !Array.isArray(data)) {
+      console.error("Invalid response format from trending external products API");
+      return [];
+    }
+
     // Format the response to match our Product interface
     return data.map((item: any) => {
-      const source = item.source.toLowerCase();
+      const source = item.source?.toLowerCase() || 'unknown';
       const baseUrl = item.url || '';
+      const externalId = item.externalId || `${source}-${Date.now()}`;
       
       // Make product available only in Germany if it's from Otto
       const countryAvailability = source === 'otto' ? ['DE'] : undefined;
 
       return {
-        id: `${source}-${item.externalId}`,
-        name: item.title,
-        price: item.price,
-        originalPrice: item.originalPrice,
+        id: `${source}-${externalId}`,
+        name: item.title || 'Unknown Product',
+        price: Number(item.price) || 0,
+        originalPrice: item.originalPrice ? Number(item.originalPrice) : undefined,
         category: item.category || 'External Product',
-        image: item.image,
-        images: item.images || [item.image],
+        image: item.image || '/placeholder.svg',
+        images: item.images || [item.image || '/placeholder.svg'],
         description: item.description,
         externalSource: source,
-        externalId: item.externalId,
+        externalId: externalId,
         externalUrl: baseUrl,
         countryAvailability,
         trending: true,
         affiliate: {
-          url: generateAffiliateUrl(baseUrl, source, item.externalId),
+          url: generateAffiliateUrl(baseUrl, source, externalId),
           commissionRate: 1.0 // 1% commission
         },
         commissionRate: 1.0 // 1% commission
@@ -163,5 +175,6 @@ export const trackAffiliateClick = async (
     console.log(`Tracked affiliate click for ${source} product: ${productId}`);
   } catch (error) {
     console.error("Error tracking affiliate click:", error);
+    // Just log the error, don't throw - this shouldn't block user experience
   }
 };
