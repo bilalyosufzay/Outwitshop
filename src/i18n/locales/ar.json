@@ -41,5 +41,18 @@
       "orders": "الطلبات",
       "language": "اللغة"
     }
+  },
+  "notifications": {
+    "enabled_success": "تم تفعيل الإشعارات!",
+    "will_receive_updates": "ستتلقى الآن تحديثات وعروض مهمة.",
+    "permission_denied": "تم رفض الإذن",
+    "enable_in_browser_settings": "يرجى تمكين الإشعارات في إعدادات المتصفح.",
+    "error": "حدث خطأ ما",
+    "try_again_later": "يرجى المحاولة مرة أخرى لاحقًا.",
+    "not_supported": "الإشعارات غير مدعومة",
+    "use_modern_browser": "يرجى استخدام متصفح حديث يدعم الإشعارات.",
+    "enable_notifications": "تفعيل الإشعارات",
+    "stay_updated": "احصل على تحديثات بشأن الطلبات والعروض والمزيد.",
+    "enable_now": "تفعيل الآن"
   }
 }

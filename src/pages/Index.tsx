@@ -8,6 +8,8 @@ import Navigation from "@/components/Navigation";
 import "../i18n/config";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { NotificationPermission } from "@/components/NotificationPermission";
+import notificationService from "@/services/notificationService";
 
 const Index = () => {
   const [loadStage, setLoadStage] = useState(0);
@@ -35,12 +37,24 @@ const Index = () => {
       document.documentElement.lang = i18n.language;
     }
   }, [i18n.language]);
+  
+  useEffect(() => {
+    // Initialize notifications if permission is already granted
+    if ('Notification' in window && Notification.permission === 'granted') {
+      // Get token and start listening for messages
+      notificationService.getToken();
+      notificationService.listenForMessages();
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-white text-gray-900 pb-20">
       <Header />
       
       <main className="container mx-auto px-4 py-6 space-y-8">
+        {/* Show notification permission banner */}
+        {loadStage >= 2 && <NotificationPermission />}
+        
         {loadStage >= 1 && (
           <>
             <HeroSection />

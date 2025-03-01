@@ -1,63 +1,57 @@
-
 {
   "header": {
     "notifications": "Notifications",
     "menu": "Menu"
   },
-  "navigation": {
-    "home": "Home",
-    "search": "Search",
-    "lucky_draw": "Lucky Draw",
-    "cart": "Cart",
-    "my_shop": "My Shop",
-    "profile": "Profile"
+  "new_arrival": "New Arrival",
+  "summer_collection": "Summer Collection",
+  "shop_now": "Shop Now",
+  "trending": {
+    "title": "Trending",
+    "hot": "Hot"
   },
-  "categories": {
-    "view_all": "View All",
-    "fashion": "Fashion",
-    "electronics": "Electronics",
-    "home": "Home",
-    "beauty": "Beauty",
-    "grocery": "Grocery",
-    "sports": "Sports",
-    "kids": "Kids",
-    "auto": "Auto",
-    "books": "Books",
-    "pets": "Pets"
+  "flash_sale": {
+    "title": "Flash Sale",
+    "limited_time": "Limited Time",
+    "ends_in": "Ends in"
   },
   "featured": {
     "title": "Featured Products",
     "view_all": "View All"
   },
-  "trending": {
-    "title": "Trending Now",
-    "hot": "Hot 🔥"
+  "categories": {
+    "clothing": "Clothing",
+    "electronics": "Electronics",
+    "home": "Home",
+    "beauty": "Beauty",
+    "sports": "Sports",
+    "toys": "Toys",
+    "jewelry": "Jewelry",
+    "automotive": "Automotive"
   },
-  "flash_sale": {
-    "title": "Flash Sale 🎉",
-    "subtitle": "Up to 50% off on selected items"
-  },
-  "shop_now": "Shop Now",
-  "new_arrival": "New Arrival",
-  "summer_collection": "Summer Collection",
   "auth": {
-    "create_account": "Create an account",
-    "join_today": "Join Outwit Shop today",
-    "email_address": "Email address",
-    "password": "Password",
-    "creating_account": "Creating account...",
-    "create_account_button": "Create account",
-    "already_have_account": "Already have an account?",
-    "sign_in": "Sign in",
-    "welcome_back": "Welcome back",
-    "please_sign_in": "Please sign in to your account",
-    "enter_email": "Enter your email",
-    "enter_password": "Enter your password",
-    "forgot_password": "Forgot password?",
-    "signing_in": "Signing in...",
-    "sign_in_button": "Sign in",
-    "dont_have_account": "Don't have an account?",
-    "sign_up": "Sign up",
-    "remember_me": "Remember me"
+    "login": "Login",
+    "signup": "Sign Up",
+    "profile": {
+      "sign_out": "Sign Out",
+      "my_account": "My Account",
+      "settings": "Settings",
+      "wishlist": "Wishlist",
+      "orders": "Orders",
+      "language": "Language"
+    }
+  },
+  "notifications": {
+    "enabled_success": "Notifications enabled!",
+    "will_receive_updates": "You'll now receive important updates and offers.",
+    "permission_denied": "Permission denied",
+    "enable_in_browser_settings": "Please enable notifications in your browser settings.",
+    "error": "Something went wrong",
+    "try_again_later": "Please try again later.",
+    "not_supported": "Notifications not supported",
+    "use_modern_browser": "Please use a modern browser that supports notifications.",
+    "enable_notifications": "Enable Notifications",
+    "stay_updated": "Get updates on orders, promotions, and more.",
+    "enable_now": "Enable Now"
   }
 }
