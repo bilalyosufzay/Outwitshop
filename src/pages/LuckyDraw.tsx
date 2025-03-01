@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Gift, Trophy, Calendar, Clock, Tag, Share2, Heart, ArrowRight, ChevronLeft, ChevronRight, Filter, Star, Zap, ShoppingCart, MessageSquare, Users, Award, User, Check, Home } from "lucide-react";
+import { Gift, Trophy, Calendar, Clock, Tag, Share2, Heart, ArrowRight, ChevronLeft, ChevronRight, Filter, Star, Zap, ShoppingCart, MessageSquare, Users, Award, User, Check, Home, Link as LinkIcon } from "lucide-react";
 import WelcomeDialog from "@/components/lucky-draw/WelcomeDialog";
 import { BackButton } from "@/components/BackButton";
 import { Link } from "react-router-dom";
@@ -286,6 +286,7 @@ const LuckyDraw = () => {
   const [showConfetti, setShowConfetti] = useState(false);
   const [showWinners, setShowWinners] = useState(false);
   const [showWelcomeDialog, setShowWelcomeDialog] = useState(false);
+  const [referralCode, setReferralCode] = useState("USER123");
 
   useEffect(() => {
     setActiveCampaigns(campaigns.filter(c => c.status === "active"));
@@ -432,6 +433,34 @@ const LuckyDraw = () => {
     );
   };
 
+  const shareReferralLink = () => {
+    const baseUrl = window.location.origin;
+    const referralUrl = `${baseUrl}/lucky-draw?ref=${referralCode}`;
+    
+    if (navigator.share) {
+      navigator.share({
+        title: "Join Lucky Draw and win prizes!",
+        text: "Use my referral link to enter the Lucky Draw and we both get extra entries!",
+        url: referralUrl,
+      }).catch(err => {
+        console.error("Error sharing:", err);
+        copyToClipboard(referralUrl);
+      });
+    } else {
+      copyToClipboard(referralUrl);
+    }
+  };
+  
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    
+    toast({
+      title: "Link Copied!",
+      description: "Referral link has been copied to clipboard. Share it with friends!",
+      duration: 3000,
+    });
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
       {showConfetti && <Confetti />}
@@ -444,11 +473,21 @@ const LuckyDraw = () => {
       <div className="container mx-auto px-4 py-8 pb-20">
         <div className="flex justify-between items-center mb-4">
           <BackButton />
-          <Link to="/">
-            <Button variant="outline" size="icon" className="rounded-full" title="Go to Home">
-              <Home className="h-5 w-5" />
+          <div className="flex gap-2">
+            <Button 
+              variant="outline" 
+              className="flex items-center gap-2" 
+              onClick={shareReferralLink}
+            >
+              <Share2 className="h-4 w-4" />
+              Share Referral
             </Button>
-          </Link>
+            <Link to="/">
+              <Button variant="outline" size="icon" className="rounded-full" title="Go to Home">
+                <Home className="h-5 w-5" />
+              </Button>
+            </Link>
+          </div>
         </div>
 
         <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
@@ -762,6 +801,34 @@ const LuckyDraw = () => {
                 
                 <h2 className="text-2xl font-bold">{selectedCampaign.name}</h2>
                 <p className="text-muted-foreground">{selectedCampaign.description}</p>
+                
+                <div className="flex items-center gap-4 mt-6">
+                  <Button 
+                    className="bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 transition-all"
+                    onClick={() => enterCampaign(selectedCampaign, 'direct')}
+                  >
+                    Enter Now
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                  
+                  <Button 
+                    variant="outline" 
+                    className="flex items-center gap-2" 
+                    onClick={() => shareCampaign(selectedCampaign)}
+                  >
+                    <Share2 className="h-4 w-4" />
+                    Share Campaign
+                  </Button>
+                  
+                  <Button 
+                    variant="outline" 
+                    className="flex items-center gap-2" 
+                    onClick={shareReferralLink}
+                  >
+                    <LinkIcon className="h-4 w-4" />
+                    Share Referral
+                  </Button>
+                </div>
               </div>
             ) : (
               <div className="text-center py-12">
@@ -776,7 +843,17 @@ const LuckyDraw = () => {
           
           <TabsContent value="winners">
             <div className="space-y-6">
-              <h2 className="text-2xl font-bold">Recent Winners</h2>
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold">Recent Winners</h2>
+                <Button 
+                  variant="outline" 
+                  className="flex items-center gap-2" 
+                  onClick={shareReferralLink}
+                >
+                  <Share2 className="h-4 w-4" />
+                  Share Referral
+                </Button>
+              </div>
               
               {endedCampaigns.filter(c => c.winners && c.winners.length > 0).length > 0 ? (
                 endedCampaigns
@@ -851,6 +928,14 @@ const LuckyDraw = () => {
             </div>
           </TabsContent>
         </Tabs>
+        
+        <Button
+          className="fixed right-4 bottom-20 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 rounded-full shadow-lg p-4 flex items-center gap-2"
+          onClick={shareReferralLink}
+        >
+          <Share2 className="h-5 w-5" />
+          <span className="hidden sm:inline">Share Referral</span>
+        </Button>
       </div>
     </div>
   );
