@@ -89,9 +89,11 @@ export const getImportedProducts = async (
   page: number = 1
 ) => {
   try {
+    // Handle the situation where the imported_marketplace_products table may not yet exist
+    // by using a type cast to any
     let query = supabase
-      .from('imported_marketplace_products')
-      .select('*')
+      .from('imported_marketplace_products' as any)
+      .select('*', { count: 'exact' })
       .order('last_updated', { ascending: false })
       .range((page - 1) * limit, page * limit - 1);
     
@@ -106,8 +108,8 @@ export const getImportedProducts = async (
     }
     
     return { 
-      products: data,
-      totalCount: count,
+      products: data || [],
+      totalCount: count || 0,
       page,
       limit
     };
@@ -122,7 +124,7 @@ export const getImportedProducts = async (
 export const removeImportedProduct = async (externalId: string) => {
   try {
     const { error } = await supabase
-      .from('imported_marketplace_products')
+      .from('imported_marketplace_products' as any)
       .delete()
       .eq('external_id', externalId);
     

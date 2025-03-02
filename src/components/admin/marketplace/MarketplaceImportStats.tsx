@@ -1,209 +1,280 @@
 
 import { useState, useEffect } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card } from "@/components/ui/card";
+import { RefreshCw, DownloadCloud, AlertCircle, Check, X } from "lucide-react";
+import { getMarketplaceAdminStats, triggerMarketplaceImport, triggerScheduledImports } from "@/services/external-products/importApi";
+import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { Loader, RefreshCw, ShoppingBag, ExternalLink, BarChart3, Tag } from "lucide-react";
+import { getAvailableMarketplaces } from "@/services/external-products/marketplaceUtils";
 import { toast } from "sonner";
-import { getMarketplaceAdminStats, triggerScheduledImports } from "@/services/externalProductsService";
 
-export function MarketplaceImportStats() {
-  const [stats, setStats] = useState<any>(null);
-  const [recentImports, setRecentImports] = useState<any[]>([]);
+type MarketplaceStats = {
+  marketplace: string;
+  productCount: number;
+  lastUpdated: string | null;
+  status: 'success' | 'pending' | 'error' | 'never';
+};
+
+type ImportStats = {
+  totalProducts: number;
+  lastImport: string | null;
+  marketplaces: MarketplaceStats[];
+  clicksTracked: number;
+  conversionRate: number;
+};
+
+const MarketplaceImportStats = () => {
+  const [stats, setStats] = useState<ImportStats | null>(null);
   const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-  const [importRunning, setImportRunning] = useState(false);
+  const [importing, setImporting] = useState(false);
+  const [selectedMarketplace, setSelectedMarketplace] = useState<string | null>(null);
 
-  // Load stats on component mount
-  useEffect(() => {
-    loadStats();
-  }, []);
-
-  // Function to load admin statistics
   const loadStats = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
       const data = await getMarketplaceAdminStats();
-      setStats(data.stats);
-      setRecentImports(data.recentImports);
+      setStats(data);
     } catch (error) {
       console.error("Failed to load marketplace stats:", error);
-      toast.error("Failed to load marketplace statistics");
     } finally {
       setLoading(false);
     }
   };
 
-  // Function to refresh statistics
-  const handleRefresh = async () => {
+  useEffect(() => {
+    loadStats();
+  }, []);
+
+  const handleTriggerImport = async (marketplace: string) => {
+    setSelectedMarketplace(marketplace);
+    setImporting(true);
     try {
-      setRefreshing(true);
-      await loadStats();
-      toast.success("Statistics refreshed");
+      const result = await triggerMarketplaceImport(marketplace);
+      if (result.success) {
+        toast.success(`Import for ${marketplace} completed successfully. Added ${result.count || 0} products.`);
+        await loadStats(); // Refresh stats
+      } else {
+        toast.error(result.message);
+      }
     } catch (error) {
-      // Error already handled in loadStats
+      console.error(`Error importing from ${marketplace}:`, error);
+      toast.error(`Failed to import from ${marketplace}`);
     } finally {
-      setRefreshing(false);
+      setImporting(false);
+      setSelectedMarketplace(null);
     }
   };
 
-  // Function to trigger imports
-  const handleRunImports = async () => {
+  const handleTriggerAllImports = async () => {
+    setImporting(true);
     try {
-      setImportRunning(true);
       const result = await triggerScheduledImports();
-      
       if (result.success) {
-        toast.success("Import process started", {
-          description: "It may take a few minutes to complete"
-        });
-        
-        // Set a timeout to refresh stats after 30 seconds
-        setTimeout(() => {
-          loadStats();
-        }, 30000);
+        toast.success("Scheduled imports completed successfully");
+        await loadStats(); // Refresh stats
       } else {
-        toast.error("Failed to start import process");
+        toast.error(result.message);
       }
     } catch (error) {
-      toast.error("Failed to run imports");
-      console.error("Import error:", error);
+      console.error("Error running scheduled imports:", error);
+      toast.error("Failed to run scheduled imports");
     } finally {
-      setImportRunning(false);
+      setImporting(false);
+    }
+  };
+
+  const formatLastUpdated = (lastUpdated: string | null) => {
+    if (!lastUpdated) return "Never";
+    
+    const date = new Date(lastUpdated);
+    return date.toLocaleString();
+  };
+
+  // Map status to badge variant
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'success':
+        return <Badge variant="outline" className="bg-green-100 text-green-800">Success</Badge>;
+      case 'pending':
+        return <Badge variant="outline" className="bg-yellow-100 text-yellow-800">Pending</Badge>;
+      case 'error':
+        return <Badge variant="destructive">Error</Badge>;
+      case 'never':
+      default:
+        return <Badge variant="outline" className="bg-gray-100">Never run</Badge>;
     }
   };
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-[400px]">
-        <Loader className="h-8 w-8 animate-spin text-muted-foreground" />
-        <span className="ml-2 text-muted-foreground">Loading marketplace statistics...</span>
+      <div className="p-6 bg-white rounded-lg shadow">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-semibold">Marketplace Imports</h2>
+          <Button variant="outline" disabled>
+            <RefreshCw className="mr-2 h-4 w-4" />
+            Refreshing...
+          </Button>
+        </div>
+        <div className="animate-pulse">
+          <div className="h-8 bg-gray-200 rounded mb-4 w-1/4"></div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div className="h-24 bg-gray-200 rounded"></div>
+            <div className="h-24 bg-gray-200 rounded"></div>
+            <div className="h-24 bg-gray-200 rounded"></div>
+          </div>
+          <div className="h-64 bg-gray-200 rounded"></div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Marketplace Import Dashboard</h2>
+    <div className="p-6 bg-white rounded-lg shadow">
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-xl font-semibold">Marketplace Imports</h2>
         <div className="flex gap-2">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={handleRefresh}
-            disabled={refreshing}
-          >
-            <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
-            Refresh
+          <Button variant="outline" onClick={loadStats} disabled={loading}>
+            <RefreshCw className="mr-2 h-4 w-4" />
+            Refresh Stats
           </Button>
           <Button 
-            variant="default" 
-            size="sm" 
-            onClick={handleRunImports}
-            disabled={importRunning}
+            variant="outline" 
+            onClick={handleTriggerAllImports} 
+            disabled={importing}
           >
-            <ShoppingBag className="h-4 w-4 mr-2" />
-            Run Imports
+            <DownloadCloud className="mr-2 h-4 w-4" />
+            Import All Marketplaces
           </Button>
         </div>
       </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {stats && stats.map((stat: any) => (
-          <Card key={stat.marketplace}>
-            <CardHeader className="pb-2">
-              <div className="flex justify-between items-start">
-                <CardTitle className="text-lg capitalize">{stat.marketplace}</CardTitle>
-                <Badge variant="outline">{stat.productCount} products</Badge>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground flex items-center">
-                    <ExternalLink className="h-3 w-3 mr-1" /> Clicks
-                  </span>
-                  <span className="font-medium">{stat.clicks}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground flex items-center">
-                    <Tag className="h-3 w-3 mr-1" /> Conversions
-                  </span>
-                  <span className="font-medium">{stat.conversions}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground flex items-center">
-                    <BarChart3 className="h-3 w-3 mr-1" /> Conversion Rate
-                  </span>
-                  <span className="font-medium">{stat.conversionRate.toFixed(1)}%</span>
-                </div>
-                <div className="flex justify-between text-sm pt-2 border-t">
-                  <span className="text-muted-foreground">Commission</span>
-                  <span className="font-medium">${stat.commission.toFixed(2)}</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Import Activity</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-auto max-h-[300px]">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b">
-                  <th className="text-left py-2 px-2">Date</th>
-                  <th className="text-left py-2 px-2">Status</th>
-                  <th className="text-left py-2 px-2">Marketplaces</th>
-                  <th className="text-left py-2 px-2">Details</th>
+      
+      {stats && (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <Card className="p-4">
+              <h3 className="text-sm font-medium text-gray-500 mb-1">Total Products</h3>
+              <p className="text-2xl font-bold">{stats.totalProducts.toLocaleString()}</p>
+              <p className="text-xs text-gray-500 mt-2">
+                Last import: {formatLastUpdated(stats.lastImport)}
+              </p>
+            </Card>
+            <Card className="p-4">
+              <h3 className="text-sm font-medium text-gray-500 mb-1">Clicks Tracked</h3>
+              <p className="text-2xl font-bold">{stats.clicksTracked.toLocaleString()}</p>
+            </Card>
+            <Card className="p-4">
+              <h3 className="text-sm font-medium text-gray-500 mb-1">Conversion Rate</h3>
+              <p className="text-2xl font-bold">{(stats.conversionRate * 100).toFixed(2)}%</p>
+            </Card>
+          </div>
+          
+          <h3 className="text-lg font-medium mb-4">Marketplace Status</h3>
+          <div className="border rounded-lg overflow-hidden">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Marketplace</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Products</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Updated</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
-              <tbody>
-                {recentImports.length === 0 ? (
-                  <tr>
-                    <td colSpan={4} className="text-center py-4 text-muted-foreground">
-                      No recent import activity found
+              <tbody className="bg-white divide-y divide-gray-200">
+                {stats.marketplaces.map((marketplace) => (
+                  <tr key={marketplace.marketplace}>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="font-medium">{marketplace.marketplace}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {marketplace.productCount.toLocaleString()}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {formatLastUpdated(marketplace.lastUpdated)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {getStatusBadge(marketplace.status)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <Button 
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => handleTriggerImport(marketplace.marketplace)}
+                        disabled={importing && selectedMarketplace === marketplace.marketplace}
+                      >
+                        {importing && selectedMarketplace === marketplace.marketplace ? (
+                          <>
+                            <RefreshCw className="mr-2 h-3 w-3 animate-spin" />
+                            Importing...
+                          </>
+                        ) : (
+                          <>
+                            <DownloadCloud className="mr-2 h-3 w-3" />
+                            Import
+                          </>
+                        )}
+                      </Button>
                     </td>
                   </tr>
-                ) : (
-                  recentImports.map((log: any) => (
-                    <tr key={log.id} className="border-b hover:bg-muted/30">
-                      <td className="py-2 px-2 text-sm">
-                        {new Date(log.created_at).toLocaleString()}
-                      </td>
-                      <td className="py-2 px-2">
-                        <Badge 
-                          variant={log.status === 'completed' ? 'success' : 
-                                  log.status === 'started' ? 'default' : 'destructive'}
-                        >
-                          {log.status}
-                        </Badge>
-                      </td>
-                      <td className="py-2 px-2 text-sm">
-                        {log.marketplaces.map((m: string) => (
-                          <Badge key={m} variant="outline" className="mr-1 capitalize">
-                            {m}
-                          </Badge>
-                        ))}
-                      </td>
-                      <td className="py-2 px-2 text-sm text-muted-foreground">
-                        {log.details}
-                      </td>
-                    </tr>
-                  ))
-                )}
+                ))}
+                
+                {/* Show all available marketplaces that aren't in stats yet */}
+                {getAvailableMarketplaces().filter(
+                  m => !stats.marketplaces.some(sm => sm.marketplace === m.id)
+                ).map(marketplace => (
+                  <tr key={marketplace.id} className="bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="font-medium">{marketplace.id}</div>
+                      <span className="text-xs text-gray-500">Not imported yet</span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">0</td>
+                    <td className="px-6 py-4 whitespace-nowrap">Never</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {getStatusBadge('never')}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <Button 
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => handleTriggerImport(marketplace.id)}
+                        disabled={importing && selectedMarketplace === marketplace.id}
+                      >
+                        {importing && selectedMarketplace === marketplace.id ? (
+                          <>
+                            <RefreshCw className="mr-2 h-3 w-3 animate-spin" />
+                            Importing...
+                          </>
+                        ) : (
+                          <>
+                            <DownloadCloud className="mr-2 h-3 w-3" />
+                            Import
+                          </>
+                        )}
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
-        </CardContent>
-      </Card>
+          
+          <div className="mt-8 bg-gray-50 p-4 rounded-lg border">
+            <div className="flex items-start">
+              <AlertCircle className="h-5 w-5 text-yellow-600 mr-2 mt-0.5" />
+              <div>
+                <h4 className="font-medium">Automated Imports</h4>
+                <p className="text-sm text-gray-600 mt-1">
+                  Products are automatically imported every 12 hours. You can also manually trigger
+                  imports for specific marketplaces using the buttons above.
+                </p>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
-}
+};
 
 export default MarketplaceImportStats;

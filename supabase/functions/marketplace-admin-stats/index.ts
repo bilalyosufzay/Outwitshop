@@ -1,119 +1,136 @@
 
-// marketplace-admin-stats/index.ts
-// This function provides statistics for the admin dashboard
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.48.1';
+import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.29.0";
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
+// Configure Supabase client
+const supabaseUrl = Deno.env.get("SUPABASE_URL") || "";
+const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
+const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-// Handle CORS preflight requests
-Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+serve(async (req) => {
+  // Handle CORS
+  if (req.method === "OPTIONS") {
+    return new Response(null, {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      },
+      status: 204,
+    });
   }
   
-  const supabaseUrl = Deno.env.get('SUPABASE_URL');
-  const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
-  
-  if (!supabaseUrl || !supabaseServiceKey) {
-    return new Response(
-      JSON.stringify({ error: 'Server misconfigured - missing Supabase credentials' }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
-    );
-  }
-  
-  const supabase = createClient(supabaseUrl, supabaseServiceKey);
-
   try {
-    // 1. Get product counts by marketplace
-    const { data: productStats, error: productError } = await supabase
-      .from('imported_marketplace_products')
-      .select('source, count(*)')
-      .group('source');
+    // Get total product count
+    const { count: totalProducts, error: countError } = await supabase
+      .from("imported_marketplace_products")
+      .select("*", { count: "exact", head: true });
+      
+    if (countError) {
+      console.error("Error counting products:", countError);
+      throw countError;
+    }
     
-    if (productError) throw productError;
+    // Get latest import date
+    const { data: latestImport, error: importError } = await supabase
+      .from("import_logs")
+      .select("created_at")
+      .eq("status", "completed")
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .single();
+      
+    // Get marketplace-specific stats
+    const { data: marketplaceData, error: marketplaceError } = await supabase
+      .from("imported_marketplace_products")
+      .select("source, count(*)")
+      .group("source");
+      
+    if (marketplaceError) {
+      console.error("Error getting marketplace stats:", marketplaceError);
+      throw marketplaceError;
+    }
     
-    // 2. Get click statistics by marketplace
-    const { data: clickStats, error: clickError } = await supabase
-      .from('affiliate_clicks')
-      .select('source, count(*)')
-      .group('source');
+    // Get latest update timestamp for each marketplace
+    const { data: lastUpdates, error: lastUpdateError } = await supabase
+      .from("imported_marketplace_products")
+      .select("source, max(last_updated) as last_updated")
+      .group("source");
+      
+    if (lastUpdateError) {
+      console.error("Error getting last updates:", lastUpdateError);
+      throw lastUpdateError;
+    }
     
-    if (clickError) throw clickError;
+    // Get affiliate click stats
+    const { count: clicksCount, error: clicksError } = await supabase
+      .from("affiliate_clicks")
+      .select("*", { count: "exact", head: true });
+      
+    if (clicksError) {
+      console.error("Error counting clicks:", clicksError);
+      throw clicksError;
+    }
     
-    // 3. Get conversion statistics
-    const { data: conversionStats, error: conversionError } = await supabase
-      .from('affiliate_clicks')
-      .select('source, count(*)')
-      .eq('converted', true)
-      .group('source');
+    // Get conversion stats
+    const { count: conversionsCount, error: conversionError } = await supabase
+      .from("affiliate_clicks")
+      .select("*", { count: "exact", head: true })
+      .eq("converted", true);
+      
+    if (conversionError) {
+      console.error("Error counting conversions:", conversionError);
+      throw conversionError;
+    }
     
-    if (conversionError) throw conversionError;
-    
-    // 4. Get recent import logs
-    const { data: importLogs, error: logsError } = await supabase
-      .from('import_logs')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .limit(10);
-    
-    if (logsError) throw logsError;
-    
-    // 5. Get commission earnings by marketplace
-    const { data: commissionStats, error: commissionError } = await supabase
-      .from('affiliate_clicks')
-      .select('source, sum(commission_amount)')
-      .eq('converted', true)
-      .group('source');
-    
-    if (commissionError) throw commissionError;
-    
-    // Calculate conversion rates and CTR
-    const clicksBySource = clickStats.reduce((acc, item) => {
-      acc[item.source] = parseInt(item.count);
-      return acc;
-    }, {});
-    
-    const conversionsBySource = conversionStats.reduce((acc, item) => {
-      acc[item.source] = parseInt(item.count);
-      return acc;
-    }, {});
-    
-    const conversionRates = Object.keys(clicksBySource).reduce((acc, source) => {
-      const clicks = clicksBySource[source] || 0;
-      const conversions = conversionsBySource[source] || 0;
-      acc[source] = clicks > 0 ? (conversions / clicks) * 100 : 0;
-      return acc;
-    }, {});
-    
-    // Combine all stats
-    const combinedStats = productStats.map(item => {
-      const source = item.source;
+    // Format marketplace stats with their last update times
+    const marketplaceStats = marketplaceData.map((marketplace) => {
+      const lastUpdate = lastUpdates.find(
+        (update) => update.source === marketplace.source
+      );
+      
       return {
-        marketplace: source,
-        productCount: parseInt(item.count),
-        clicks: clicksBySource[source] || 0,
-        conversions: conversionsBySource[source] || 0,
-        conversionRate: conversionRates[source] || 0,
-        commission: commissionStats.find(c => c.source === source)?.sum || 0
+        marketplace: marketplace.source,
+        productCount: marketplace.count,
+        lastUpdated: lastUpdate?.last_updated || null,
+        status: lastUpdate?.last_updated ? "success" : "never",
       };
     });
     
+    // Calculate conversion rate (default to 0 if no clicks)
+    const conversionRate = clicksCount ? (conversionsCount / clicksCount) : 0;
+    
     return new Response(
       JSON.stringify({
-        stats: combinedStats,
-        recentImports: importLogs,
-        lastUpdated: new Date().toISOString()
+        totalProducts: totalProducts || 0,
+        lastImport: latestImport?.created_at || null,
+        marketplaces: marketplaceStats,
+        clicksTracked: clicksCount || 0,
+        conversionRate: conversionRate,
       }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { 
+        status: 200, 
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        } 
+      }
     );
   } catch (error) {
-    console.error('Error fetching admin statistics:', error);
+    console.error("Error fetching marketplace admin stats:", error);
+    
     return new Response(
-      JSON.stringify({ error: error.message }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
+      JSON.stringify({
+        success: false,
+        message: `Failed to fetch marketplace stats: ${error.message}`,
+      }),
+      { 
+        status: 500, 
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        } 
+      }
     );
   }
 });
