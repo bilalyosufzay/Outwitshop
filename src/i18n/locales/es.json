@@ -4,16 +4,14 @@
     "notifications": "Notificaciones",
     "menu": "Menú"
   },
-  "navigation": {
-    "home": "Inicio",
-    "search": "Buscar",
-    "lucky_draw": "Sorteo",
-    "cart": "Carrito",
-    "my_shop": "Mi Tienda",
-    "profile": "Perfil",
-    "feeds": "Noticias",
-    "global": "Global"
-  },
+  "home": "Inicio",
+  "search": "Buscar",
+  "lucky_draw": "Sorteo",
+  "cart": "Carrito",
+  "my_shop": "Mi Tienda",
+  "profile": "Perfil",
+  "feeds": "Noticias",
+  "global": "Global",
   "categories": {
     "view_all": "Ver Todo",
     "fashion": "Moda",
@@ -38,6 +36,10 @@
   "flash_sale": {
     "title": "Oferta Relámpago 🎉",
     "subtitle": "Hasta 50% de descuento en artículos seleccionados"
+  },
+  "external_marketplace": {
+    "title": "Mercado Global",
+    "view_all": "Ver Todo"
   },
   "shop_now": "Comprar Ahora",
   "new_arrival": "Recién Llegados",

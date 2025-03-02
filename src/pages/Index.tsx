@@ -10,10 +10,16 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { NotificationPermission } from "@/components/NotificationPermission";
 import notificationService from "@/services/notificationService";
+import { getTrendingExternalProducts } from "@/services/externalProductsService";
+import ProductGrid from "@/components/external-products/ProductGrid";
+import { Product } from "@/data/types/product";
 
 const Index = () => {
   const [loadStage, setLoadStage] = useState(0);
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
+  const [externalProducts, setExternalProducts] = useState<Product[]>([]);
+  const [userCountry, setUserCountry] = useState("US");
+  const [loadingExternalProducts, setLoadingExternalProducts] = useState(true);
   
   useEffect(() => {
     console.log("Index page loaded - Starting component rendering");
@@ -47,6 +53,32 @@ const Index = () => {
     }
   }, []);
 
+  // Fetch trending external products
+  useEffect(() => {
+    const fetchExternalProducts = async () => {
+      try {
+        setLoadingExternalProducts(true);
+        // Get user country (could be expanded with geolocation API in the future)
+        // For now, we'll use a hardcoded value
+        const country = "US"; // Default country
+        setUserCountry(country);
+        
+        // Fetch trending products for this country
+        const products = await getTrendingExternalProducts(country, 8);
+        console.log(`Fetched ${products.length} trending external products`);
+        setExternalProducts(products);
+      } catch (error) {
+        console.error("Error fetching external products:", error);
+      } finally {
+        setLoadingExternalProducts(false);
+      }
+    };
+
+    if (loadStage >= 1) {
+      fetchExternalProducts();
+    }
+  }, [loadStage]);
+
   return (
     <div className="min-h-screen bg-white text-gray-900 pb-20">
       <Header />
@@ -62,6 +94,26 @@ const Index = () => {
               <>
                 <TrendingSection />
                 <FlashSaleSection />
+                
+                {/* External Marketplace Products Section */}
+                <section className="py-4">
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-2xl font-bold">
+                      {t("external_marketplace.title", "Global Marketplace")}
+                    </h2>
+                    <a href="/external-products" className="text-primary text-sm font-medium flex items-center">
+                      {t("external_marketplace.view_all", "View All")}
+                    </a>
+                  </div>
+                  
+                  <ProductGrid 
+                    products={externalProducts}
+                    loading={loadingExternalProducts}
+                    userCountry={userCountry}
+                    isTrending={true}
+                  />
+                </section>
+                
                 <FeaturedSection />
               </>
             )}
