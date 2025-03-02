@@ -26,3 +26,11 @@ export {
 export {
   mapExternalProductToProduct
 } from './external-products/productMappers';
+
+export {
+  triggerMarketplaceImport,
+  triggerScheduledImports,
+  getMarketplaceAdminStats,
+  getImportedProducts,
+  removeImportedProduct
+} from './external-products/importApi';
