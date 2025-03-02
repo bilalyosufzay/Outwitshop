@@ -70,11 +70,7 @@ const ExternalProducts = () => {
         setTrendingProducts(data);
       } catch (error) {
         console.error("Failed to load trending products:", error);
-        toast({
-          title: t("errors.trending_products", "Error loading trending products"),
-          description: t("errors.try_again", "Please try again later"),
-          variant: "destructive",
-        });
+        toast.error(t("errors.trending_products", "Error loading trending products"));
       } finally {
         setTrendingLoading(false);
       }
@@ -103,11 +99,7 @@ const ExternalProducts = () => {
       setProducts(results);
     } catch (error) {
       console.error("Search failed:", error);
-      toast({
-        title: t("errors.search_failed", "Search failed"),
-        description: t("errors.unable_to_fetch", "Unable to fetch products. Please try again."),
-        variant: "destructive",
-      });
+      toast.error(t("errors.search_failed", "Search failed"));
     } finally {
       setLoading(false);
     }

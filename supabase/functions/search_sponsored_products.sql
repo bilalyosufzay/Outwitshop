@@ -16,13 +16,21 @@ BEGIN
       'price', p.price,
       'category', p.category,
       'image', p.image,
-      'images', p.images
+      'images', p.images,
+      'description', p.description,
+      'externalSource', p.source,
+      'externalUrl', p.affiliate_link,
+      'currency', COALESCE(p.shipping_info->>'currency', 'USD')
     ) as products,
     sp.boost_level
   FROM sponsored_products sp
   JOIN products p ON p.id = sp.product_id
   WHERE sp.status = 'active'
-  AND p.name ILIKE '%' || search_query || '%'
+  AND (
+    p.name ILIKE '%' || search_query || '%' 
+    OR p.description ILIKE '%' || search_query || '%'
+    OR p.category ILIKE '%' || search_query || '%'
+  )
   ORDER BY sp.boost_level DESC;
 END;
 $$;

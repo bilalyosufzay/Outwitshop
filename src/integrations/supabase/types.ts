@@ -9,6 +9,42 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      affiliate_clicks: {
+        Row: {
+          clicked_at: string | null
+          commission_amount: number | null
+          converted: boolean | null
+          country: string
+          created_at: string | null
+          id: string
+          product_id: string
+          source: string
+          user_id: string | null
+        }
+        Insert: {
+          clicked_at?: string | null
+          commission_amount?: number | null
+          converted?: boolean | null
+          country?: string
+          created_at?: string | null
+          id?: string
+          product_id: string
+          source: string
+          user_id?: string | null
+        }
+        Update: {
+          clicked_at?: string | null
+          commission_amount?: number | null
+          converted?: boolean | null
+          country?: string
+          created_at?: string | null
+          id?: string
+          product_id?: string
+          source?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       chat_conversations: {
         Row: {
           created_at: string | null
