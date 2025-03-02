@@ -1,151 +1,184 @@
 
-// This is a Supabase Edge Function that searches for products from external sources
-// Supports AliExpress, Shein, and Otto
+import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
 
-import { corsHeaders } from '../_shared/cors.ts';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.38.4';
+// Configure CORS
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
 
-// Load environment variables
-const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
-const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
-const supabase = createClient(supabaseUrl, supabaseKey);
-
-// Mock APIs for now - in a real implementation, you would connect to actual APIs
-async function searchAliExpress(query: string): Promise<any[]> {
-  console.log(`Searching AliExpress for: ${query}`);
-  // Simulate API call
-  await new Promise(resolve => setTimeout(resolve, 500));
+// Mock data generator for search results from various sources
+const generateMockSearchResults = (query: string, country: string, sources: string[]) => {
+  // Make sure the query is a string
+  const searchQuery = String(query).toLowerCase();
   
-  // Generate 5 mock products
-  return Array.from({ length: 5 }, (_, i) => ({
-    title: `AliExpress: ${query} Product ${i+1}`,
-    price: Math.floor(Math.random() * 100) + 5,
-    originalPrice: Math.floor(Math.random() * 150) + 50,
-    image: `https://picsum.photos/seed/aliexpress-${query}-${i}/300/300`,
-    images: [
-      `https://picsum.photos/seed/aliexpress-${query}-${i}/300/300`,
-      `https://picsum.photos/seed/aliexpress-${query}-${i}-2/300/300`,
-    ],
-    category: ['Electronics', 'Fashion', 'Home', 'Beauty', 'Toys'][Math.floor(Math.random() * 5)],
-    description: `This is a great ${query} product from AliExpress with amazing features!`,
-    externalId: `ali-${Date.now()}-${i}`,
-    url: `https://www.aliexpress.com/item/${Date.now()}${i}.html`,
-    source: 'AliExpress'
-  }));
-}
+  // Define category pools for different marketplaces
+  const categoryPools = {
+    aliexpress: ['Electronics', 'Home & Garden', 'Fashion', 'Toys', 'Beauty'],
+    shein: ['Women\'s Clothing', 'Men\'s Clothing', 'Kids', 'Accessories', 'Home Décor'],
+    otto: ['Furniture', 'Appliances', 'Fashion', 'Electronics', 'Home'],
+    zalando: ['Shoes', 'Clothing', 'Sports', 'Accessories', 'Designer'],
+    harcoo: ['Luxury', 'Travel', 'Outdoors', 'Tech', 'Lifestyle'],
+    lounge: ['Premium Fashion', 'Designer', 'Exclusive', 'Limited Edition', 'Seasonal'],
+    flaconi: ['Perfume', 'Skincare', 'Makeup', 'Haircare', 'Wellness']
+  };
 
-async function searchShein(query: string): Promise<any[]> {
-  console.log(`Searching Shein for: ${query}`);
-  // Simulate API call
-  await new Promise(resolve => setTimeout(resolve, 300));
+  // Define price ranges for different marketplaces and countries
+  const priceRanges = {
+    aliexpress: { min: 5, max: 50 },
+    shein: { min: 8, max: 40 },
+    otto: { min: 20, max: 200 },
+    zalando: { min: 25, max: 150 },
+    harcoo: { min: 30, max: 300 },
+    lounge: { min: 40, max: 400 },
+    flaconi: { min: 15, max: 100 }
+  };
+
+  // Adjust prices based on country/currency
+  const priceMultipliers = {
+    US: 1.0,    // USD
+    CA: 1.35,   // CAD
+    UK: 0.8,    // GBP
+    DE: 0.9,    // EUR
+    FR: 0.9,    // EUR
+    SE: 10.5,   // SEK
+    TR: 30.0,   // TRY
+    AT: 0.9     // EUR
+  };
+
+  const searchResults = [];
+  const multiplier = priceMultipliers[country] || 1.0;
   
-  // Generate 5 mock products
-  return Array.from({ length: 5 }, (_, i) => ({
-    title: `SHEIN: ${query} Fashion Item ${i+1}`,
-    price: Math.floor(Math.random() * 40) + 10,
-    originalPrice: Math.floor(Math.random() * 60) + 30,
-    image: `https://picsum.photos/seed/shein-${query}-${i}/300/300`,
-    images: [
-      `https://picsum.photos/seed/shein-${query}-${i}/300/300`,
-      `https://picsum.photos/seed/shein-${query}-${i}-2/300/300`,
-    ],
-    category: ['Women', 'Men', 'Kids', 'Home', 'Beauty'][Math.floor(Math.random() * 5)],
-    description: `Trendy ${query} fashion item from SHEIN!`,
-    externalId: `shein-${Date.now()}-${i}`,
-    url: `https://www.shein.com/item-p-${Date.now()}${i}.html`,
-    source: 'Shein'
-  }));
-}
+  // Generate 5 results per source
+  for (const source of sources) {
+    const categories = categoryPools[source] || ['General'];
+    const priceRange = priceRanges[source] || { min: 10, max: 100 };
+    
+    // Generate between 3-8 results per source
+    const numResults = Math.floor(Math.random() * 5) + 3;
+    
+    for (let i = 0; i < numResults; i++) {
+      const category = categories[i % categories.length];
+      const price = (Math.random() * (priceRange.max - priceRange.min) + priceRange.min) * multiplier;
+      const hasDiscount = Math.random() > 0.6;
+      const originalPrice = hasDiscount ? price * (1 + Math.random() * 0.5) : undefined;
+      
+      // Generate mock product image URL
+      const imageId = Math.floor(Math.random() * 1000);
+      const productId = `${source}-${Date.now()}-${i}`;
+      
+      // Set shipping countries based on source
+      let shippingCountries;
+      if (source === 'otto') {
+        shippingCountries = ['DE', 'AT'];
+      } else if (source === 'zalando') {
+        shippingCountries = ['DE', 'AT', 'FR', 'UK', 'SE'];
+      } else if (source === 'harcoo' || source === 'lounge') {
+        shippingCountries = ['DE', 'UK', 'FR'];
+      } else if (source === 'flaconi') {
+        shippingCountries = ['DE', 'AT', 'FR'];
+      } else {
+        // Global marketplaces
+        shippingCountries = ['US', 'CA', 'UK', 'DE', 'FR', 'SE', 'TR', 'AT'];
+      }
+      
+      // Set language based on country
+      let language = 'en';
+      if (['DE', 'AT'].includes(country)) language = 'de';
+      if (country === 'FR') language = 'fr';
+      if (country === 'SE') language = 'sv';
+      if (country === 'TR') language = 'tr';
+      
+      searchResults.push({
+        title: `${searchQuery.toUpperCase()} ${source} ${category} Item ${i+1}`,
+        price: price.toFixed(2),
+        originalPrice: originalPrice?.toFixed(2),
+        category: category,
+        source: source,
+        externalId: productId,
+        url: `https://example.com/${source}/product/${productId}`,
+        image: `https://picsum.photos/seed/${imageId}/300/300`,
+        images: [
+          `https://picsum.photos/seed/${imageId}/300/300`,
+          `https://picsum.photos/seed/${imageId+1}/300/300`,
+          `https://picsum.photos/seed/${imageId+2}/300/300`
+        ],
+        description: `This is a product matching your search for "${searchQuery}" from ${source} in the ${category} category.`,
+        shippingCountries,
+        language
+      });
+    }
+  }
 
-async function searchOtto(query: string): Promise<any[]> {
-  console.log(`Searching Otto for: ${query}`);
-  // Simulate API call
-  await new Promise(resolve => setTimeout(resolve, 400));
-  
-  // Generate 5 mock products
-  return Array.from({ length: 5 }, (_, i) => ({
-    title: `OTTO: ${query} Premium Item ${i+1}`,
-    price: Math.floor(Math.random() * 150) + 50,
-    originalPrice: Math.floor(Math.random() * 200) + 100,
-    image: `https://picsum.photos/seed/otto-${query}-${i}/300/300`,
-    images: [
-      `https://picsum.photos/seed/otto-${query}-${i}/300/300`,
-      `https://picsum.photos/seed/otto-${query}-${i}-2/300/300`,
-    ],
-    category: ['Furniture', 'Fashion', 'Electronics', 'Home', 'Sports'][Math.floor(Math.random() * 5)],
-    description: `Premium ${query} item from OTTO Germany!`,
-    externalId: `otto-${Date.now()}-${i}`,
-    url: `https://www.otto.de/p/${Date.now()}${i}`,
-    source: 'Otto'
-  }));
-}
+  return searchResults;
+};
 
-// Handle requests to this function
-Deno.serve(async (req) => {
+serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { query, country, sources } = await req.json();
+    // Parse request body
+    const { query, country = 'US', sources = ['aliexpress', 'shein'] } = await req.json();
+    console.log(`Searching for: "${query}" in ${country}, sources: ${sources.join(', ')}`);
 
     if (!query) {
       return new Response(
-        JSON.stringify({ error: 'Query parameter is required' }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
+        JSON.stringify({ error: "Search query is required" }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
       );
     }
 
-    // Log search request
-    console.log(`External product search: "${query}" for country: ${country}, sources: ${sources.join(',')}`);
+    // Filter sources based on country availability
+    let availableSources = [...sources];
     
-    // Initialize results array
-    let results: any[] = [];
-    
-    // Search on each platform that's requested
-    const searchPromises: Promise<any[]>[] = [];
-    
-    if (sources.includes('aliexpress')) {
-      searchPromises.push(searchAliExpress(query));
+    // Otto is only available in Germany and Austria
+    if (!['DE', 'AT'].includes(country) && availableSources.includes('otto')) {
+      availableSources = availableSources.filter(source => source !== 'otto');
     }
     
-    if (sources.includes('shein')) {
-      searchPromises.push(searchShein(query));
+    // Zalando is available in specific European countries
+    if (!['DE', 'AT', 'FR', 'UK', 'SE'].includes(country) && availableSources.includes('zalando')) {
+      availableSources = availableSources.filter(source => source !== 'zalando');
     }
     
-    // Only include Otto for German customers
-    if (sources.includes('otto') && country === 'DE') {
-      searchPromises.push(searchOtto(query));
+    // Harcoo and Lounge are available in Germany, UK, and France
+    if (!['DE', 'UK', 'FR'].includes(country)) {
+      availableSources = availableSources.filter(source => 
+        source !== 'harcoo' && source !== 'lounge'
+      );
     }
     
-    // Wait for all searches to complete
-    const searchResults = await Promise.all(searchPromises);
-    
-    // Combine and shuffle results
-    results = searchResults.flat();
-    
-    // Shuffle results to mix different sources
-    results.sort(() => Math.random() - 0.5);
-    
-    // Track the search in the database
-    await supabase.from('external_product_searches').insert({
-      query,
-      country,
-      sources: sources,
-      results_count: results.length
-    });
+    // Flaconi is available in Germany, Austria, and France
+    if (!['DE', 'AT', 'FR'].includes(country) && availableSources.includes('flaconi')) {
+      availableSources = availableSources.filter(source => source !== 'flaconi');
+    }
+
+    // In a real implementation, you would make API calls to each marketplace
+    // For now, we'll generate mock data based on the query
+    const searchResults = generateMockSearchResults(query, country, availableSources);
 
     return new Response(
-      JSON.stringify(results),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      JSON.stringify(searchResults),
+      {
+        status: 200,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      }
     );
   } catch (error) {
-    console.error('Error processing request:', error);
+    console.error("Error searching external products:", error);
     
     return new Response(
-      JSON.stringify({ error: 'An error occurred while processing your request' }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
+      JSON.stringify({ error: "Failed to search external products" }),
+      {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      }
     );
   }
 });

@@ -10,7 +10,8 @@
     "lucky_draw": "Çekiliş",
     "cart": "Sepet",
     "my_shop": "Mağazam",
-    "profile": "Profil"
+    "profile": "Profil",
+    "global": "Global"
   },
   "categories": {
     "view_all": "Tümünü Gör",
@@ -40,6 +41,33 @@
   "shop_now": "Hemen Al",
   "new_arrival": "Yeni Gelenler",
   "summer_collection": "Yaz Koleksiyonu",
+  "external_products": {
+    "title": "Küresel Pazar",
+    "description": "AliExpress, Shein ve diğer platformlardan ürünleri doğrudan uygulamamız üzerinden satın alın!",
+    "select_country": "Ülke Seçin",
+    "search_placeholder": "Küresel ürünleri ara...",
+    "all_platforms": "Tüm Platformlar",
+    "search_results": "Arama Sonuçları",
+    "no_products": "Ürün bulunamadı",
+    "try_different_search": "Farklı bir arama terimi veya platform deneyin",
+    "trending_products": "Trend Ürünler",
+    "tax_included": "KDV Dahil",
+    "available_in": "Mevcut ülkeler",
+    "not_available": "Bölgenizde mevcut değil",
+    "redirecting": "Harici ürün sayfası açılıyor",
+    "redirect_description": "Alışverişinizi tamamlamak için yönlendirileceksiniz"
+  },
+  "errors": {
+    "trending_products": "Trend ürünler yüklenirken hata oluştu",
+    "try_again": "Lütfen daha sonra tekrar deneyin",
+    "search_failed": "Arama başarısız oldu",
+    "unable_to_fetch": "Ürünler getirilemedi. Lütfen tekrar deneyin."
+  },
+  "common": {
+    "search": "Ara",
+    "visit": "Ziyaret Et",
+    "image_unavailable": "Görsel mevcut değil"
+  },
   "auth": {
     "create_account": "Hesap Oluştur",
     "join_today": "Outwit Shop'a bugün katılın",

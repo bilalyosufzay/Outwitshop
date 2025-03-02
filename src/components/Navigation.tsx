@@ -2,10 +2,12 @@
 import { Link, useLocation } from "react-router-dom";
 import { Home, Search, ShoppingCart, User, MessageSquare, Gift, ShoppingBag, Heart, Globe } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 const Navigation = () => {
   const location = useLocation();
   const pathname = location.pathname;
+  const { t } = useTranslation();
 
   const isActive = (path: string) => pathname === path;
 
@@ -19,7 +21,7 @@ const Navigation = () => {
         )}
       >
         <Home className="h-5 w-5" />
-        <span>Home</span>
+        <span>{t("navigation.home")}</span>
       </Link>
 
       <Link
@@ -30,7 +32,7 @@ const Navigation = () => {
         )}
       >
         <MessageSquare className="h-5 w-5" />
-        <span>Feeds</span>
+        <span>{t("navigation.feeds", "Feeds")}</span>
       </Link>
 
       <Link
@@ -41,7 +43,7 @@ const Navigation = () => {
         )}
       >
         <Gift className="h-5 w-5" />
-        <span>Lucky Draw</span>
+        <span>{t("navigation.lucky_draw")}</span>
       </Link>
 
       <Link
@@ -52,7 +54,7 @@ const Navigation = () => {
         )}
       >
         <Search className="h-5 w-5" />
-        <span>Search</span>
+        <span>{t("navigation.search")}</span>
       </Link>
 
       <Link
@@ -63,7 +65,7 @@ const Navigation = () => {
         )}
       >
         <ShoppingCart className="h-5 w-5" />
-        <span>Cart</span>
+        <span>{t("navigation.cart")}</span>
       </Link>
 
       <Link
@@ -74,7 +76,7 @@ const Navigation = () => {
         )}
       >
         <User className="h-5 w-5" />
-        <span>Profile</span>
+        <span>{t("navigation.profile")}</span>
       </Link>
 
       <Link
@@ -85,7 +87,7 @@ const Navigation = () => {
         )}
       >
         <Globe className="h-5 w-5" />
-        <span>Global</span>
+        <span>{t("navigation.global", "Global")}</span>
       </Link>
     </nav>
   );

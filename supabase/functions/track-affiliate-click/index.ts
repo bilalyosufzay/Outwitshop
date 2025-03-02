@@ -1,59 +1,80 @@
 
-// This is a Supabase Edge Function to track affiliate clicks and commissions
+import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.7.1';
 
-import { corsHeaders } from '../_shared/cors.ts';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.38.4';
+// Configure CORS
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
 
-// Load environment variables
-const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
-const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
-const supabase = createClient(supabaseUrl, supabaseKey);
+// Create a Supabase client
+const supabaseClient = createClient(
+  Deno.env.get('SUPABASE_URL') ?? '',
+  Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+);
 
-// Handle requests to this function
-Deno.serve(async (req) => {
+serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { productId, source, userId, timestamp } = await req.json();
-    
-    // Validate required fields
+    // Get request data
+    const { productId, source, userId, country, timestamp } = await req.json();
+
     if (!productId || !source) {
       return new Response(
-        JSON.stringify({ error: 'Product ID and source are required' }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
+        JSON.stringify({ error: 'Missing required fields: productId and source are required' }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
       );
     }
-    
-    // Log click
-    console.log(`Tracking affiliate click: ${source} product ${productId} by user ${userId}`);
-    
-    // Insert click record into the database
-    const { error } = await supabase.from('affiliate_clicks').insert({
-      product_id: productId,
-      source: source,
-      user_id: userId || null,
-      clicked_at: timestamp || new Date().toISOString(),
-      commission_rate: 1.0 // 1% commission rate
-    });
-    
+
+    console.log(`Tracking affiliate click for ${source} product: ${productId}, user: ${userId}, country: ${country}`);
+
+    // Insert the affiliate click tracking data
+    const { data, error } = await supabaseClient
+      .from('affiliate_clicks')
+      .insert([
+        {
+          product_id: productId,
+          source,
+          user_id: userId || null,
+          country: country || 'US',
+          clicked_at: timestamp || new Date().toISOString(),
+        },
+      ]);
+
     if (error) {
-      console.error('Error recording affiliate click:', error);
-      throw error;
+      console.error('Error tracking affiliate click:', error);
+      return new Response(
+        JSON.stringify({ error: 'Failed to track affiliate click' }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
     }
-    
+
     return new Response(
-      JSON.stringify({ success: true }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      JSON.stringify({ success: true, message: 'Affiliate click tracked successfully' }),
+      {
+        status: 200,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      }
     );
   } catch (error) {
     console.error('Error processing request:', error);
-    
     return new Response(
-      JSON.stringify({ error: 'An error occurred while processing your request' }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
+      JSON.stringify({ error: 'Internal server error' }),
+      {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      }
     );
   }
 });

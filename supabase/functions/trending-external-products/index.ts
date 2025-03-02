@@ -1,142 +1,172 @@
 
-// Supabase Edge Function to fetch trending products from external e-commerce platforms
-// Supports AliExpress, Shein, and Otto
+import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
 
-import { corsHeaders } from '../_shared/cors.ts';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.38.4';
+// Configure CORS
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
 
-// Load environment variables
-const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
-const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
-const supabase = createClient(supabaseUrl, supabaseKey);
+// Mock data generator for trending products from various sources
+const generateMockTrendingProducts = (country: string, limit: number, sources: string[]) => {
+  // Define category pools for different marketplaces
+  const categoryPools = {
+    aliexpress: ['Electronics', 'Home & Garden', 'Fashion', 'Toys', 'Beauty'],
+    shein: ['Women\'s Clothing', 'Men\'s Clothing', 'Kids', 'Accessories', 'Home Décor'],
+    otto: ['Furniture', 'Appliances', 'Fashion', 'Electronics', 'Home'],
+    zalando: ['Shoes', 'Clothing', 'Sports', 'Accessories', 'Designer'],
+    harcoo: ['Luxury', 'Travel', 'Outdoors', 'Tech', 'Lifestyle'],
+    lounge: ['Premium Fashion', 'Designer', 'Exclusive', 'Limited Edition', 'Seasonal'],
+    flaconi: ['Perfume', 'Skincare', 'Makeup', 'Haircare', 'Wellness']
+  };
 
-// Mock function to get trending AliExpress products
-async function getTrendingAliExpressProducts(limit: number = 10): Promise<any[]> {
-  // Simulate API call
-  await new Promise(resolve => setTimeout(resolve, 300));
+  // Define price ranges for different marketplaces and countries
+  const priceRanges = {
+    aliexpress: { min: 5, max: 50 },
+    shein: { min: 8, max: 40 },
+    otto: { min: 20, max: 200 },
+    zalando: { min: 25, max: 150 },
+    harcoo: { min: 30, max: 300 },
+    lounge: { min: 40, max: 400 },
+    flaconi: { min: 15, max: 100 }
+  };
+
+  // Adjust prices based on country/currency
+  const priceMultipliers = {
+    US: 1.0,    // USD
+    CA: 1.35,   // CAD
+    UK: 0.8,    // GBP
+    DE: 0.9,    // EUR
+    FR: 0.9,    // EUR
+    SE: 10.5,   // SEK
+    TR: 30.0,   // TRY
+    AT: 0.9     // EUR
+  };
+
+  // Generate fake trending products
+  const trendingProducts = [];
+  const multiplier = priceMultipliers[country] || 1.0;
+
+  // Evenly distribute products across selected sources
+  const productsPerSource = Math.ceil(limit / sources.length);
   
-  // Generate mock trending products
-  return Array.from({ length: limit }, (_, i) => ({
-    title: `AliExpress Trending Item ${i+1}`,
-    price: Math.floor(Math.random() * 100) + 5,
-    originalPrice: Math.floor(Math.random() * 150) + 50,
-    image: `https://picsum.photos/seed/alitrend-${i}/300/300`,
-    images: [
-      `https://picsum.photos/seed/alitrend-${i}/300/300`,
-      `https://picsum.photos/seed/alitrend-${i}-2/300/300`,
-    ],
-    category: ['Electronics', 'Fashion', 'Home', 'Beauty', 'Toys'][Math.floor(Math.random() * 5)],
-    description: 'This is a trending product on AliExpress with amazing features!',
-    externalId: `alitrend-${Date.now()}-${i}`,
-    url: `https://www.aliexpress.com/item/${Date.now()}${i}.html`,
-    source: 'AliExpress'
-  }));
-}
+  for (const source of sources) {
+    const categories = categoryPools[source] || ['General'];
+    const priceRange = priceRanges[source] || { min: 10, max: 100 };
+    
+    for (let i = 0; i < productsPerSource; i++) {
+      if (trendingProducts.length >= limit) break;
+      
+      const price = (Math.random() * (priceRange.max - priceRange.min) + priceRange.min) * multiplier;
+      const hasDiscount = Math.random() > 0.7;
+      const originalPrice = hasDiscount ? price * (1 + Math.random() * 0.5) : undefined;
+      
+      // Generate mock product image URL - in production you'd use real URLs
+      const imageId = Math.floor(Math.random() * 1000);
+      const productId = `${source}-${Date.now()}-${i}`;
+      
+      // Set shipping countries based on source
+      let shippingCountries;
+      if (source === 'otto') {
+        shippingCountries = ['DE', 'AT'];
+      } else if (source === 'zalando') {
+        shippingCountries = ['DE', 'AT', 'FR', 'UK', 'SE'];
+      } else if (source === 'harcoo' || source === 'lounge') {
+        shippingCountries = ['DE', 'UK', 'FR'];
+      } else if (source === 'flaconi') {
+        shippingCountries = ['DE', 'AT', 'FR'];
+      } else {
+        // Global marketplaces
+        shippingCountries = ['US', 'CA', 'UK', 'DE', 'FR', 'SE', 'TR', 'AT'];
+      }
+      
+      // Set language based on country
+      let language = 'en';
+      if (['DE', 'AT'].includes(country)) language = 'de';
+      if (country === 'FR') language = 'fr';
+      if (country === 'SE') language = 'sv';
+      if (country === 'TR') language = 'tr';
+      
+      trendingProducts.push({
+        title: `Trending ${source} ${categories[i % categories.length]} Item ${i+1}`,
+        price: price.toFixed(2),
+        originalPrice: originalPrice?.toFixed(2),
+        category: categories[i % categories.length],
+        source: source,
+        externalId: productId,
+        url: `https://example.com/${source}/product/${productId}`,
+        image: `https://picsum.photos/seed/${imageId}/300/300`,
+        images: [
+          `https://picsum.photos/seed/${imageId}/300/300`,
+          `https://picsum.photos/seed/${imageId+1}/300/300`,
+          `https://picsum.photos/seed/${imageId+2}/300/300`
+        ],
+        description: `This is a trending product from ${source} in the ${categories[i % categories.length]} category.`,
+        shippingCountries,
+        language
+      });
+    }
+  }
 
-// Mock function to get trending Shein products
-async function getTrendingSheinProducts(limit: number = 10): Promise<any[]> {
-  // Simulate API call
-  await new Promise(resolve => setTimeout(resolve, 250));
-  
-  // Generate mock trending products
-  return Array.from({ length: limit }, (_, i) => ({
-    title: `SHEIN Trending Fashion ${i+1}`,
-    price: Math.floor(Math.random() * 40) + 10,
-    originalPrice: Math.floor(Math.random() * 60) + 30,
-    image: `https://picsum.photos/seed/sheintrend-${i}/300/300`,
-    images: [
-      `https://picsum.photos/seed/sheintrend-${i}/300/300`,
-      `https://picsum.photos/seed/sheintrend-${i}-2/300/300`,
-    ],
-    category: ['Women', 'Men', 'Kids', 'Home', 'Beauty'][Math.floor(Math.random() * 5)],
-    description: 'Trendy fashion item from SHEIN!',
-    externalId: `sheintrend-${Date.now()}-${i}`,
-    url: `https://www.shein.com/item-p-${Date.now()}${i}.html`,
-    source: 'Shein'
-  }));
-}
+  return trendingProducts;
+};
 
-// Mock function to get trending Otto products
-async function getTrendingOttoProducts(limit: number = 10): Promise<any[]> {
-  // Simulate API call
-  await new Promise(resolve => setTimeout(resolve, 350));
-  
-  // Generate mock trending products
-  return Array.from({ length: limit }, (_, i) => ({
-    title: `OTTO Premium Trending ${i+1}`,
-    price: Math.floor(Math.random() * 150) + 50,
-    originalPrice: Math.floor(Math.random() * 200) + 100,
-    image: `https://picsum.photos/seed/ottotrend-${i}/300/300`,
-    images: [
-      `https://picsum.photos/seed/ottotrend-${i}/300/300`,
-      `https://picsum.photos/seed/ottotrend-${i}-2/300/300`,
-    ],
-    category: ['Furniture', 'Fashion', 'Electronics', 'Home', 'Sports'][Math.floor(Math.random() * 5)],
-    description: 'Premium trending item from OTTO Germany!',
-    externalId: `ottotrend-${Date.now()}-${i}`,
-    url: `https://www.otto.de/p/${Date.now()}${i}`,
-    source: 'Otto'
-  }));
-}
-
-// Handle requests to this function
-Deno.serve(async (req) => {
+serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { country, limit = 12, sources = ['aliexpress', 'shein', 'otto'] } = await req.json();
+    // Parse request body
+    const { country = 'US', limit = 10, sources = ['aliexpress', 'shein'] } = await req.json();
+    console.log(`Fetching trending external products for ${country}, sources: ${sources.join(', ')}`);
+
+    // Filter sources based on country availability
+    let availableSources = [...sources];
     
-    // Determine how many products to fetch from each source
-    const sourcesCount = sources.length;
-    const itemsPerSource = Math.ceil(limit / sourcesCount);
-    
-    // Log request
-    console.log(`Fetching trending products for country: ${country}, limit: ${limit}, sources: ${sources.join(',')}`);
-    
-    // Initialize results array
-    let results: any[] = [];
-    
-    // Get trending products from each platform
-    const trendsPromises: Promise<any[]>[] = [];
-    
-    if (sources.includes('aliexpress')) {
-      trendsPromises.push(getTrendingAliExpressProducts(itemsPerSource));
+    // Otto is only available in Germany and Austria
+    if (!['DE', 'AT'].includes(country) && availableSources.includes('otto')) {
+      availableSources = availableSources.filter(source => source !== 'otto');
     }
     
-    if (sources.includes('shein')) {
-      trendsPromises.push(getTrendingSheinProducts(itemsPerSource));
+    // Zalando is available in specific European countries
+    if (!['DE', 'AT', 'FR', 'UK', 'SE'].includes(country) && availableSources.includes('zalando')) {
+      availableSources = availableSources.filter(source => source !== 'zalando');
     }
     
-    // Only include Otto for German customers
-    if (sources.includes('otto') && country === 'DE') {
-      trendsPromises.push(getTrendingOttoProducts(itemsPerSource));
+    // Harcoo and Lounge are available in Germany, UK, and France
+    if (!['DE', 'UK', 'FR'].includes(country)) {
+      availableSources = availableSources.filter(source => 
+        source !== 'harcoo' && source !== 'lounge'
+      );
     }
     
-    // Wait for all trends to complete
-    const trendsResults = await Promise.all(trendsPromises);
+    // Flaconi is available in Germany, Austria, and France
+    if (!['DE', 'AT', 'FR'].includes(country) && availableSources.includes('flaconi')) {
+      availableSources = availableSources.filter(source => source !== 'flaconi');
+    }
     
-    // Combine results from all sources
-    results = trendsResults.flat();
-    
-    // Shuffle results to mix different sources
-    results.sort(() => Math.random() - 0.5);
-    
-    // Limit to requested number of results
-    results = results.slice(0, limit);
-    
+    // In a real implementation, you would make API calls to each marketplace to get trending products
+    // For now, we'll generate mock data
+    const trendingProducts = generateMockTrendingProducts(country, limit, availableSources);
+
     return new Response(
-      JSON.stringify(results),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      JSON.stringify(trendingProducts),
+      {
+        status: 200,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      }
     );
   } catch (error) {
-    console.error('Error processing request:', error);
+    console.error("Error generating trending products:", error);
     
     return new Response(
-      JSON.stringify({ error: 'An error occurred while processing your request' }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
+      JSON.stringify({ error: "Failed to fetch trending products" }),
+      {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      }
     );
   }
 });

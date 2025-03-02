@@ -5,16 +5,24 @@ import Navigation from "@/components/Navigation";
 import ExternalProductCard from "@/components/ExternalProductCard";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Filter, ShoppingBag, Globe } from "lucide-react";
+import { Search, Filter, ShoppingBag, Globe, MapPin } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Product } from "@/data/types/product";
-import { searchExternalProducts, getTrendingExternalProducts } from "@/services/externalProductsService";
+import { 
+  searchExternalProducts, 
+  getTrendingExternalProducts,
+  getAvailableMarketplacesForCountry,
+  getSupportedCountries 
+} from "@/services/externalProductsService";
 import { useAuth } from "@/contexts/AuthContext";
 import { Separator } from "@/components/ui/separator";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { detectUserCountry, getTaxDisplayText } from "@/utils/localization";
+import { useTranslation } from "react-i18next";
+import { Header } from "@/components/Header";
 
 const ExternalProducts = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -23,22 +31,38 @@ const ExternalProducts = () => {
   const [trendingProducts, setTrendingProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const [trendingLoading, setTrendingLoading] = useState(true);
-  const [country, setCountry] = useState("US");
+  const [country, setCountry] = useState("");
   const { user } = useAuth();
-  const { toast } = useToast();
+  const { t, i18n } = useTranslation();
   const location = useLocation();
 
-  // Get user country from query parameter or default to "US"
+  // Get available marketplaces for selected country
+  const availableMarketplaces = getAvailableMarketplacesForCountry(country);
+  const supportedCountries = getSupportedCountries();
+
+  // Initialize country based on URL param or browser detection
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const countryParam = params.get("country");
+    
     if (countryParam) {
       setCountry(countryParam.toUpperCase());
+    } else {
+      // Auto-detect country if not specified
+      const detectedCountry = detectUserCountry();
+      setCountry(detectedCountry);
+      
+      // Update URL
+      const url = new URL(window.location.href);
+      url.searchParams.set("country", detectedCountry);
+      window.history.replaceState({}, "", url);
     }
   }, [location]);
 
-  // Load trending products on mount
+  // Load trending products when country changes
   useEffect(() => {
+    if (!country) return;
+    
     const loadTrendingProducts = async () => {
       setTrendingLoading(true);
       try {
@@ -47,8 +71,8 @@ const ExternalProducts = () => {
       } catch (error) {
         console.error("Failed to load trending products:", error);
         toast({
-          title: "Error loading trending products",
-          description: "Please try again later",
+          title: t("errors.trending_products", "Error loading trending products"),
+          description: t("errors.try_again", "Please try again later"),
           variant: "destructive",
         });
       } finally {
@@ -57,7 +81,7 @@ const ExternalProducts = () => {
     };
 
     loadTrendingProducts();
-  }, [country, toast]);
+  }, [country, t]);
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) return;
@@ -65,14 +89,14 @@ const ExternalProducts = () => {
     setLoading(true);
     try {
       // Define which sources to search based on the active tab
-      let sources = ['aliexpress', 'shein', 'otto'];
-      if (activeTab === 'aliexpress') sources = ['aliexpress'];
-      if (activeTab === 'shein') sources = ['shein'];
-      if (activeTab === 'otto') sources = ['otto'];
+      let sources: string[] = [];
       
-      // Don't include Otto for non-German users
-      if (country !== 'DE' && sources.includes('otto')) {
-        sources = sources.filter(s => s !== 'otto');
+      if (activeTab === 'all') {
+        // Use all available marketplaces for this country
+        sources = availableMarketplaces.map(m => m.id);
+      } else {
+        // Use selected marketplace
+        sources = [activeTab];
       }
       
       const results = await searchExternalProducts(searchQuery, country, sources);
@@ -80,8 +104,8 @@ const ExternalProducts = () => {
     } catch (error) {
       console.error("Search failed:", error);
       toast({
-        title: "Search failed",
-        description: "Unable to fetch products. Please try again.",
+        title: t("errors.search_failed", "Search failed"),
+        description: t("errors.unable_to_fetch", "Unable to fetch products. Please try again."),
         variant: "destructive",
       });
     } finally {
@@ -103,45 +127,53 @@ const ExternalProducts = () => {
     const url = new URL(window.location.href);
     url.searchParams.set("country", value);
     window.history.pushState({}, "", url);
+    
+    // Reset active tab to "all" when changing country
+    setActiveTab("all");
   };
+
+  // Get tax display text
+  const taxInfo = getTaxDisplayText(country);
 
   return (
     <div className="min-h-screen bg-background pb-20">
+      <Header />
       <div className="container mx-auto px-4 py-4">
         <div className="flex flex-col space-y-4 mb-6">
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <Globe className="h-6 w-6 text-primary" />
-            Global Marketplace
+            {t("external_products.title", "Global Marketplace")}
           </h1>
           <p className="text-muted-foreground">
-            Shop products from AliExpress, Shein, and Otto (Germany only) directly through our app!
+            {t("external_products.description", "Shop products from global marketplaces directly through our app!")}
           </p>
           
-          <div className="flex items-center gap-2">
-            <Select value={country} onValueChange={handleCountryChange}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select Country" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="US">United States</SelectItem>
-                <SelectItem value="DE">Germany</SelectItem>
-                <SelectItem value="UK">United Kingdom</SelectItem>
-                <SelectItem value="FR">France</SelectItem>
-                <SelectItem value="CA">Canada</SelectItem>
-                <SelectItem value="AU">Australia</SelectItem>
-              </SelectContent>
-            </Select>
-            {country !== 'DE' && (
-              <p className="text-xs text-muted-foreground">
-                Note: Otto products are only available in Germany
-              </p>
-            )}
+          <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+            <div className="flex items-center gap-2">
+              <MapPin className="h-4 w-4 text-muted-foreground" />
+              <Select value={country} onValueChange={handleCountryChange}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder={t("external_products.select_country", "Select Country")} />
+                </SelectTrigger>
+                <SelectContent>
+                  {supportedCountries.map((country) => (
+                    <SelectItem key={country.code} value={country.code}>
+                      {country.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <p className="text-xs text-muted-foreground">
+              {taxInfo}
+            </p>
           </div>
           
           <div className="relative flex gap-2">
             <Input
               type="search"
-              placeholder="Search global products..."
+              placeholder={t("external_products.search_placeholder", "Search global products...")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
@@ -149,18 +181,20 @@ const ExternalProducts = () => {
             />
             <Button onClick={handleSearch}>
               <Search className="h-4 w-4 mr-2" />
-              Search
+              {t("common.search", "Search")}
             </Button>
           </div>
           
           <Tabs value={activeTab} onValueChange={handleTabChange}>
             <TabsList className="w-full justify-start overflow-x-auto">
-              <TabsTrigger value="all">All Platforms</TabsTrigger>
-              <TabsTrigger value="aliexpress">AliExpress</TabsTrigger>
-              <TabsTrigger value="shein">Shein</TabsTrigger>
-              {country === 'DE' && (
-                <TabsTrigger value="otto">Otto</TabsTrigger>
-              )}
+              <TabsTrigger value="all">{t("external_products.all_platforms", "All Platforms")}</TabsTrigger>
+              
+              {/* Dynamically generate tabs based on available marketplaces */}
+              {availableMarketplaces.map((marketplace) => (
+                <TabsTrigger key={marketplace.id} value={marketplace.id}>
+                  {marketplace.name}
+                </TabsTrigger>
+              ))}
             </TabsList>
           </Tabs>
         </div>
@@ -181,19 +215,27 @@ const ExternalProducts = () => {
             {/* Search Results */}
             {products.length > 0 ? (
               <div>
-                <h2 className="text-lg font-semibold mb-4">Search Results</h2>
+                <h2 className="text-lg font-semibold mb-4">
+                  {t("external_products.search_results", "Search Results")}
+                </h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {products.map((product) => (
-                    <ExternalProductCard key={product.id} product={product} />
+                    <ExternalProductCard 
+                      key={product.id} 
+                      product={product} 
+                      userCountry={country}
+                    />
                   ))}
                 </div>
               </div>
             ) : searchQuery ? (
               <div className="text-center py-10">
                 <ShoppingBag className="h-12 w-12 mx-auto text-muted-foreground mb-2" />
-                <h3 className="text-lg font-medium">No products found</h3>
+                <h3 className="text-lg font-medium">
+                  {t("external_products.no_products", "No products found")}
+                </h3>
                 <p className="text-muted-foreground">
-                  Try a different search term or platform
+                  {t("external_products.try_different_search", "Try a different search term or platform")}
                 </p>
               </div>
             ) : null}
@@ -201,7 +243,9 @@ const ExternalProducts = () => {
             {/* Trending Products Section */}
             {!searchQuery && (
               <div className="mt-8">
-                <h2 className="text-lg font-semibold mb-4">Trending Products</h2>
+                <h2 className="text-lg font-semibold mb-4">
+                  {t("external_products.trending_products", "Trending Products")}
+                </h2>
                 {trendingLoading ? (
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {[...Array(8)].map((_, i) => (
@@ -211,7 +255,11 @@ const ExternalProducts = () => {
                 ) : (
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {trendingProducts.map((product) => (
-                      <ExternalProductCard key={product.id} product={product} />
+                      <ExternalProductCard 
+                        key={product.id} 
+                        product={product} 
+                        userCountry={country}
+                      />
                     ))}
                   </div>
                 )}

@@ -10,7 +10,8 @@
     "lucky_draw": "Gewinnspiel",
     "cart": "Warenkorb",
     "my_shop": "Mein Shop",
-    "profile": "Profil"
+    "profile": "Profil",
+    "global": "Global"
   },
   "categories": {
     "view_all": "Alle anzeigen",
@@ -40,6 +41,33 @@
   "shop_now": "Jetzt kaufen",
   "new_arrival": "Neu eingetroffen",
   "summer_collection": "Sommerkollektion",
+  "external_products": {
+    "title": "Globaler Marktplatz",
+    "description": "Kaufen Sie Produkte von AliExpress, Shein, Otto und anderen direkt über unsere App!",
+    "select_country": "Land auswählen",
+    "search_placeholder": "Globale Produkte suchen...",
+    "all_platforms": "Alle Plattformen",
+    "search_results": "Suchergebnisse",
+    "no_products": "Keine Produkte gefunden",
+    "try_different_search": "Versuchen Sie einen anderen Suchbegriff oder eine andere Plattform",
+    "trending_products": "Trendprodukte",
+    "tax_included": "Inkl. MwSt.",
+    "available_in": "Verfügbar in",
+    "not_available": "Nicht verfügbar in Ihrer Region",
+    "redirecting": "Externe Produktseite wird geöffnet",
+    "redirect_description": "Sie werden zur Durchführung Ihres Kaufs weitergeleitet"
+  },
+  "errors": {
+    "trending_products": "Fehler beim Laden der Trendprodukte",
+    "try_again": "Bitte versuchen Sie es später erneut",
+    "search_failed": "Suche fehlgeschlagen",
+    "unable_to_fetch": "Produkte konnten nicht abgerufen werden. Bitte versuchen Sie es erneut."
+  },
+  "common": {
+    "search": "Suchen",
+    "visit": "Besuchen",
+    "image_unavailable": "Bild nicht verfügbar"
+  },
   "auth": {
     "create_account": "Konto erstellen",
     "join_today": "Heute bei Outwit Shop beitreten",
