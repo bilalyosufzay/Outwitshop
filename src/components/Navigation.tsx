@@ -1,94 +1,65 @@
 
 import { Link, useLocation } from "react-router-dom";
-import { Home, Search, ShoppingCart, User, MessageSquare, Gift, ShoppingBag, Heart, Globe } from "lucide-react";
+import { Home, Search, ShoppingCart, User, MessageSquare, Gift, Globe } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
+import { useEffect, useState } from "react";
 
 const Navigation = () => {
   const location = useLocation();
   const pathname = location.pathname;
   const { t } = useTranslation();
+  const [showAll, setShowAll] = useState(false);
+  
+  // Detect screen width to determine if all navigation items should be shown
+  useEffect(() => {
+    const handleResize = () => {
+      setShowAll(window.innerWidth > 640);
+    };
+    
+    handleResize(); // Check on initial load
+    window.addEventListener('resize', handleResize);
+    
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const isActive = (path: string) => pathname === path;
 
+  // Primary navigation items that are always shown
+  const primaryNavItems = [
+    { path: "/", icon: <Home className="h-5 w-5" />, label: t("navigation.home") },
+    { path: "/search", icon: <Search className="h-5 w-5" />, label: t("navigation.search") },
+    { path: "/cart", icon: <ShoppingCart className="h-5 w-5" />, label: t("navigation.cart") },
+    { path: "/profile", icon: <User className="h-5 w-5" />, label: t("navigation.profile") },
+  ];
+  
+  // Secondary navigation items that are shown based on screen width
+  const secondaryNavItems = [
+    { path: "/feeds", icon: <MessageSquare className="h-5 w-5" />, label: t("navigation.feeds") },
+    { path: "/lucky-draw", icon: <Gift className="h-5 w-5" />, label: t("navigation.lucky_draw") },
+    { path: "/external-products", icon: <Globe className="h-5 w-5" />, label: t("navigation.global") },
+  ];
+  
+  // Determine which items to display based on screen width
+  const displayItems = showAll 
+    ? [...primaryNavItems, ...secondaryNavItems]
+    : primaryNavItems;
+
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-white border-t h-16 flex items-center justify-around px-4 z-50">
-      <Link
-        to="/"
-        className={cn(
-          "flex flex-col items-center text-xs gap-1",
-          isActive("/") ? "text-primary" : "text-muted-foreground"
-        )}
-      >
-        <Home className="h-5 w-5" />
-        <span>{t("navigation.home")}</span>
-      </Link>
-
-      <Link
-        to="/feeds"
-        className={cn(
-          "flex flex-col items-center text-xs gap-1",
-          isActive("/feeds") ? "text-primary" : "text-muted-foreground"
-        )}
-      >
-        <MessageSquare className="h-5 w-5" />
-        <span>{t("navigation.feeds", "Feeds")}</span>
-      </Link>
-
-      <Link
-        to="/lucky-draw"
-        className={cn(
-          "flex flex-col items-center text-xs gap-1",
-          isActive("/lucky-draw") ? "text-primary" : "text-muted-foreground"
-        )}
-      >
-        <Gift className="h-5 w-5" />
-        <span>{t("navigation.lucky_draw")}</span>
-      </Link>
-
-      <Link
-        to="/search"
-        className={cn(
-          "flex flex-col items-center text-xs gap-1",
-          isActive("/search") ? "text-primary" : "text-muted-foreground"
-        )}
-      >
-        <Search className="h-5 w-5" />
-        <span>{t("navigation.search")}</span>
-      </Link>
-
-      <Link
-        to="/cart"
-        className={cn(
-          "flex flex-col items-center text-xs gap-1",
-          isActive("/cart") ? "text-primary" : "text-muted-foreground"
-        )}
-      >
-        <ShoppingCart className="h-5 w-5" />
-        <span>{t("navigation.cart")}</span>
-      </Link>
-
-      <Link
-        to="/profile"
-        className={cn(
-          "flex flex-col items-center text-xs gap-1",
-          isActive("/profile") ? "text-primary" : "text-muted-foreground"
-        )}
-      >
-        <User className="h-5 w-5" />
-        <span>{t("navigation.profile")}</span>
-      </Link>
-
-      <Link
-        to="/external-products"
-        className={cn(
-          "flex flex-col items-center text-xs gap-1",
-          isActive("/external-products") ? "text-primary" : "text-muted-foreground"
-        )}
-      >
-        <Globe className="h-5 w-5" />
-        <span>{t("navigation.global", "Global")}</span>
-      </Link>
+      {displayItems.map((item) => (
+        <Link
+          key={item.path}
+          to={item.path}
+          className={cn(
+            "flex flex-col items-center text-xs gap-1",
+            isActive(item.path) ? "text-primary" : "text-muted-foreground"
+          )}
+        >
+          {item.icon}
+          <span>{item.label}</span>
+        </Link>
+      ))}
     </nav>
   );
 };

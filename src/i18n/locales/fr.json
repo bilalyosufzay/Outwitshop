@@ -1,4 +1,3 @@
-
 {
   "header": {
     "notifications": "Notifications",
@@ -10,7 +9,9 @@
     "lucky_draw": "Tirage au Sort",
     "cart": "Panier",
     "my_shop": "Ma Boutique",
-    "profile": "Profil"
+    "profile": "Profil",
+    "feeds": "Actualités",
+    "global": "Mondial"
   },
   "categories": {
     "view_all": "Voir tout",
