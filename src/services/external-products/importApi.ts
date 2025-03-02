@@ -26,7 +26,7 @@ export const triggerMarketplaceImport = async (
       message: data.message,
       count: data.count
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error triggering marketplace import:", error);
     toast.error(`Failed to import from ${marketplace}`);
     return {
@@ -53,7 +53,7 @@ export const triggerScheduledImports = async (): Promise<{success: boolean, mess
       success: true,
       message: data.message
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error triggering scheduled imports:", error);
     toast.error("Failed to run scheduled imports");
     return {
@@ -75,7 +75,7 @@ export const getMarketplaceAdminStats = async () => {
     }
     
     return data;
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error fetching marketplace admin stats:", error);
     toast.error("Failed to load marketplace statistics");
     throw error;
@@ -113,7 +113,7 @@ export const getImportedProducts = async (
       page,
       limit
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error fetching imported products:", error);
     toast.error("Failed to load imported products");
     throw error;
@@ -134,7 +134,7 @@ export const removeImportedProduct = async (externalId: string) => {
     
     toast.success("Product removed successfully");
     return true;
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error removing imported product:", error);
     toast.error("Failed to remove product");
     throw error;

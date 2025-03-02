@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { RefreshCw, DownloadCloud, AlertCircle, Check, X } from "lucide-react";
+import { RefreshCw, DownloadCloud, AlertCircle } from "lucide-react";
 import { getMarketplaceAdminStats, triggerMarketplaceImport, triggerScheduledImports } from "@/services/external-products/importApi";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
@@ -278,3 +278,4 @@ const MarketplaceImportStats = () => {
 };
 
 export default MarketplaceImportStats;
+
