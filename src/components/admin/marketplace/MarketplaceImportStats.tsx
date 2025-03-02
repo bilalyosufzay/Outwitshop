@@ -6,7 +6,7 @@ import { RefreshCw, DownloadCloud, AlertCircle } from "lucide-react";
 import { getMarketplaceAdminStats, triggerMarketplaceImport, triggerScheduledImports } from "@/services/external-products/importApi";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { getAvailableMarketplaces } from "@/services/external-products/marketplaceUtils";
+import { getAvailableMarketplacesForCountry } from "@/services/external-products/marketplaceUtils";
 import { toast } from "sonner";
 
 type MarketplaceStats = {
@@ -220,7 +220,7 @@ const MarketplaceImportStats = () => {
                 ))}
                 
                 {/* Show all available marketplaces that aren't in stats yet */}
-                {getAvailableMarketplaces().filter(
+                {getAvailableMarketplacesForCountry('US').filter(
                   m => !stats.marketplaces.some(sm => sm.marketplace === m.id)
                 ).map(marketplace => (
                   <tr key={marketplace.id} className="bg-gray-50">
@@ -278,4 +278,3 @@ const MarketplaceImportStats = () => {
 };
 
 export default MarketplaceImportStats;
-
