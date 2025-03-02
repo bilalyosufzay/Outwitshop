@@ -2,19 +2,26 @@
 import { trackAffiliateClick } from "@/services/external-products/trackingApi";
 import { toast } from "sonner";
 
+interface SiteInfo {
+  siteName: string;
+  siteUrl: string;
+}
+
 // Export the handleAffiliateClick function
 export const handleAffiliateClick = async (
   externalId: string,
   externalSource: string,
   userCountry: string,
   t: (key: string, fallback: string) => string,
-  userId?: string
+  userId?: string,
+  siteInfo?: SiteInfo
 ) => {
   try {
     await trackAffiliateClick(
       externalId, 
       externalSource, 
-      userCountry
+      userCountry,
+      siteInfo
     );
     
     toast.success(t("external_products.redirecting", "Opening external product page"), {

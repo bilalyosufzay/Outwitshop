@@ -1,11 +1,17 @@
 
 import { supabase } from "@/integrations/supabase/client";
 
+interface SiteInfo {
+  siteName: string;
+  siteUrl: string;
+}
+
 // Track affiliate link clicks
 export const trackAffiliateClick = async (
   externalId: string, 
   source: string, 
-  country: string = 'US'
+  country: string = 'US',
+  siteInfo?: SiteInfo
 ): Promise<void> => {
   try {
     // Call the function to track the click
@@ -13,7 +19,11 @@ export const trackAffiliateClick = async (
       body: { 
         externalId,
         source,
-        country
+        country,
+        siteInfo: siteInfo || {
+          siteName: 'Outwit Shop',
+          siteUrl: window.location.origin
+        }
       }
     });
     

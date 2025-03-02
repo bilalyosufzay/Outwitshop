@@ -25,12 +25,18 @@ export const generateAffiliateUrl = (
   try {
     const urlObj = new URL(url);
     
+    // Get site information
+    const siteName = 'Outwit Shop';
+    const siteUrl = window.location.origin;
+    
     // Add appropriate parameters based on marketplace
     switch (marketplace.toLowerCase()) {
       case 'aliexpress':
-        // Example: ?aff_id=outwitshop&product_id={productId}
+        // Example: ?aff_id=outwitshop&product_id={productId}&site_name={siteName}&site_url={siteUrl}
         urlObj.searchParams.append('aff_id', 'outwitshop');
         urlObj.searchParams.append('product_id', externalId);
+        urlObj.searchParams.append('site_name', siteName);
+        urlObj.searchParams.append('site_url', encodeURIComponent(siteUrl));
         break;
         
       case 'shein':

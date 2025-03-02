@@ -49,7 +49,13 @@ const AffiliateLink = ({
     try {
       // Track affiliate click and show a toast notification
       if (externalId) {
-        await handleAffiliateClick(externalId, externalSource, userCountry, t);
+        // Pass the site information for AliExpress affiliates
+        const siteInfo = externalSource === 'aliexpress' ? {
+          siteName: 'Outwit Shop',
+          siteUrl: window.location.origin
+        } : undefined;
+        
+        await handleAffiliateClick(externalId, externalSource, userCountry, t, undefined, siteInfo);
       }
       
       // Open the URL in a new tab
