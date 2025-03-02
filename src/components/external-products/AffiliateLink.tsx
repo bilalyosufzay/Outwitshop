@@ -1,19 +1,17 @@
 
 import { Button } from "@/components/ui/button";
+import { ExternalLink, ShoppingBag } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { trackAffiliateClick } from "@/services/external-products/trackingApi";
-import { trackClick, handleAffiliateClick } from "./card-utils/trackClick";
-import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
-import { useAuth } from "@/contexts/AuthContext";
+import { cn } from "@/lib/utils";
+import { handleAffiliateClick, trackClick } from "./card-utils/trackClick";
 
 interface AffiliateLinkProps {
   productId: string;
   productName: string;
-  externalSource?: string | null;
-  externalId?: string | null;
+  externalSource?: string;
+  externalId?: string;
   affiliateUrl?: string | null;
-  externalUrl?: string | null;
+  externalUrl?: string;
   userCountry: string;
   isAvailableInUserCountry: boolean;
 }
@@ -21,79 +19,68 @@ interface AffiliateLinkProps {
 const AffiliateLink = ({
   productId,
   productName,
-  externalSource,
-  externalId,
+  externalSource = 'unknown',
+  externalId = '',
   affiliateUrl,
   externalUrl,
   userCountry,
   isAvailableInUserCountry
 }: AffiliateLinkProps) => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const { user } = useAuth();
 
-  const handleClick = async (e: React.MouseEvent) => {
-    e.preventDefault();
+  // This handles what happens when the user clicks on the product
+  const handleClick = async () => {
+    // Track this click for analytics
+    trackClick(productId, externalSource);
     
-    console.log("AffiliateLink clicked:", {
-      affiliateUrl,
-      externalUrl,
-      productId,
-      externalSource
-    });
-    
-    // First, track the click for analytics
-    trackClick(productId, externalSource || "unknown");
-    
-    // If product is not available in user's country, show message
-    if (!isAvailableInUserCountry) {
-      toast.error(t("errors.product_not_available_in_country", "This product is not available in your country"));
+    // If there's no valid URL or product is not available, don't proceed
+    if ((!affiliateUrl && !externalUrl) || !isAvailableInUserCountry) {
+      console.log(`Product ${productId} has no valid URL or is not available in ${userCountry}`);
       return;
     }
     
-    // Then handle the actual link behavior
-    if (affiliateUrl) {
-      // Handle affiliate click tracking and navigation
-      if (externalId && externalSource) {
-        await handleAffiliateClick(
-          externalId,
-          externalSource,
-          userCountry,
-          t,
-          user?.id
-        );
+    // Use the affiliate URL if available, otherwise use the external URL
+    const url = affiliateUrl || externalUrl;
+    if (!url) {
+      console.error(`No URL available for product ${productId}`);
+      return;
+    }
+    
+    try {
+      // Track affiliate click and show a toast notification
+      if (externalId) {
+        await handleAffiliateClick(externalId, externalSource, userCountry, t);
       }
       
-      // Check if it's a mobile device - could expand with more sophisticated detection
-      const isMobile = window.innerWidth <= 768;
-      
-      if (isMobile) {
-        // For mobile, open directly in new tab
-        window.open(affiliateUrl, "_blank", "noopener,noreferrer");
-      } else {
-        // For desktop, we can do the same or redirect
-        window.open(affiliateUrl, "_blank", "noopener,noreferrer");
-      }
-    } else if (externalUrl) {
-      // If no affiliate link but we have the external URL, use that instead
-      window.open(externalUrl, "_blank", "noopener,noreferrer");
-    } else {
-      // As a fallback, navigate to the external products page
-      navigate("/external-products");
+      // Open the URL in a new tab
+      window.open(url, '_blank', 'noopener,noreferrer');
+    } catch (error) {
+      console.error("Error opening affiliate link:", error);
     }
   };
 
   return (
-    <div className="mt-auto pt-2">
-      <Button 
-        onClick={handleClick}
-        variant="default" 
-        className="w-full rounded-md hover:text-white transition-colors"
-        disabled={!isAvailableInUserCountry}
-      >
-        {isAvailableInUserCountry ? t("shop_now", "Shop Now") : t("errors.not_available", "Not Available")}
-      </Button>
-    </div>
+    <Button 
+      onClick={handleClick}
+      className={cn(
+        "w-full mt-2 flex items-center gap-2",
+        !isAvailableInUserCountry && "opacity-50 cursor-not-allowed"
+      )}
+      variant="default"
+      disabled={!isAvailableInUserCountry || (!affiliateUrl && !externalUrl)}
+    >
+      {isAvailableInUserCountry ? (
+        <>
+          <ShoppingBag className="h-4 w-4" />
+          {t("external_products.view_product", "View product")}
+          <ExternalLink className="h-3 w-3 ml-auto" />
+        </>
+      ) : (
+        <>
+          {t("external_products.not_available_button", "Not available")}
+        </>
+      )}
+    </Button>
   );
 };
 

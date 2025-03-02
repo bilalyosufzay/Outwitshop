@@ -20,6 +20,10 @@ export const mapExternalProductToProduct = (item: any, country: string): Product
     countryAvailability = ['DE', 'UK'];
   } else if (source === 'flaconi') {
     countryAvailability = ['DE', 'FR', 'AT'];
+  } else if (source === 'aliexpress') {
+    countryAvailability = ['US', 'UK', 'DE', 'FR', 'ES', 'IT', 'NL', 'PL', 'TR', 'RU', 'BR', 'SE'];
+  } else if (source === 'shein') {
+    countryAvailability = ['US', 'UK', 'DE', 'FR', 'ES', 'IT', 'AU', 'CA', 'RU', 'BR', 'MX', 'AE'];
   }
   
   // Get currency and tax info
@@ -51,8 +55,8 @@ export const mapExternalProductToProduct = (item: any, country: string): Product
     ...(item.trending && { trending: true }),
     affiliate: {
       url: affiliateUrl,
-      commissionRate: 1.0 // 1% commission
+      commissionRate: item.commissionRate || 1.0 // Default 1% commission or use provided rate
     },
-    commissionRate: 1.0 // 1% commission
+    commissionRate: item.commissionRate || 1.0 // 1% commission
   };
 };

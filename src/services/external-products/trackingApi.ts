@@ -1,44 +1,30 @@
 
 import { supabase } from "@/integrations/supabase/client";
 
-/**
- * Track when a user clicks on an affiliate link
- * Stores the click in the database for analytics and commission tracking
- */
+// Track affiliate link clicks
 export const trackAffiliateClick = async (
-  externalId: string,
-  externalSource: string,
-  country: string = 'US',
-  userId?: string
+  externalId: string, 
+  source: string, 
+  country: string = 'US'
 ): Promise<void> => {
   try {
-    console.log(`Tracking affiliate click: ${externalId} from ${externalSource} in ${country}`);
-    
-    // Record this click in the database
-    await supabase.from('affiliate_clicks').insert({
-      user_id: userId,
-      product_id: externalId,
-      source: externalSource,
-      country: country
-    });
-    
-    // Call Edge Function if needed for additional processing (uncomment if using edge function)
-    /*
+    // Call the function to track the click
     const { error } = await supabase.functions.invoke('track-affiliate-click', {
       body: { 
-        productId: externalId,
-        country,
-        source: externalSource,
-        userId
+        externalId,
+        source,
+        country
       }
     });
     
     if (error) {
-      console.error('Error calling track-affiliate-click function:', error);
+      console.error("Error tracking affiliate click:", error);
     }
-    */
     
-  } catch (error) {
-    console.error('Error tracking affiliate click:', error);
+    // Log client-side for debugging
+    console.log(`Tracking affiliate click: ${source} product ${externalId} in ${country}`);
+    
+  } catch (err) {
+    console.error("Failed to track affiliate click:", err);
   }
 };

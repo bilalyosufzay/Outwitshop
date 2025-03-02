@@ -37,11 +37,29 @@
   },
   "flash_sale": {
     "title": "Oferta Relámpago 🎉",
-    "subtitle": "Hasta 50% de descuento en artículos seleccionados"
+    "subtitle": "Hasta 50% de descuento en artículos seleccionados",
+    "limited_time": "Tiempo Limitado",
+    "ends_in": "Termina en"
   },
   "external_marketplace": {
     "title": "Mercado Global",
     "view_all": "Ver Todo"
+  },
+  "external_products": {
+    "view_product": "Ver Producto",
+    "not_available_button": "No Disponible",
+    "redirecting": "Abriendo página externa",
+    "redirect_description": "Serás redirigido para completar tu compra",
+    "tax_included": "Impuesto Incl.",
+    "not_available": "No disponible en tu región",
+    "available_in": "Disponible en",
+    "no_products": "No se encontraron productos",
+    "try_different_search": "Prueba con otro término o plataforma",
+    "search_results": "Resultados de Búsqueda",
+    "trending_products": "Productos Populares",
+    "global_marketplace": "Mercado Global",
+    "country_selector": "Seleccionar País",
+    "change_country": "Cambiar País"
   },
   "shop_now": "Comprar Ahora",
   "new_arrival": "Recién Llegados",
@@ -69,5 +87,12 @@
       "sign_out": "Cerrar sesión",
       "sign_out_confirm": "¿Estás seguro de que quieres cerrar sesión?"
     }
+  },
+  "common": {
+    "image_unavailable": "Imagen no disponible"
+  },
+  "errors": {
+    "trending_products": "Error al cargar productos populares",
+    "search_failed": "Búsqueda fallida"
   }
 }

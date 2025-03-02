@@ -40,14 +40,36 @@ export const generateAffiliateUrl = (
         break;
         
       case 'otto':
+        // Otto specific affiliate parameters
+        urlObj.searchParams.append('partner', 'outwitshop');
+        urlObj.searchParams.append('campaignId', 'otto-marketplace');
+        urlObj.searchParams.append('id', externalId);
+        break;
+        
       case 'zalando':
-      case 'harcoo':
-      case 'lounge':
-      case 'flaconi':
-        // General affiliate pattern
+        // Zalando specific affiliate parameters
         urlObj.searchParams.append('partner', 'outwitshop');
         urlObj.searchParams.append('source', 'marketplace');
         urlObj.searchParams.append('id', externalId);
+        break;
+        
+      case 'harcoo':
+        // Harcoo specific affiliate parameters
+        urlObj.searchParams.append('ref', 'outwitshop');
+        urlObj.searchParams.append('pid', externalId);
+        break;
+        
+      case 'lounge':
+        // Lounge by Zalando specific parameters
+        urlObj.searchParams.append('partner', 'outwitshop');
+        urlObj.searchParams.append('campaign', 'lounge-marketplace');
+        urlObj.searchParams.append('id', externalId);
+        break;
+        
+      case 'flaconi':
+        // Flaconi specific parameters
+        urlObj.searchParams.append('ref', 'outwitshop');
+        urlObj.searchParams.append('product', externalId);
         break;
         
       default:

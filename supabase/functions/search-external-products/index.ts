@@ -1,184 +1,274 @@
 
-import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.7.1'
+import { corsHeaders } from '../_shared/cors.ts'
 
-// Configure CORS
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
+const supabaseUrl = Deno.env.get('SUPABASE_URL')
+const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')
+const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
 
-// Mock data generator for search results from various sources
-const generateMockSearchResults = (query: string, country: string, sources: string[]) => {
-  // Make sure the query is a string
-  const searchQuery = String(query).toLowerCase();
-  
-  // Define category pools for different marketplaces
-  const categoryPools = {
-    aliexpress: ['Electronics', 'Home & Garden', 'Fashion', 'Toys', 'Beauty'],
-    shein: ['Women\'s Clothing', 'Men\'s Clothing', 'Kids', 'Accessories', 'Home Décor'],
-    otto: ['Furniture', 'Appliances', 'Fashion', 'Electronics', 'Home'],
-    zalando: ['Shoes', 'Clothing', 'Sports', 'Accessories', 'Designer'],
-    harcoo: ['Luxury', 'Travel', 'Outdoors', 'Tech', 'Lifestyle'],
-    lounge: ['Premium Fashion', 'Designer', 'Exclusive', 'Limited Edition', 'Seasonal'],
-    flaconi: ['Perfume', 'Skincare', 'Makeup', 'Haircare', 'Wellness']
-  };
+const marketplaceApiKeys = {
+  aliexpress: Deno.env.get('ALIEXPRESS_API_KEY') || '',
+  shein: Deno.env.get('SHEIN_API_KEY') || '',
+  otto: Deno.env.get('OTTO_API_KEY') || '',
+  zalando: Deno.env.get('ZALANDO_API_KEY') || '',
+  harcoo: Deno.env.get('HARCOO_API_KEY') || '',
+  lounge: Deno.env.get('LOUNGE_API_KEY') || '',
+  flaconi: Deno.env.get('FLACONI_API_KEY') || '',
+}
 
-  // Define price ranges for different marketplaces and countries
-  const priceRanges = {
-    aliexpress: { min: 5, max: 50 },
-    shein: { min: 8, max: 40 },
-    otto: { min: 20, max: 200 },
-    zalando: { min: 25, max: 150 },
-    harcoo: { min: 30, max: 300 },
-    lounge: { min: 40, max: 400 },
-    flaconi: { min: 15, max: 100 }
-  };
-
-  // Adjust prices based on country/currency
-  const priceMultipliers = {
-    US: 1.0,    // USD
-    CA: 1.35,   // CAD
-    UK: 0.8,    // GBP
-    DE: 0.9,    // EUR
-    FR: 0.9,    // EUR
-    SE: 10.5,   // SEK
-    TR: 30.0,   // TRY
-    AT: 0.9     // EUR
-  };
-
-  const searchResults = [];
-  const multiplier = priceMultipliers[country] || 1.0;
-  
-  // Generate 5 results per source
-  for (const source of sources) {
-    const categories = categoryPools[source] || ['General'];
-    const priceRange = priceRanges[source] || { min: 10, max: 100 };
-    
-    // Generate between 3-8 results per source
-    const numResults = Math.floor(Math.random() * 5) + 3;
-    
-    for (let i = 0; i < numResults; i++) {
-      const category = categories[i % categories.length];
-      const price = (Math.random() * (priceRange.max - priceRange.min) + priceRange.min) * multiplier;
-      const hasDiscount = Math.random() > 0.6;
-      const originalPrice = hasDiscount ? price * (1 + Math.random() * 0.5) : undefined;
-      
-      // Generate mock product image URL
-      const imageId = Math.floor(Math.random() * 1000);
-      const productId = `${source}-${Date.now()}-${i}`;
-      
-      // Set shipping countries based on source
-      let shippingCountries;
-      if (source === 'otto') {
-        shippingCountries = ['DE', 'AT'];
-      } else if (source === 'zalando') {
-        shippingCountries = ['DE', 'AT', 'FR', 'UK', 'SE'];
-      } else if (source === 'harcoo' || source === 'lounge') {
-        shippingCountries = ['DE', 'UK', 'FR'];
-      } else if (source === 'flaconi') {
-        shippingCountries = ['DE', 'AT', 'FR'];
-      } else {
-        // Global marketplaces
-        shippingCountries = ['US', 'CA', 'UK', 'DE', 'FR', 'SE', 'TR', 'AT'];
-      }
-      
-      // Set language based on country
-      let language = 'en';
-      if (['DE', 'AT'].includes(country)) language = 'de';
-      if (country === 'FR') language = 'fr';
-      if (country === 'SE') language = 'sv';
-      if (country === 'TR') language = 'tr';
-      
-      searchResults.push({
-        title: `${searchQuery.toUpperCase()} ${source} ${category} Item ${i+1}`,
-        price: price.toFixed(2),
-        originalPrice: originalPrice?.toFixed(2),
-        category: category,
-        source: source,
-        externalId: productId,
-        url: `https://example.com/${source}/product/${productId}`,
-        image: `https://picsum.photos/seed/${imageId}/300/300`,
-        images: [
-          `https://picsum.photos/seed/${imageId}/300/300`,
-          `https://picsum.photos/seed/${imageId+1}/300/300`,
-          `https://picsum.photos/seed/${imageId+2}/300/300`
-        ],
-        description: `This is a product matching your search for "${searchQuery}" from ${source} in the ${category} category.`,
-        shippingCountries,
-        language
-      });
-    }
-  }
-
-  return searchResults;
-};
-
-serve(async (req) => {
-  // Handle CORS preflight requests
+Deno.serve(async (req) => {
+  // Handle CORS preflight request
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: corsHeaders })
   }
 
   try {
-    // Parse request body
-    const { query, country = 'US', sources = ['aliexpress', 'shein'] } = await req.json();
-    console.log(`Searching for: "${query}" in ${country}, sources: ${sources.join(', ')}`);
+    const { query, country, sources } = await req.json()
+    const results = []
 
-    if (!query) {
-      return new Response(
-        JSON.stringify({ error: "Search query is required" }),
-        {
-          status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    console.log(`Searching: "${query}" in ${country}, sources:`, sources)
+
+    // Create a client with the service role key for database operations
+    const supabase = createClient(
+      supabaseUrl || '',
+      supabaseServiceKey || ''
+    )
+
+    // Check if we have any API keys for the requested sources
+    const hasApiKeys = sources.some(source => !!marketplaceApiKeys[source])
+
+    // If we have no valid API keys, try to use cached results from our database
+    if (!hasApiKeys) {
+      console.log('No valid API keys found, using cached results')
+      const { data: cachedResults, error } = await supabase
+        .from('external_products')
+        .select('*')
+        .ilike('name', `%${query}%`)
+        .in('source', sources)
+        .limit(20)
+
+      if (!error && cachedResults?.length) {
+        return new Response(
+          JSON.stringify(formatProducts(cachedResults, country)),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
+      }
+    }
+
+    // Process each source in parallel
+    await Promise.all(
+      sources.map(async (source) => {
+        // Skip if no API key
+        if (!marketplaceApiKeys[source]) {
+          console.log(`No API key for ${source}, skipping`)
+          return
         }
-      );
-    }
 
-    // Filter sources based on country availability
-    let availableSources = [...sources];
-    
-    // Otto is only available in Germany and Austria
-    if (!['DE', 'AT'].includes(country) && availableSources.includes('otto')) {
-      availableSources = availableSources.filter(source => source !== 'otto');
-    }
-    
-    // Zalando is available in specific European countries
-    if (!['DE', 'AT', 'FR', 'UK', 'SE'].includes(country) && availableSources.includes('zalando')) {
-      availableSources = availableSources.filter(source => source !== 'zalando');
-    }
-    
-    // Harcoo and Lounge are available in Germany, UK, and France
-    if (!['DE', 'UK', 'FR'].includes(country)) {
-      availableSources = availableSources.filter(source => 
-        source !== 'harcoo' && source !== 'lounge'
-      );
-    }
-    
-    // Flaconi is available in Germany, Austria, and France
-    if (!['DE', 'AT', 'FR'].includes(country) && availableSources.includes('flaconi')) {
-      availableSources = availableSources.filter(source => source !== 'flaconi');
-    }
+        try {
+          const sourceResults = await searchProductsFromSource(source, query, country)
+          if (sourceResults && sourceResults.length > 0) {
+            results.push(...sourceResults)
+            
+            // Cache results in database for future use
+            await cacheProducts(supabase, sourceResults, source)
+          }
+        } catch (sourceError) {
+          console.error(`Error fetching from ${source}:`, sourceError)
+        }
+      })
+    )
 
-    // In a real implementation, you would make API calls to each marketplace
-    // For now, we'll generate mock data based on the query
-    const searchResults = generateMockSearchResults(query, country, availableSources);
+    // If we have no results from APIs, attempt to use demo data
+    if (results.length === 0) {
+      console.log('No results from APIs, using sample data')
+      
+      // Generate some sample data based on the query
+      const sampleData = generateSampleData(query, sources, country)
+      results.push(...sampleData)
+    }
 
     return new Response(
-      JSON.stringify(searchResults),
-      {
-        status: 200,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      }
-    );
+      JSON.stringify(results),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    )
   } catch (error) {
-    console.error("Error searching external products:", error);
-    
+    console.error('Error processing request:', error)
     return new Response(
-      JSON.stringify({ error: "Failed to search external products" }),
-      {
+      JSON.stringify({ error: error.message }),
+      { 
         status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
       }
-    );
+    )
   }
-});
+})
+
+async function searchProductsFromSource(source, query, country) {
+  console.log(`Searching ${source} for "${query}" in ${country}`)
+  
+  const apiKey = marketplaceApiKeys[source]
+  
+  // This would be replaced with actual API calls to each marketplace
+  // Below is a structure for how this might work
+  
+  switch (source) {
+    case 'aliexpress':
+      return await searchAliExpress(query, country, apiKey)
+    case 'shein':
+      return await searchShein(query, country, apiKey)
+    case 'otto':
+      return await searchOtto(query, country, apiKey)
+    case 'zalando':
+      return await searchZalando(query, country, apiKey)
+    case 'harcoo':
+      return await searchHarcoo(query, country, apiKey)
+    case 'lounge':
+      return await searchLounge(query, country, apiKey)
+    case 'flaconi':
+      return await searchFlaconi(query, country, apiKey)
+    default:
+      return []
+  }
+}
+
+// Example implementation for one API
+async function searchAliExpress(query, country, apiKey) {
+  if (!apiKey) {
+    console.log('No AliExpress API key available')
+    return []
+  }
+  
+  try {
+    // Real implementation would make an actual API call
+    // This is a placeholder for the API call structure
+    const response = await fetch(`https://api.aliexpress.com/v1/products/search?keywords=${encodeURIComponent(query)}&country=${country}`, {
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
+      }
+    })
+    
+    // If the API is down or returns an error, handle gracefully
+    if (!response.ok) {
+      console.error(`AliExpress API error: ${response.status} ${response.statusText}`)
+      return []
+    }
+    
+    const data = await response.json()
+    
+    // Map API response to our product format
+    return data.products.map(product => ({
+      title: product.title,
+      price: product.price.value,
+      originalPrice: product.original_price?.value,
+      image: product.image_url,
+      images: product.image_urls,
+      url: product.product_url,
+      category: product.category_name,
+      description: product.description,
+      source: 'aliexpress',
+      externalId: product.product_id,
+      language: country === 'US' ? 'en' : country.toLowerCase(),
+      affiliateUrl: product.promotion_link
+    }))
+  } catch (error) {
+    console.error('Error searching AliExpress:', error)
+    return []
+  }
+}
+
+// Similar functions would be implemented for other marketplaces
+async function searchShein(query, country, apiKey) {
+  // Similar structure to AliExpress function
+  return []
+}
+
+async function searchOtto(query, country, apiKey) {
+  // Similar structure to AliExpress function
+  return []
+}
+
+async function searchZalando(query, country, apiKey) {
+  // Similar structure to AliExpress function
+  return []
+}
+
+async function searchHarcoo(query, country, apiKey) {
+  // Similar structure to AliExpress function
+  return []
+}
+
+async function searchLounge(query, country, apiKey) {
+  // Similar structure to AliExpress function
+  return []
+}
+
+async function searchFlaconi(query, country, apiKey) {
+  // Similar structure to AliExpress function
+  return []
+}
+
+// Helper to cache products in the database
+async function cacheProducts(supabase, products, source) {
+  if (!products || products.length === 0) return
+  
+  try {
+    // Format products for database storage
+    const formattedProducts = products.map(p => ({
+      name: p.title,
+      price: p.price,
+      source: source,
+      image: p.image,
+      affiliate_link: p.affiliateUrl || p.url,
+      created_at: new Date()
+    }))
+    
+    // Upsert to avoid duplicates
+    const { error } = await supabase
+      .from('external_products')
+      .upsert(formattedProducts, { 
+        onConflict: 'name,source',
+        ignoreDuplicates: false 
+      })
+    
+    if (error) {
+      console.error('Error caching products:', error)
+    }
+  } catch (error) {
+    console.error('Exception caching products:', error)
+  }
+}
+
+// Format products from database to match the API format
+function formatProducts(dbProducts, country) {
+  return dbProducts.map(p => ({
+    title: p.name,
+    price: p.price,
+    image: p.image,
+    url: p.affiliate_link,
+    source: p.source,
+    externalId: p.id,
+    language: country === 'US' ? 'en' : country.toLowerCase(),
+    affiliateUrl: p.affiliate_link
+  }))
+}
+
+// Generate sample data if no API results
+function generateSampleData(query, sources, country) {
+  return sources.slice(0, 3).flatMap(source => {
+    return Array(2).fill(0).map((_, i) => ({
+      title: `${source.charAt(0).toUpperCase() + source.slice(1)} ${query} Item ${i+1}`,
+      price: 19.99 + (i * 10),
+      originalPrice: i % 2 === 0 ? 29.99 + (i * 10) : null,
+      image: `https://picsum.photos/seed/${source}${i}/400/400`,
+      images: [`https://picsum.photos/seed/${source}${i}/400/400`],
+      url: `https://example.com/${source}/products/${i}`,
+      category: query,
+      description: `This is a sample ${source} product for "${query}"`,
+      source: source,
+      externalId: `sample-${source}-${i}`,
+      language: country === 'US' ? 'en' : country.toLowerCase(),
+      affiliateUrl: `https://example.com/${source}/affiliate/${i}?ref=outwitshop`
+    }))
+  })
+}

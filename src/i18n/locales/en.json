@@ -1,3 +1,4 @@
+
 {
   "header": {
     "notifications": "Notifications",
@@ -38,6 +39,22 @@
     "toys": "Toys",
     "jewelry": "Jewelry",
     "automotive": "Automotive"
+  },
+  "external_products": {
+    "view_product": "View Product",
+    "not_available_button": "Not Available",
+    "redirecting": "Opening external product page",
+    "redirect_description": "You'll be redirected to complete your purchase",
+    "tax_included": "Tax Incl.",
+    "not_available": "Not available in your region",
+    "available_in": "Available in",
+    "no_products": "No products found",
+    "try_different_search": "Try a different search term or platform",
+    "search_results": "Search Results",
+    "trending_products": "Trending Products",
+    "global_marketplace": "Global Marketplace",
+    "country_selector": "Select Country",
+    "change_country": "Change Country"
   },
   "auth": {
     "login": "Login",
@@ -99,5 +116,12 @@
       "social": "Social Integration",
       "reports": "Reports"
     }
+  },
+  "common": {
+    "image_unavailable": "Image unavailable"
+  },
+  "errors": {
+    "trending_products": "Error loading trending products",
+    "search_failed": "Search failed"
   }
 }
