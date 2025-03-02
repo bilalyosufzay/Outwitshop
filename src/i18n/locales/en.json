@@ -1,8 +1,17 @@
-
 {
   "header": {
     "notifications": "Notifications",
     "menu": "Menu"
+  },
+  "navigation": {
+    "home": "Home",
+    "search": "Search",
+    "lucky_draw": "Lucky Draw",
+    "cart": "Cart",
+    "my_shop": "My Shop",
+    "profile": "Profile",
+    "feeds": "Feeds",
+    "global": "Global"
   },
   "new_arrival": "New Arrival",
   "summer_collection": "Summer Collection",
@@ -60,22 +69,6 @@
       "follower_count": "Followers",
       "following_count": "Following"
     }
-  },
-  "navigation": {
-    "home": "Back to Home"
-  },
-  "notifications": {
-    "enabled_success": "Notifications enabled!",
-    "will_receive_updates": "You'll now receive important updates and offers.",
-    "permission_denied": "Permission denied",
-    "enable_in_browser_settings": "Please enable notifications in your browser settings.",
-    "error": "Something went wrong",
-    "try_again_later": "Please try again later.",
-    "not_supported": "Notifications not supported",
-    "use_modern_browser": "Please use a modern browser that supports notifications.",
-    "enable_notifications": "Enable Notifications",
-    "stay_updated": "Get updates on orders, promotions, and more.",
-    "enable_now": "Enable Now"
   },
   "profile": {
     "buyer": {

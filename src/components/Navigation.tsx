@@ -27,17 +27,17 @@ const Navigation = () => {
 
   // Primary navigation items that are always shown
   const primaryNavItems = [
-    { path: "/", icon: <Home className="h-5 w-5" />, label: t("home") },
-    { path: "/search", icon: <Search className="h-5 w-5" />, label: t("search") },
-    { path: "/cart", icon: <ShoppingCart className="h-5 w-5" />, label: t("cart") },
-    { path: "/profile", icon: <User className="h-5 w-5" />, label: t("profile") },
+    { path: "/", icon: <Home className="h-5 w-5" />, label: t("navigation.home") },
+    { path: "/search", icon: <Search className="h-5 w-5" />, label: t("navigation.search") },
+    { path: "/cart", icon: <ShoppingCart className="h-5 w-5" />, label: t("navigation.cart") },
+    { path: "/profile", icon: <User className="h-5 w-5" />, label: t("navigation.profile") },
   ];
   
   // Secondary navigation items that are shown based on screen width
   const secondaryNavItems = [
-    { path: "/feeds", icon: <MessageSquare className="h-5 w-5" />, label: t("feeds") },
-    { path: "/lucky-draw", icon: <Gift className="h-5 w-5" />, label: t("lucky_draw") },
-    { path: "/external-products", icon: <Globe className="h-5 w-5" />, label: t("global") },
+    { path: "/feeds", icon: <MessageSquare className="h-5 w-5" />, label: t("navigation.feeds") },
+    { path: "/lucky-draw", icon: <Gift className="h-5 w-5" />, label: t("navigation.lucky_draw") },
+    { path: "/external-products", icon: <Globe className="h-5 w-5" />, label: t("navigation.global") },
   ];
   
   // Determine which items to display based on screen width

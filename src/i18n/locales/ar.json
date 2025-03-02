@@ -1,8 +1,17 @@
-
 {
   "header": {
     "notifications": "الإشعارات",
     "menu": "القائمة"
+  },
+  "navigation": {
+    "home": "الرئيسية",
+    "search": "بحث",
+    "lucky_draw": "سحب",
+    "cart": "سلة التسوق",
+    "my_shop": "متجري",
+    "profile": "الملف الشخصي",
+    "feeds": "المنشورات",
+    "global": "عالمي"
   },
   "new_arrival": "وصل حديثاً",
   "summer_collection": "مجموعة الصيف",
@@ -61,22 +70,6 @@
       "following_count": "المتابَعين"
     }
   },
-  "navigation": {
-    "home": "العودة إلى الصفحة الرئيسية"
-  },
-  "notifications": {
-    "enabled_success": "تم تفعيل الإشعارات!",
-    "will_receive_updates": "ستتلقى الآن تحديثات وعروض مهمة.",
-    "permission_denied": "تم رفض الإذن",
-    "enable_in_browser_settings": "يرجى تمكين الإشعارات في إعدادات المتصفح.",
-    "error": "حدث خطأ ما",
-    "try_again_later": "يرجى المحاولة مرة أخرى لاحقًا.",
-    "not_supported": "الإشعارات غير مدعومة",
-    "use_modern_browser": "يرجى استخدام متصفح حديث يدعم الإشعارات.",
-    "enable_notifications": "تفعيل الإشعارات",
-    "stay_updated": "احصل على تحديثات بشأن الطلبات والعروض والمزيد.",
-    "enable_now": "تفعيل الآن"
-  },
   "profile": {
     "buyer": {
       "auto_reorder": "إعادة طلب المستلزمات تلقائيًا",
@@ -106,5 +99,18 @@
       "social": "تكامل التواصل الاجتماعي",
       "reports": "التقارير"
     }
+  },
+  "notifications": {
+    "enabled_success": "تم تفعيل الإشعارات!",
+    "will_receive_updates": "ستتلقى الآن تحديثات وعروض مهمة.",
+    "permission_denied": "تم رفض الإذن",
+    "enable_in_browser_settings": "يرجى تمكين الإشعارات في إعدادات المتصفح.",
+    "error": "حدث خطأ ما",
+    "try_again_later": "يرجى المحاولة مرة أخرى لاحقًا.",
+    "not_supported": "الإشعارات غير مدعومة",
+    "use_modern_browser": "يرجى استخدام متصفح حديث يدعم الإشعارات.",
+    "enable_notifications": "تفعيل الإشعارات",
+    "stay_updated": "احصل على تحديثات بشأن الطلبات والعروض والمزيد.",
+    "enable_now": "تفعيل الآن"
   }
 }
