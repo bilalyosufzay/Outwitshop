@@ -1,28 +1,27 @@
 
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
+
 import Navigation from "@/components/Navigation";
-import ExternalProductCard from "@/components/ExternalProductCard";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Search, Filter, ShoppingBag, Globe, MapPin } from "lucide-react";
-import { Card } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Header } from "@/components/Header";
 import { Product } from "@/data/types/product";
 import { 
   searchExternalProducts, 
   getTrendingExternalProducts,
-  getAvailableMarketplacesForCountry,
-  getSupportedCountries 
+  getAvailableMarketplacesForCountry 
 } from "@/services/externalProductsService";
 import { useAuth } from "@/contexts/AuthContext";
-import { Separator } from "@/components/ui/separator";
-import { toast } from "sonner";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { detectUserCountry, getTaxDisplayText } from "@/utils/localization";
-import { useTranslation } from "react-i18next";
-import { Header } from "@/components/Header";
+import { detectUserCountry } from "@/utils/localization";
+
+// Imported components
+import PageHeader from "@/components/external-products/PageHeader";
+import CountrySelector from "@/components/external-products/CountrySelector";
+import SearchBar from "@/components/external-products/SearchBar";
+import MarketplaceTabs from "@/components/external-products/MarketplaceTabs";
+import ProductGrid from "@/components/external-products/ProductGrid";
+import TrendingProducts from "@/components/external-products/TrendingProducts";
 
 const ExternalProducts = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -33,12 +32,8 @@ const ExternalProducts = () => {
   const [trendingLoading, setTrendingLoading] = useState(true);
   const [country, setCountry] = useState("");
   const { user } = useAuth();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const location = useLocation();
-
-  // Get available marketplaces for selected country
-  const availableMarketplaces = getAvailableMarketplacesForCountry(country);
-  const supportedCountries = getSupportedCountries();
 
   // Initialize country based on URL param or browser detection
   useEffect(() => {
@@ -89,7 +84,7 @@ const ExternalProducts = () => {
       
       if (activeTab === 'all') {
         // Use all available marketplaces for this country
-        sources = availableMarketplaces.map(m => m.id);
+        sources = getAvailableMarketplacesForCountry(country).map(m => m.id);
       } else {
         // Use selected marketplace
         sources = [activeTab];
@@ -124,140 +119,47 @@ const ExternalProducts = () => {
     setActiveTab("all");
   };
 
-  // Get tax display text
-  const taxInfo = getTaxDisplayText(country);
-
   return (
     <div className="min-h-screen bg-background pb-20">
       <Header />
       <div className="container mx-auto px-4 py-4">
         <div className="flex flex-col space-y-4 mb-6">
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            <Globe className="h-6 w-6 text-primary" />
-            {t("external_products.title", "Global Marketplace")}
-          </h1>
-          <p className="text-muted-foreground">
-            {t("external_products.description", "Shop products from global marketplaces directly through our app!")}
-          </p>
+          <PageHeader />
           
-          <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-            <div className="flex items-center gap-2">
-              <MapPin className="h-4 w-4 text-muted-foreground" />
-              <Select value={country} onValueChange={handleCountryChange}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder={t("external_products.select_country", "Select Country")} />
-                </SelectTrigger>
-                <SelectContent>
-                  {supportedCountries.map((country) => (
-                    <SelectItem key={country.code} value={country.code}>
-                      {country.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <p className="text-xs text-muted-foreground">
-              {taxInfo}
-            </p>
-          </div>
+          <CountrySelector 
+            country={country} 
+            onCountryChange={handleCountryChange} 
+          />
           
-          <div className="relative flex gap-2">
-            <Input
-              type="search"
-              placeholder={t("external_products.search_placeholder", "Search global products...")}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-              className="flex-1"
-            />
-            <Button onClick={handleSearch}>
-              <Search className="h-4 w-4 mr-2" />
-              {t("common.search", "Search")}
-            </Button>
-          </div>
+          <SearchBar 
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            handleSearch={handleSearch}
+          />
           
-          <Tabs value={activeTab} onValueChange={handleTabChange}>
-            <TabsList className="w-full justify-start overflow-x-auto">
-              <TabsTrigger value="all">{t("external_products.all_platforms", "All Platforms")}</TabsTrigger>
-              
-              {/* Dynamically generate tabs based on available marketplaces */}
-              {availableMarketplaces.map((marketplace) => (
-                <TabsTrigger key={marketplace.id} value={marketplace.id}>
-                  {marketplace.name}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </Tabs>
+          <MarketplaceTabs 
+            activeTab={activeTab} 
+            onTabChange={handleTabChange}
+            country={country}
+          />
         </div>
 
-        {loading ? (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[...Array(8)].map((_, i) => (
-              <Card key={i} className="border-none shadow-none animate-pulse">
-                <div className="aspect-square bg-gray-200 rounded-xl mb-4"></div>
-                <div className="h-4 bg-gray-200 rounded mb-2 w-1/3"></div>
-                <div className="h-5 bg-gray-200 rounded mb-2 w-2/3"></div>
-                <div className="h-4 bg-gray-200 rounded w-1/4"></div>
-              </Card>
-            ))}
-          </div>
-        ) : (
-          <>
-            {/* Search Results */}
-            {products.length > 0 ? (
-              <div>
-                <h2 className="text-lg font-semibold mb-4">
-                  {t("external_products.search_results", "Search Results")}
-                </h2>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {products.map((product) => (
-                    <ExternalProductCard 
-                      key={product.id} 
-                      product={product} 
-                      userCountry={country}
-                    />
-                  ))}
-                </div>
-              </div>
-            ) : searchQuery ? (
-              <div className="text-center py-10">
-                <ShoppingBag className="h-12 w-12 mx-auto text-muted-foreground mb-2" />
-                <h3 className="text-lg font-medium">
-                  {t("external_products.no_products", "No products found")}
-                </h3>
-                <p className="text-muted-foreground">
-                  {t("external_products.try_different_search", "Try a different search term or platform")}
-                </p>
-              </div>
-            ) : null}
+        {/* Search Results */}
+        <ProductGrid
+          products={products}
+          loading={loading}
+          noResultsMessage={true}
+          searchQuery={searchQuery}
+          userCountry={country}
+        />
 
-            {/* Trending Products Section */}
-            {!searchQuery && (
-              <div className="mt-8">
-                <h2 className="text-lg font-semibold mb-4">
-                  {t("external_products.trending_products", "Trending Products")}
-                </h2>
-                {trendingLoading ? (
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {[...Array(8)].map((_, i) => (
-                      <Skeleton key={i} className="aspect-square rounded-xl" />
-                    ))}
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {trendingProducts.map((product) => (
-                      <ExternalProductCard 
-                        key={product.id} 
-                        product={product} 
-                        userCountry={country}
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-          </>
+        {/* Trending Products Section */}
+        {!searchQuery && (
+          <TrendingProducts
+            trendingProducts={trendingProducts}
+            loading={trendingLoading}
+            country={country}
+          />
         )}
       </div>
       <Navigation />
