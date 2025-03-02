@@ -1,4 +1,6 @@
 
+import { SITE_INFO } from "./trackingApi";
+
 /**
  * Generate an affiliate URL for a given product URL and marketplace
  * This adds appropriate tracking parameters based on the marketplace
@@ -25,9 +27,8 @@ export const generateAffiliateUrl = (
   try {
     const urlObj = new URL(url);
     
-    // Get site information
-    const siteName = 'Outwit Shop';
-    const siteUrl = window.location.origin;
+    // Get site information from our constant
+    const { siteName, siteUrl } = SITE_INFO;
     
     // Add appropriate parameters based on marketplace
     switch (marketplace.toLowerCase()) {

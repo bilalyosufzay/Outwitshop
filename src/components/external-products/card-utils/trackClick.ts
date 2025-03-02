@@ -1,5 +1,5 @@
 
-import { trackAffiliateClick } from "@/services/external-products/trackingApi";
+import { SITE_INFO, trackAffiliateClick } from "@/services/external-products/trackingApi";
 import { toast } from "sonner";
 
 interface SiteInfo {
@@ -17,11 +17,15 @@ export const handleAffiliateClick = async (
   siteInfo?: SiteInfo
 ) => {
   try {
+    // Use provided siteInfo or default to our constant for AliExpress
+    const trackingSiteInfo = siteInfo || 
+      (externalSource === 'aliexpress' ? SITE_INFO : undefined);
+    
     await trackAffiliateClick(
       externalId, 
       externalSource, 
       userCountry,
-      siteInfo
+      trackingSiteInfo
     );
     
     toast.success(t("external_products.redirecting", "Opening external product page"), {

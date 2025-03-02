@@ -4,6 +4,7 @@ import { ExternalLink, ShoppingBag } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { handleAffiliateClick, trackClick } from "./card-utils/trackClick";
+import { SITE_INFO } from "@/services/external-products/trackingApi";
 
 interface AffiliateLinkProps {
   productId: string;
@@ -49,11 +50,8 @@ const AffiliateLink = ({
     try {
       // Track affiliate click and show a toast notification
       if (externalId) {
-        // Pass the site information for AliExpress affiliates
-        const siteInfo = externalSource === 'aliexpress' ? {
-          siteName: 'Outwit Shop',
-          siteUrl: window.location.origin
-        } : undefined;
+        // Only pass the site information for AliExpress affiliates
+        const siteInfo = externalSource === 'aliexpress' ? SITE_INFO : undefined;
         
         await handleAffiliateClick(externalId, externalSource, userCountry, t, undefined, siteInfo);
       }
