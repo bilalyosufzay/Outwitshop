@@ -34,6 +34,11 @@ const ExternalProductCard = ({ product, className, userCountry = "US" }: Externa
   const isAvailableInUserCountry = !product.countryAvailability || 
     product.countryAvailability.includes(userCountry);
 
+  // Ensure we have valid affiliate URL
+  const affiliateUrl = product.affiliate?.url || product.externalUrl;
+
+  console.log(`Product: ${product.name}, Affiliate URL: ${affiliateUrl}`);
+
   return (
     <Card 
       className={cn(
@@ -63,7 +68,7 @@ const ExternalProductCard = ({ product, className, userCountry = "US" }: Externa
         productName={product.name}
         externalSource={product.externalSource}
         externalId={product.externalId}
-        affiliateUrl={product.affiliate?.url}
+        affiliateUrl={affiliateUrl}
         externalUrl={product.externalUrl}
         userCountry={userCountry}
         isAvailableInUserCountry={isAvailableInUserCountry}

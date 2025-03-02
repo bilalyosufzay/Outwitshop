@@ -1,37 +1,67 @@
 
-// Function to generate affiliate URL based on product and source
-export const generateAffiliateUrl = (url: string, source: string, productId: string): string => {
-  // In a real implementation, these would be your actual affiliate IDs
-  const affiliateIds = {
-    aliexpress: "marketplace-app-1234",
-    shein: "marketplace-app-5678",
-    otto: "marketplace-app-9012",
-    zalando: "marketplace-app-3456",
-    harcoo: "marketplace-app-7890",
-    lounge: "marketplace-app-2345",
-    flaconi: "marketplace-app-6789"
-  };
-
-  // Add affiliate parameters based on the source
-  if (source === 'aliexpress') {
-    // AliExpress typically uses something like this
-    return `${url}?aff_id=${affiliateIds.aliexpress}&product_id=${productId}`;
-  } else if (source === 'shein') {
-    // Shein might use a different format
-    return `${url}?ref=${affiliateIds.shein}&item=${productId}`;
-  } else if (source === 'otto') {
-    // Otto might use yet another format
-    return `${url}?partner=${affiliateIds.otto}&campaign=marketplace&item=${productId}`;
-  } else if (source === 'zalando') {
-    return `${url}?partner=${affiliateIds.zalando}&item=${productId}`;
-  } else if (source === 'harcoo') {
-    return `${url}?aff=${affiliateIds.harcoo}&pid=${productId}`;
-  } else if (source === 'lounge') {
-    return `${url}?partner=${affiliateIds.lounge}&item=${productId}`;
-  } else if (source === 'flaconi') {
-    return `${url}?ref=${affiliateIds.flaconi}&item=${productId}`;
+/**
+ * Generate an affiliate URL for a given product URL and marketplace
+ * This adds appropriate tracking parameters based on the marketplace
+ */
+export const generateAffiliateUrl = (
+  baseUrl: string, 
+  marketplace: string,
+  externalId: string
+): string => {
+  // Ensure the base URL is valid
+  if (!baseUrl || typeof baseUrl !== 'string') {
+    console.error('Invalid base URL for affiliate link generation', baseUrl);
+    return '';
   }
   
-  // Default fallback
-  return url;
+  // Clean the URL to prevent issues
+  let url = baseUrl.trim();
+  
+  // If the URL is already an affiliate URL, return it
+  if (url.includes('tag=') || url.includes('aff_id=') || url.includes('ref=')) {
+    return url;
+  }
+  
+  try {
+    const urlObj = new URL(url);
+    
+    // Add appropriate parameters based on marketplace
+    switch (marketplace.toLowerCase()) {
+      case 'aliexpress':
+        // Example: ?aff_id=outwitshop&product_id={productId}
+        urlObj.searchParams.append('aff_id', 'outwitshop');
+        urlObj.searchParams.append('product_id', externalId);
+        break;
+        
+      case 'shein':
+        // Example: ?ref=outwitshop&product_id={productId}
+        urlObj.searchParams.append('ref', 'outwitshop');
+        urlObj.searchParams.append('product_id', externalId);
+        break;
+        
+      case 'otto':
+      case 'zalando':
+      case 'harcoo':
+      case 'lounge':
+      case 'flaconi':
+        // General affiliate pattern
+        urlObj.searchParams.append('partner', 'outwitshop');
+        urlObj.searchParams.append('source', 'marketplace');
+        urlObj.searchParams.append('id', externalId);
+        break;
+        
+      default:
+        // Generic tracking
+        urlObj.searchParams.append('ref', 'outwitshop');
+    }
+    
+    console.log(`Generated affiliate URL for ${marketplace}: ${urlObj.toString()}`);
+    return urlObj.toString();
+  } catch (error) {
+    console.error('Error generating affiliate URL:', error);
+    
+    // If URL parsing fails, add parameters in a simple way
+    const separator = url.includes('?') ? '&' : '?';
+    return `${url}${separator}ref=outwitshop&id=${externalId}`;
+  }
 };

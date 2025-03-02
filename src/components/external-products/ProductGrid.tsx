@@ -58,6 +58,8 @@ const ProductGrid = ({
     return null;
   }
 
+  console.log(`Rendering ${products.length} products in grid`);
+  
   return (
     <div className="mt-4">
       {!isTrending && products.length > 0 && (
@@ -71,13 +73,16 @@ const ProductGrid = ({
         </h2>
       )}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {products.map((product) => (
-          <ExternalProductCard 
-            key={product.id} 
-            product={product} 
-            userCountry={userCountry}
-          />
-        ))}
+        {products.map((product) => {
+          console.log(`Grid rendering product: ${product.id}, has affiliate URL: ${!!product.affiliate?.url}`);
+          return (
+            <ExternalProductCard 
+              key={product.id} 
+              product={product} 
+              userCountry={userCountry}
+            />
+          );
+        })}
       </div>
     </div>
   );

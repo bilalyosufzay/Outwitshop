@@ -26,6 +26,11 @@ export const mapExternalProductToProduct = (item: any, country: string): Product
   const currency = getCurrencyForCountry(country);
   const taxIncluded = isTaxIncluded(country);
 
+  // Generate proper affiliate URL or use the one provided
+  const affiliateUrl = item.affiliateUrl || (baseUrl ? generateAffiliateUrl(baseUrl, source, externalId) : null);
+  
+  console.log(`Mapping product from ${source}: ${item.title || 'Unknown'}, URL: ${affiliateUrl || 'No URL'}`);
+
   return {
     id: `${source}-${externalId}`,
     name: item.title || 'Unknown Product',
@@ -45,7 +50,7 @@ export const mapExternalProductToProduct = (item: any, country: string): Product
     shippingCountries: item.shippingCountries,
     ...(item.trending && { trending: true }),
     affiliate: {
-      url: generateAffiliateUrl(baseUrl, source, externalId),
+      url: affiliateUrl,
       commissionRate: 1.0 // 1% commission
     },
     commissionRate: 1.0 // 1% commission
