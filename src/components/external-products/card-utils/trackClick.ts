@@ -2,6 +2,7 @@
 import { trackAffiliateClick } from "@/services/external-products/trackingApi";
 import { toast } from "sonner";
 
+// Export the handleAffiliateClick function
 export const handleAffiliateClick = async (
   externalId: string,
   externalSource: string,
@@ -13,7 +14,6 @@ export const handleAffiliateClick = async (
     await trackAffiliateClick(
       externalId, 
       externalSource, 
-      userId, // userId will be filled if authenticated
       userCountry
     );
     
@@ -24,4 +24,11 @@ export const handleAffiliateClick = async (
     console.error("Error tracking affiliate click:", error);
     // Still allow the navigation to happen even if tracking fails
   }
+};
+
+// Add the trackClick function that's being imported in AffiliateLink.tsx
+export const trackClick = (productId: string, source: string) => {
+  console.log(`Product click tracked: ${productId} from ${source}`);
+  // This is a simple tracking function that could be expanded
+  // to include analytics tracking in the future
 };

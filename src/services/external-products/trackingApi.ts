@@ -6,17 +6,19 @@ import { supabase } from "@/integrations/supabase/client";
  * Stores the click in the database for analytics and commission tracking
  */
 export const trackAffiliateClick = async (
-  productId: string, 
+  externalId: string,
+  externalSource: string,
   country: string = 'US',
-  source: string = 'unknown'
+  userId?: string
 ): Promise<void> => {
   try {
-    console.log(`Tracking affiliate click: ${productId} from ${source} in ${country}`);
+    console.log(`Tracking affiliate click: ${externalId} from ${externalSource} in ${country}`);
     
     // Record this click in the database
     await supabase.from('affiliate_clicks').insert({
-      product_id: productId,
-      source: source,
+      user_id: userId,
+      product_id: externalId,
+      source: externalSource,
       country: country
     });
     
@@ -24,9 +26,10 @@ export const trackAffiliateClick = async (
     /*
     const { error } = await supabase.functions.invoke('track-affiliate-click', {
       body: { 
-        productId,
+        productId: externalId,
         country,
-        source
+        source: externalSource,
+        userId
       }
     });
     

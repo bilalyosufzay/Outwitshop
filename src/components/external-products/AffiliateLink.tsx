@@ -1,10 +1,11 @@
 
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
-import { trackAffiliateClick } from "@/services/externalProductsService";
-import { trackClick } from "./card-utils/trackClick";
+import { trackAffiliateClick } from "@/services/external-products/trackingApi";
+import { trackClick, handleAffiliateClick } from "./card-utils/trackClick";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface AffiliateLinkProps {
   productId: string;
@@ -29,8 +30,9 @@ const AffiliateLink = ({
 }: AffiliateLinkProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { user } = useAuth();
 
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = async (e: React.MouseEvent) => {
     e.preventDefault();
     
     console.log("AffiliateLink clicked:", {
@@ -51,27 +53,27 @@ const AffiliateLink = ({
     
     // Then handle the actual link behavior
     if (affiliateUrl) {
-      // Track in backend for affiliate commission
-      trackAffiliateClick(productId, userCountry, externalSource || "unknown")
-        .then(() => {
-          console.log("Affiliate click tracked successfully");
-          
-          // Check if it's a mobile device - could expand with more sophisticated detection
-          const isMobile = window.innerWidth <= 768;
-          
-          if (isMobile) {
-            // For mobile, open directly in new tab
-            window.open(affiliateUrl, "_blank", "noopener,noreferrer");
-          } else {
-            // For desktop, we can do the same or redirect
-            window.open(affiliateUrl, "_blank", "noopener,noreferrer");
-          }
-        })
-        .catch(error => {
-          console.error("Error tracking affiliate click:", error);
-          // Still open the link even if tracking fails
-          window.open(affiliateUrl, "_blank", "noopener,noreferrer");
-        });
+      // Handle affiliate click tracking and navigation
+      if (externalId && externalSource) {
+        await handleAffiliateClick(
+          externalId,
+          externalSource,
+          userCountry,
+          t,
+          user?.id
+        );
+      }
+      
+      // Check if it's a mobile device - could expand with more sophisticated detection
+      const isMobile = window.innerWidth <= 768;
+      
+      if (isMobile) {
+        // For mobile, open directly in new tab
+        window.open(affiliateUrl, "_blank", "noopener,noreferrer");
+      } else {
+        // For desktop, we can do the same or redirect
+        window.open(affiliateUrl, "_blank", "noopener,noreferrer");
+      }
     } else if (externalUrl) {
       // If no affiliate link but we have the external URL, use that instead
       window.open(externalUrl, "_blank", "noopener,noreferrer");
