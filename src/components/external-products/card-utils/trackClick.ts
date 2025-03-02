@@ -1,18 +1,19 @@
 
-import { trackAffiliateClick } from "@/services/externalProductsService";
+import { trackAffiliateClick } from "@/services/external-products/trackingApi";
 import { toast } from "sonner";
 
 export const handleAffiliateClick = async (
   externalId: string,
   externalSource: string,
-  userCountry: string = "US",
-  t: (key: string, fallback: string) => string
+  userCountry: string,
+  t: (key: string, fallback: string) => string,
+  userId?: string
 ) => {
   try {
     await trackAffiliateClick(
       externalId, 
       externalSource, 
-      undefined, // userId will be filled if authenticated
+      userId, // userId will be filled if authenticated
       userCountry
     );
     

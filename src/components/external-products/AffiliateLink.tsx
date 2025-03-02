@@ -32,7 +32,9 @@ const AffiliateLink = ({
   }
 
   const handleClick = () => {
-    handleAffiliateClick(externalId, externalSource, userCountry, t);
+    if (externalId && externalSource) {
+      handleAffiliateClick(externalId, externalSource, userCountry, t);
+    }
   };
 
   return (
