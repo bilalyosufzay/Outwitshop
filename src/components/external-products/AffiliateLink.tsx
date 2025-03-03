@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { handleAffiliateClick, trackClick } from "./card-utils/trackClick";
 import { SITE_INFO } from "@/services/external-products/trackingApi";
+import { openExternalUrl } from "@/utils/capacitorHelpers";
 
 interface AffiliateLinkProps {
   productId: string;
@@ -56,8 +57,8 @@ const AffiliateLink = ({
         await handleAffiliateClick(externalId, externalSource, userCountry, t, undefined, siteInfo);
       }
       
-      // Open the URL in a new tab
-      window.open(url, '_blank', 'noopener,noreferrer');
+      // Open the URL using our capacitor helper (handles both web and mobile)
+      openExternalUrl(url);
     } catch (error) {
       console.error("Error opening affiliate link:", error);
     }
