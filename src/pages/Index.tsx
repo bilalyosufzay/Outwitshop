@@ -8,7 +8,6 @@ import Navigation from "@/components/Navigation";
 import "../i18n/config";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { NotificationPermission } from "@/components/NotificationPermission";
 import notificationService from "@/services/notificationService";
 import { getTrendingExternalProducts } from "@/services/externalProductsService";
 import ProductGrid from "@/components/external-products/ProductGrid";
@@ -84,9 +83,6 @@ const Index = () => {
       <Header />
       
       <main className="container mx-auto px-4 py-6 space-y-8">
-        {/* Show notification permission banner */}
-        {loadStage >= 2 && <NotificationPermission />}
-        
         {loadStage >= 1 && (
           <>
             <HeroSection />
