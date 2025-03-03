@@ -40,6 +40,19 @@ if (isNativeApp) {
   });
 }
 
+// Register service worker for web
+if ('serviceWorker' in navigator && !isNativeApp) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then(registration => {
+        console.log('Service Worker registered: ', registration);
+      })
+      .catch(registrationError => {
+        console.log('Service Worker registration failed: ', registrationError);
+      });
+  });
+}
+
 createRoot(document.getElementById("root")!).render(
   <QueryClientProvider client={queryClient}>
     <App />
