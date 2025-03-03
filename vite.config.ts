@@ -28,7 +28,7 @@ export default defineConfig(({ mode }) => ({
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom', 'react-router-dom'],
-          ui: ['@/components/ui'],
+          // Remove the problematic ui chunk that references the directory directly
         },
       },
     },
