@@ -1,6 +1,7 @@
 
 import { Link } from "react-router-dom";
 import { Button } from "../components/ui/button";
+import TestComponent from "../components/TestComponent";
 
 export default function Index() {
   return (
@@ -8,6 +9,10 @@ export default function Index() {
       <div className="max-w-md w-full space-y-8 text-center">
         <h1 className="text-4xl font-bold text-gray-900">Welcome to Outwit Shop</h1>
         <p className="mt-3 text-lg text-gray-600">Your premier online shopping destination</p>
+        
+        {/* Test Component */}
+        <TestComponent />
+        
         <div className="mt-8 space-y-4">
           <Button className="w-full" asChild>
             <Link to="/auth/login">Login</Link>
