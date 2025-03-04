@@ -1,3 +1,4 @@
+
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Index from "@/pages/Index";
 import Products from "@/pages/Products";
@@ -19,6 +20,9 @@ import Login from "@/pages/auth/Login";
 import { useEffect } from "react";
 import ManageProducts from "@/pages/my-shop/products/ManageProducts";
 import AddProductForm from "@/pages/my-shop/products/AddProductForm";
+import SignUp from "@/pages/auth/SignUp";
+import ForgotPassword from "@/pages/auth/ForgotPassword";
+import ResetPassword from "@/pages/auth/ResetPassword";
 
 function App() {
   useEffect(() => {
@@ -38,6 +42,9 @@ function App() {
           <Route path="/search" element={<Search />} />
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/auth/login" element={<Login />} />
+          <Route path="/auth/signup" element={<SignUp />} />
+          <Route path="/auth/forgot-password" element={<ForgotPassword />} />
+          <Route path="/auth/reset-password" element={<ResetPassword />} />
           <Route 
             path="/profile" 
             element={
