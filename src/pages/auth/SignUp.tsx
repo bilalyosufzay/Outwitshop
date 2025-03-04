@@ -1,19 +1,30 @@
 
 import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "../../components/ui/button";
+import { Input } from "../../components/ui/input";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../components/ui/card";
 import { useState } from "react";
+import { useAuth } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const { signup } = useAuth();
+  const navigate = useNavigate();
   
-  const handleSignUp = (e: React.FormEvent) => {
+  const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Implement sign up logic here
-    console.log("Sign up with:", { email, password, name });
+    try {
+      await signup(email, password, name);
+      toast.success("Account created successfully");
+      navigate("/dashboard");
+    } catch (error) {
+      toast.error("Failed to create account");
+      console.error("Signup error:", error);
+    }
   };
 
   return (

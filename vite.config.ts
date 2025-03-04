@@ -15,10 +15,3 @@ export default defineConfig({
     port: 8080
   }
 })
-</lov-add-dependency>clsx@latest</lov-add-dependency>
-<lov-add-dependency>class-variance-authority@latest</lov-add-dependency>
-<lov-add-dependency>tailwind-merge@latest</lov-add-dependency>
-<lov-add-dependency>sonner@latest</lov-add-dependency>
-<lov-add-dependency>next-themes@latest</lov-add-dependency>
-<lov-add-dependency>@radix-ui/react-slot@latest</lov-add-dependency>
-<lov-add-dependency>@vitejs/plugin-react@latest</lov-add-dependency>
