@@ -1,46 +1,81 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, ActivityIndicator } from "react-native";
-import { searchSponsoredProducts, getAllProducts, getProductById } from "./utils/searchApi"; // Use correct relative path
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Index from "@/pages/Index";
+import Products from "@/pages/Products";
+import Cart from "@/pages/Cart";
+import Search from "@/pages/Search";
+import Profile from "@/pages/Profile";
+import Notifications from "@/pages/Notifications";
+import Settings from "@/pages/Settings";
+import Security from "@/pages/Security";
+import NotFound from "@/pages/NotFound";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import Welcome from "@/pages/Welcome";
+import Dashboard from "@/pages/Dashboard";
+import LuckyDraw from "@/pages/LuckyDraw";
+import Feeds from "@/pages/Feeds";
+import { Toaster } from "@/components/ui/sonner";
+import { AuthProvider } from "@/contexts/AuthContext";
+import Login from "@/pages/auth/Login";
+import { useEffect } from "react";
+import ManageProducts from "@/pages/my-shop/products/ManageProducts";
+import AddProductForm from "@/pages/my-shop/products/AddProductForm";
 
-export default function App() {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-
+function App() {
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const results = await searchSponsoredProducts("phone"); // Fetch sponsored products
-        setProducts(results);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
+    // Mobile setup initialization logging
+    console.log("Mobile app initialization started");
+    console.log("Capacitor setup initialized");
   }, []);
 
   return (
-    <View style={{ flex: 1, padding: 20 }}>
-      <Text style={{ fontSize: 24, fontWeight: "bold", textAlign: "center" }}>
-        Outwit Shop Products
-      </Text>
-
-      {loading ? (
-        <ActivityIndicator size="large" color="blue" />
-      ) : (
-        <FlatList
-          data={products}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <View style={{ padding: 10, borderBottomWidth: 1 }}>
-              <Text style={{ fontSize: 18 }}>{item.name}</Text>
-              <Text style={{ color: "gray" }}>{item.price}</Text>
-            </View>
-          )}
-        />
-      )}
-    </View>
+    <Router>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/welcome" element={<Welcome />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/notifications" element={<Notifications />} />
+          <Route path="/auth/login" element={<Login />} />
+          <Route 
+            path="/profile" 
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            } 
+          />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/security" element={<Security />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/lucky-draw" element={<LuckyDraw />} />
+          <Route path="/feeds" element={<Feeds />} />
+          
+          {/* Shop and Product Management Routes */}
+          <Route 
+            path="/my-shop/products" 
+            element={
+              <ProtectedRoute>
+                <ManageProducts />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/my-shop/products/add" 
+            element={
+              <ProtectedRoute>
+                <AddProductForm />
+              </ProtectedRoute>
+            } 
+          />
+          
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+        <Toaster />
+      </AuthProvider>
+    </Router>
   );
 }
+
+export default App;

@@ -25,6 +25,15 @@
     ],
     "runtimeVersion": {
       "policy": "sdkVersion"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "dist",
+      "publicPath": "./",
+      "favicon": "./assets/favicon.png",
+      "serviceWorker": {
+        "register": false
+      }
     }
   }
 }

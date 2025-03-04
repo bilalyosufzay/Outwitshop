@@ -3,13 +3,12 @@ plugins {
 }
 
 android {
-    namespace "com.example.outwitshop" // Replace with your actual package name
+    namespace "com.example.outwitshop" // Change this to your actual package name
     compileSdk 34
-    // Removed buildToolsVersion to let the Android Gradle Plugin automatically select a compatible version
 
     defaultConfig {
-        applicationId "com.example.outwitshop"
-        minSdkVersion 24  // React Native 0.72+ requires at least 24
+        applicationId "com.example.outwitshop" // Change if needed
+        minSdkVersion 24  // React Native requires at least 24
         targetSdkVersion 34
         versionCode 1
         versionName "1.0"
@@ -37,6 +36,4 @@ dependencies {
     implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.core:core-ktx:1.12.0'
-    // Add Capacitor dependency so that BridgeActivity is available:
-    implementation "com.getcapacitor:capacitor-android:5.0.0"
 }
