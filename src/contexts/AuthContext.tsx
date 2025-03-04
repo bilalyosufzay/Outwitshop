@@ -98,7 +98,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       setLoading(true);
       // Mock reset password logic - replace with actual implementation
-      console.log("Setting new password with token:", token);
+      console.log("Setting new password with token:", token, "Password length:", password.length);
     } catch (error) {
       console.error("Reset password error:", error);
       throw error;
