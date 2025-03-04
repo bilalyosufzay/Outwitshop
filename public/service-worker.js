@@ -7,6 +7,7 @@ const urlsToCache = [
   '/manifest.json',
   '/favicon.ico',
   '/og-image.png',
+  '/apple-touch-icon.png',
   '/placeholder.svg'
 ];
 

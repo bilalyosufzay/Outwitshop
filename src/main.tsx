@@ -40,16 +40,34 @@ if (isNativeApp) {
   });
 }
 
-// Register service worker for web
+// Improved service worker registration for web
 if ('serviceWorker' in navigator && !isNativeApp) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/service-worker.js')
       .then(registration => {
         console.log('Service Worker registered: ', registration);
+        
+        // Check for updates
+        registration.addEventListener('updatefound', () => {
+          const newWorker = registration.installing;
+          console.log('Service Worker update found!');
+          
+          newWorker?.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              console.log('New content is available; please refresh.');
+              // You could show a toast notification here to prompt the user to refresh
+            }
+          });
+        });
       })
       .catch(registrationError => {
         console.log('Service Worker registration failed: ', registrationError);
       });
+      
+    // Handle communication with the service worker
+    navigator.serviceWorker.addEventListener('message', (event) => {
+      console.log('Message from Service Worker: ', event.data);
+    });
   });
 }
 
