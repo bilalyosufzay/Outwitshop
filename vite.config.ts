@@ -15,4 +15,3 @@ export default defineConfig({
     port: 8080
   }
 })
-</lov-add-dependency>@vitejs/plugin-react@latest</lov-add-dependency>
