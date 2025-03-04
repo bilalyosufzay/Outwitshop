@@ -64,7 +64,7 @@ function App() {
             path="/my-shop/products" 
             element={
               <ProtectedRoute>
-                <ManageProducts />
+                <Profile />
               </ProtectedRoute>
             } 
           />
