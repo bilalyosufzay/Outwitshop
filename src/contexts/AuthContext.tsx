@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-
 import { createContext, useContext, useState, ReactNode, useEffect } from "react";
 
 interface User {
@@ -33,7 +31,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is logged in from localStorage or session
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
@@ -44,10 +41,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = async (email: string, password: string) => {
     try {
       setLoading(true);
-      // Mock login logic - replace with actual implementation
       console.log("Logging in with:", email, password);
-      
-      // Simulate successful login
       const mockUser = { id: "123", email };
       setUser(mockUser);
       localStorage.setItem("user", JSON.stringify(mockUser));
@@ -62,10 +56,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const signup = async (email: string, password: string, name: string) => {
     try {
       setLoading(true);
-      // Mock signup logic - replace with actual implementation
       console.log("Signing up with:", email, password, name);
-      
-      // Simulate successful signup
       const mockUser = { id: "123", email, name };
       setUser(mockUser);
       localStorage.setItem("user", JSON.stringify(mockUser));
@@ -85,7 +76,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const forgotPassword = async (email: string) => {
     try {
       setLoading(true);
-      // Mock forgot password logic - replace with actual implementation
       console.log("Reset password for:", email);
     } catch (error) {
       console.error("Forgot password error:", error);
@@ -98,7 +88,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const resetPassword = async (password: string, token: string) => {
     try {
       setLoading(true);
-      // Mock reset password logic - replace with actual implementation
       console.log("Setting new password with token:", token, "Password length:", password.length);
     } catch (error) {
       console.error("Reset password error:", error);
@@ -108,7 +97,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const value = {
+  const value: AuthContextType = {
     user,
     login,
     signup,
@@ -120,17 +109,3 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
-=======
-﻿import React, { createContext, useContext, useState } from "react";
-const AuthContext = createContext<any>(null);
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState(null);
-  return (
-    <AuthContext.Provider value={{ user, setUser }}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
-export const useAuth = () => useContext(AuthContext);
-export default AuthContext;
->>>>>>> 38fd4b7 (Add placeholder Toaster component and update project files)
