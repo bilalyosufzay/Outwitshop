@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 import { createContext, useContext, useState, ReactNode, useEffect } from "react";
 
@@ -119,3 +120,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
+=======
+﻿import React, { createContext, useContext, useState } from "react";
+const AuthContext = createContext<any>(null);
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const [user, setUser] = useState(null);
+  return (
+    <AuthContext.Provider value={{ user, setUser }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+export const useAuth = () => useContext(AuthContext);
+export default AuthContext;
+>>>>>>> 38fd4b7 (Add placeholder Toaster component and update project files)

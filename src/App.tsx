@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from "./components/ui/sonner";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -26,7 +25,6 @@ import { useEffect } from "react";
 
 function App() {
   useEffect(() => {
-    // Mobile setup initialization logging
     console.log("Mobile app initialization started");
     console.log("Capacitor setup initialized");
   }, []);
@@ -58,8 +56,6 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/lucky-draw" element={<LuckyDraw />} />
           <Route path="/feeds" element={<Feeds />} />
-          
-          {/* Shop and Product Management Routes */}
           <Route 
             path="/my-shop/products" 
             element={
@@ -76,7 +72,6 @@ function App() {
               </ProtectedRoute>
             } 
           />
-          
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Toaster />

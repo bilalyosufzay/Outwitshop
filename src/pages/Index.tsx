@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 import { Link } from "react-router-dom";
 import { Button } from "../components/ui/button";
@@ -25,6 +26,14 @@ export default function Index() {
           </Button>
         </div>
       </div>
+=======
+﻿import React from "react";
+export default function Index() {
+  return (
+    <div>
+      <h1>Index Page</h1>
+      <p>Welcome to Outwit Shop!</p>
+>>>>>>> 38fd4b7 (Add placeholder Toaster component and update project files)
     </div>
   );
 }

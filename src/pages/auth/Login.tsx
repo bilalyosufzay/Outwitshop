@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -88,6 +89,14 @@ export default function Login() {
           </Button>
         </CardFooter>
       </Card>
+=======
+﻿import React from "react";
+export default function Login() {
+  return (
+    <div>
+      <h1>Login Page</h1>
+      <p>Please log in to continue.</p>
+>>>>>>> 38fd4b7 (Add placeholder Toaster component and update project files)
     </div>
   );
 }
