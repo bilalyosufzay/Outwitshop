@@ -1,8 +1,6 @@
-
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "./src/components/ui/sonner";
 import { AuthProvider } from "./src/contexts/AuthContext";
-import Index from "./src/pages/Index";
 import Products from "./src/pages/Products";
 import Cart from "./src/pages/Cart";
 import Search from "./src/pages/Search";
@@ -26,7 +24,6 @@ import { useEffect } from "react";
 
 function App() {
   useEffect(() => {
-    // Mobile setup initialization logging
     console.log("Mobile app initialization started");
     console.log("Capacitor setup initialized");
   }, []);
@@ -35,7 +32,7 @@ function App() {
     <Router>
       <AuthProvider>
         <Routes>
-          <Route path="/" element={<Index />} />
+          <Route path="/" element={<Navigate to="/welcome" replace />} />
           <Route path="/welcome" element={<Welcome />} />
           <Route path="/products" element={<Products />} />
           <Route path="/cart" element={<Cart />} />
@@ -45,13 +42,13 @@ function App() {
           <Route path="/auth/signup" element={<SignUp />} />
           <Route path="/auth/forgot-password" element={<ForgotPassword />} />
           <Route path="/auth/reset-password" element={<ResetPassword />} />
-          <Route 
-            path="/profile" 
+          <Route
+            path="/profile"
             element={
               <ProtectedRoute>
                 <Profile />
               </ProtectedRoute>
-            } 
+            }
           />
           <Route path="/settings" element={<Settings />} />
           <Route path="/security" element={<Security />} />
@@ -60,23 +57,23 @@ function App() {
           <Route path="/feeds" element={<Feeds />} />
           
           {/* Shop and Product Management Routes */}
-          <Route 
-            path="/my-shop/products" 
+          <Route
+            path="/my-shop/products"
             element={
               <ProtectedRoute>
                 <ManageProducts />
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="/my-shop/products/add" 
+          <Route
+            path="/my-shop/products/add"
             element={
               <ProtectedRoute>
                 <AddProductForm />
               </ProtectedRoute>
-            } 
+            }
           />
-          
+
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Toaster />
